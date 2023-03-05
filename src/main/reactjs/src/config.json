@@ -1,0 +1,12 @@
+{
+  "comment" : "Config server api url",
+  "server" : {
+    "api" : {
+      "account" : {
+        "get" : {
+          "url" : ""
+        }
+      }
+    }
+  }
+}
