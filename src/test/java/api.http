@@ -1,0 +1,24 @@
+### Login
+POST http://localhost:5000/api/login
+Content-Type: application/json
+
+{
+  "email" : "20020390@vnu.edu.vn",
+  "password" : "Hello"
+}
+
+<> 2023-03-06T212618.400.json
+
+### Create user
+POST http://localhost:5000/api/register
+Content-Type: application/json
+
+{
+  "email" : "20020390@vnu.edu.vn",
+  "password" : "Hello",
+  "confirmPassword" : "Hello",
+  "role" : "Admin"
+}
+
+<> 2023-03-06T212754.200.json
+<> 2023-03-06T212740.400.json

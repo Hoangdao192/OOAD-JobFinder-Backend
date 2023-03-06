@@ -29,4 +29,8 @@ public class Role implements Serializable {
     @ToString.Exclude
     @JsonIgnore
     private List<User> users = new ArrayList<>();
+
+    public Role(String name) {
+        this.name = name;
+    }
 }

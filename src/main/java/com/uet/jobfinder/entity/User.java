@@ -20,8 +20,19 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String username;
+    private String email;
     private String password;
+
+    public User(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
+    public User(String email, String password, Set<Role> roles) {
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+    }
 
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(
@@ -48,6 +59,10 @@ public class User implements UserDetails {
         return authorities;
     }
 
+    @Override
+    public String getUsername() {
+        return email;
+    }
 
     @Override
     public boolean isAccountNonExpired() {
