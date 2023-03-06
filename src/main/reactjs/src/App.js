@@ -1,7 +1,7 @@
 import React from "react";
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import {privateRoutes, publicRoutes} from "./routes/Routes";
-import BlankLayout from "./components/Layouts/BlankLayout";
+import BlankLayout from "./components/layouts/BlankLayout";
 import AuthenticatedRoute from "./components/AuthenticatedRoute";
 import './App.css';
 import { ToastContainer } from "react-toastify";
