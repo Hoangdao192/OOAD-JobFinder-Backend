@@ -1,4 +1,6 @@
 # Giải thích một số thành phần mã nguồn
+## Phần giải thích này chỉ dành cho reactjs thôi nhé
+## src/main/reactjs
 
 Đây chỉ là một ít gơi ý nhỏ và vẫn còn không rõ ràng, nếu 
 có bất cứ thắc mắc nào cứ liên hệ t vì t lúc nào cũng online.
