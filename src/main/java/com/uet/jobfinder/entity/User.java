@@ -22,6 +22,8 @@ public class User implements UserDetails {
     private Long id;
     private String email;
     private String password;
+    private Boolean enabled;
+    private Boolean locked;
 
     public User(String email, String password) {
         this.email = email;
@@ -32,6 +34,13 @@ public class User implements UserDetails {
         this.email = email;
         this.password = password;
         this.roles = roles;
+    }
+
+    public User(String email, String password, Boolean enabled, Boolean locked) {
+        this.email = email;
+        this.password = password;
+        this.enabled = enabled;
+        this.locked = locked;
     }
 
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
@@ -71,7 +80,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return locked;
     }
 
     @Override
@@ -81,6 +90,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 }

@@ -1,3 +1,34 @@
+# Ứng dụng tìm kiếm việc làm
+### Công nghệ sử dụng
+* Front-end : ReactJS
+* Back-end : SpringBoot (JDK 11), MySQL
+
+## Hướng dẫn chạy ứng dụng
+### Backend
+* Tạo một CSDL mới (đặt tên tùy ý)
+* Tạo file application-local.properties trong đường dẫn src/main/resources với nội dung
+````
+spring.datasource.url=jdbc:mysql://localhost:3306/<database_name>
+spring.datasource.username=<mysql_username>
+spring.datasource.password=<mysql_password>
+````
+Ví dụ
+````
+spring.datasource.url=jdbc:mysql://localhost:3306/jobfinder
+spring.datasource.username=root
+spring.datasource.password=12345
+````
+* Chạy class App (src/main/java/com.uet.jobfinder/App)
+* Server Backend sẽ chạy trên port 5000
+* Một số mẫu về cách sử dụng api ở trong file src/test/java/api.http
+
+### Front - end
+* cd đến mục src/main/reactjs (Nếu dùng VsCode thì chỉ cần mở mỗi folder reactjs lên cho đỡ bị rối với back-end)
+```bash
+cd src/main/reactjs
+```
+
+
 # Giải thích một số thành phần mã nguồn
 ## Phần giải thích này chỉ dành cho reactjs thôi nhé
 ## src/main/reactjs
