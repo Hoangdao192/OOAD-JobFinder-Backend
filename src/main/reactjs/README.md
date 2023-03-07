@@ -3,6 +3,7 @@
 Đây chỉ là một ít gơi ý nhỏ và vẫn còn không rõ ràng, nếu 
 có bất cứ thắc mắc nào cứ liên hệ t vì t lúc nào cũng online.
 Có thể tham khảo repo ProductionMove
+https://github.com/Hoangdao192/ProductionMove
 
 ### Một trang web sẽ được chia thành hai phần là phần layout và phần nội dung
 * Phần layout được lưu trong src/components/layout
