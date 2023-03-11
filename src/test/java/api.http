@@ -20,5 +20,14 @@ Content-Type: application/json
   "role" : "Admin"
 }
 
+### Confirm user
+POST http://localhost:5000/api/register/confirm
+Content-Type: application/json
+
+{
+  "email" : "20020390@vnu.edu.vn",
+  "confirmationKey" : 527946
+}
+
 <> 2023-03-06T212754.200.json
 <> 2023-03-06T212740.400.json

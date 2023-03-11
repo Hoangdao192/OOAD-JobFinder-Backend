@@ -1,6 +1,7 @@
 package com.uet.jobfinder.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,6 +16,7 @@ import java.util.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class User implements UserDetails {
 
     @Id
@@ -22,8 +24,8 @@ public class User implements UserDetails {
     private Long id;
     private String email;
     private String password;
-    private Boolean enabled;
-    private Boolean locked;
+    private Boolean enabled = false;
+    private Boolean locked = false;
 
     public User(String email, String password) {
         this.email = email;
@@ -80,7 +82,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return locked;
+        return !locked;
     }
 
     @Override

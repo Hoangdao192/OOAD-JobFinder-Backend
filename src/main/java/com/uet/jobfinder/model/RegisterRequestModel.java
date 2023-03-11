@@ -16,7 +16,8 @@ public class RegisterRequestModel {
 
     @NotEmpty(message = "Email không được để trống.")
     @NotNull(message = "Email không được là null.")
-    @Pattern(regexp = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\\\.[A-Z]{2,6}$", message = "Email không hợp lệ.")
+    @Pattern(regexp = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
+            + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$", message = "Email không hợp lệ.")
     private String email;
 
     @NotEmpty(message = "Mật khẩu không được để trống.")

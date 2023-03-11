@@ -4,23 +4,18 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class LoginRequestModel {
+@AllArgsConstructor
+public class ConfirmValidationKeyModel {
 
-    @NotEmpty(message = "Email không được để trống.")
-    @NotNull(message = "Email không được là null.")
+    @NotNull(message = "confirmationKey cannot be null.")
+    private Long confirmationKey;
     @Pattern(regexp = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
             + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$", message = "Email không hợp lệ.")
     private String email;
-
-    @NotEmpty(message = "Mật khẩu không được để trống.")
-    @NotNull(message = "Mật khẩu không được là null.")
-    private String password;
 
 }
