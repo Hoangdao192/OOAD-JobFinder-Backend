@@ -3,6 +3,8 @@ package com.uet.jobfinder.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -25,7 +27,9 @@ public class ValidationKey {
     @JoinColumn(nullable = false)
     private User user;
 
-    public ValidationKey(Long validationKey, LocalDateTime createDate, LocalDateTime expirationDate, User user) {
+    public ValidationKey(
+            @NotNull Long validationKey, @NotNull LocalDateTime createDate,
+            @NotNull LocalDateTime expirationDate, @NotNull User user) {
         this.validationKey = validationKey;
         this.createDate = createDate;
         this.expirationDate = expirationDate;

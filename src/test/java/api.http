@@ -4,7 +4,7 @@ Content-Type: application/json
 
 {
   "email" : "20020390@vnu.edu.vn",
-  "password" : "Hello"
+  "password" : "Hellos"
 }
 
 <> 2023-03-06T212618.400.json
@@ -14,7 +14,7 @@ POST http://localhost:5000/api/register
 Content-Type: application/json
 
 {
-  "email" : "20020390@vnu.edu.vn",
+  "email" : "2002039kaasl@vnu.edu.vn",
   "password" : "Hello",
   "confirmPassword" : "Hello",
   "role" : "Admin"
@@ -26,7 +26,7 @@ Content-Type: application/json
 
 {
   "email" : "20020390@vnu.edu.vn",
-  "confirmationKey" : 527946
+  "confirmationKey" : 49952
 }
 
 <> 2023-03-06T212754.200.json

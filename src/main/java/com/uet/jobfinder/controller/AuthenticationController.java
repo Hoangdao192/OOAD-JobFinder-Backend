@@ -1,5 +1,6 @@
 package com.uet.jobfinder.controller;
 
+import com.uet.jobfinder.error.Error;
 import com.uet.jobfinder.model.ConfirmValidationKeyModel;
 import com.uet.jobfinder.model.LoginRequestModel;
 import com.uet.jobfinder.model.RegisterRequestModel;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
 import java.util.Map;
 
 @RestController
@@ -34,6 +36,18 @@ public class AuthenticationController {
             return ResponseEntity.ok(Map.of("success", true));
         }
         return ResponseEntity.ok(Map.of("success", false, "message", "Key is expired."));
+    }
+
+    @GetMapping(path = "register/confirm/resend")
+    public ResponseEntity resendRegisterConfirmationEmail(
+            @RequestParam
+            @Pattern(regexp = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
+                    + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$", message = "AUERR1")
+            String email) {
+        boolean isSuccess = authenticationService.sendEmailVerification(email);
+        return ResponseEntity.ok(
+                Map.of("success", isSuccess)
+        );
     }
 
 }
