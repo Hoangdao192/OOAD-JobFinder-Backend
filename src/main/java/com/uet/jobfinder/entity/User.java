@@ -22,6 +22,7 @@ public class User implements UserDetails {
     private Long id;
     private String email;
     private String password;
+
     private Boolean enabled;
     private Boolean locked;
 
@@ -58,6 +59,14 @@ public class User implements UserDetails {
     public void removeRole(Role role) {
         roles.remove(role);
     }
+
+//    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY,
+//            cascade = CascadeType.ALL)
+//    private Company company;
+//
+//    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY,
+//            cascade = CascadeType.ALL)
+//    private Employee employee;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
