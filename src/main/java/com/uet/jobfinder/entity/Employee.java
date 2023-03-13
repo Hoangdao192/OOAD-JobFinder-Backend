@@ -13,10 +13,12 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+//@IdClass(User.class)
 public class Employee implements Serializable {
     @Id
     @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+//    @GeneratedValue(strategy = GenerationType.AUTO)
     User userID;
     @Column(name = "fullname")
     private String fullName;

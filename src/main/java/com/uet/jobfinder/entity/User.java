@@ -1,6 +1,7 @@
 package com.uet.jobfinder.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,6 +12,7 @@ import javax.persistence.*;
 import java.util.*;
 
 @Table(name = "user")
+@Builder
 @Entity
 @Data
 @AllArgsConstructor
@@ -20,6 +22,9 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Company company;
+
     private String email;
     private String password;
 
@@ -44,6 +49,14 @@ public class User implements UserDetails {
         this.locked = locked;
     }
 
+    public User(Long id, String email, String password, Boolean enabled, Boolean locked) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.enabled = enabled;
+        this.locked = locked;
+    }
+
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_role",
@@ -59,14 +72,6 @@ public class User implements UserDetails {
     public void removeRole(Role role) {
         roles.remove(role);
     }
-
-//    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY,
-//            cascade = CascadeType.ALL)
-//    private Company company;
-//
-//    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY,
-//            cascade = CascadeType.ALL)
-//    private Employee employee;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
