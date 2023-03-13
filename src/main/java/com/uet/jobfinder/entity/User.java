@@ -24,7 +24,8 @@ public class User implements UserDetails {
     private Long id;
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Company company;
-
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Candidate candidate;
     private String email;
     private String password;
 

@@ -85,8 +85,7 @@ public class CompanyService {
     public CompanyContext putCompanyById(Long id, CompanyContext companyContext) {
         Company company = companyRepository.findById(id)
                 .orElseThrow(() -> new InvalidPathException("../api/company/id", "Công ty không tồn tại"));
-        Address address = addressRepository.findById(company.getAddress().getId())
-                .orElseThrow(() -> new InvalidPathException("../api/company/id", "Công ty không tồn tại"));
+        Address address = company.getAddress();
 
         AddressModel addressModel = companyContext.getAddressModel();
         CompanyModel companyModel = companyContext.getCompanyModel();
@@ -110,11 +109,15 @@ public class CompanyService {
     }
 
     public String deleteCompanyById(Long id) {
-        Company company = companyRepository.findById(0L)
+        Company company = companyRepository.findById(id)
                 .orElseThrow(() -> new InvalidPathException("../api/company/id", "Công ty không tồn tại"));
         companyRepository.delete(company);
         companyRepository.deleteById(id);
 
+//        return CompanyModel.builder()
+//                .companyName(company.getCompanyName())
+//                .build()
+//                .toString();
         return Long.toString(companyRepository.count());
     }
 }

@@ -1,6 +1,7 @@
 package com.uet.jobfinder.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,21 +10,23 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name = "employee")
+@Table(name = "candidate")
+@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-//@IdClass(User.class)
-public class Employee implements Serializable {
+public class Candidate implements Serializable {
     @Id
-    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-//    @GeneratedValue(strategy = GenerationType.AUTO)
-    User userID;
+    @Column(name = "user_id")
+    private Long id;
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "user_id")
+    private User user;
     @Column(name = "fullname")
     private String fullName;
     private String sex;
-    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id")
     private Address address;
     @Column(name = "date_of_birth")

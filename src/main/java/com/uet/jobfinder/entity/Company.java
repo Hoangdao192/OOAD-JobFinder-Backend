@@ -16,12 +16,11 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class Company implements Serializable {
     @Id
-//    @Column(name = "id")
-//    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "user_id")
     private Long id;
     @OneToOne
     @MapsId
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Column(name = "company_name")

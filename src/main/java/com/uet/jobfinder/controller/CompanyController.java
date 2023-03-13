@@ -18,9 +18,9 @@ public class CompanyController {
     CompanyService companyService;
 
     @PostMapping(path = "/{id}")
-    public Company createCompany(@PathVariable Long id,
+    public ResponseEntity<Company> createCompany(@PathVariable Long id,
             @RequestBody @Valid CompanyContext companyAddressContext) {
-        return companyService.createCompany(id, companyAddressContext.getCompanyModel(), companyAddressContext.getAddressModel());
+        return ResponseEntity.ok().body(companyService.createCompany(id, companyAddressContext.getCompanyModel(), companyAddressContext.getAddressModel()));
     }
 
     @GetMapping(path = "/")
