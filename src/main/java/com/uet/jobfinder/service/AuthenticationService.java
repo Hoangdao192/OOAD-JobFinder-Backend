@@ -1,6 +1,8 @@
 package com.uet.jobfinder.service;
 
+import com.uet.jobfinder.entity.Company;
 import com.uet.jobfinder.entity.User;
+import com.uet.jobfinder.entity.UserType;
 import com.uet.jobfinder.entity.ValidationKey;
 import com.uet.jobfinder.error.Error;
 import com.uet.jobfinder.error.LoginError;
@@ -10,10 +12,13 @@ import com.uet.jobfinder.exception.CustomIllegalArgumentException;
 import com.uet.jobfinder.model.ConfirmValidationKeyModel;
 import com.uet.jobfinder.model.LoginRequestModel;
 import com.uet.jobfinder.model.RegisterRequestModel;
+import com.uet.jobfinder.model.UserModel;
+import com.uet.jobfinder.repository.CompanyRepository;
 import com.uet.jobfinder.repository.RoleRepository;
 import com.uet.jobfinder.repository.UserRepository;
 import com.uet.jobfinder.repository.ValidationKeyRepository;
 import com.uet.jobfinder.security.JsonWebTokenProvider;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -35,6 +40,8 @@ import java.util.stream.Collectors;
 @Service
 public class AuthenticationService {
 
+    @Autowired
+    private ModelMapper modelMapper;
     private AuthenticationManager authenticationManager;
     private JsonWebTokenProvider jwtProvider;
     @Autowired
@@ -50,8 +57,10 @@ public class AuthenticationService {
     private EmailService emailService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private CompanyRepository companyRepository;
 
-    public User register(RegisterRequestModel registerRequestModel) {
+    public UserModel register(RegisterRequestModel registerRequestModel) {
         if (userRepository.findByEmail(registerRequestModel.getEmail()).isPresent()) {
             throw new CustomIllegalArgumentException(ServerError.EMAIL_HAS_BEEN_USED);
         }
@@ -68,8 +77,19 @@ public class AuthenticationService {
 
         user = userRepository.save(user);
         userRepository.flush();
+
+        //  TODO : Fix this when merge with cuong
+        if (user.getRoles().stream().anyMatch(role -> role.getName().equals(UserType.COMPANY))) {
+            Company company = new Company();
+            company.setUser(user);
+            companyRepository.save(company);
+        }
+
         sendEmailVerification(user.getEmail());
-        return user;
+
+        UserModel userModel = new UserModel();
+        modelMapper.map(user, userModel);
+        return userModel;
     }
 
     public Boolean confirmRegister(ConfirmValidationKeyModel confirmValidationKeyModel) {

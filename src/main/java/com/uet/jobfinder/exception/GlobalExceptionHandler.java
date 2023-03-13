@@ -28,19 +28,24 @@ public class GlobalExceptionHandler {
 
         List<Object> errorList = new ArrayList<>();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
-            boolean isErrorDefined = false;
+            String code = "undefined";
+            String message = error.getDefaultMessage();
+
             for (ServerError serverError : ServerError.values()) {
                 if (error.getDefaultMessage().equals(serverError.getCode())) {
-                    errorList.add(serverError);
+                    code = serverError.getCode();
+
+                    if (error.getDefaultMessage().equals("SVERR3") ||
+                            error.getDefaultMessage().equals("SVERR4")) {
+                        message = ((FieldError) error).getField() + " " + serverError.getMessage();
+                    } else {
+                        message = serverError.getMessage();
+                    }
                 }
             }
-
-            if (!isErrorDefined) {
-                errorList.add(new Object() {
-                    public String code = "NotDefined";
-                    public String message = error.getDefaultMessage();
-                });
-            }
+            errorList.add(
+                    Map.of("code", code, "message", message)
+            );
         });
 
         return new ResponseEntity<>(
@@ -87,19 +92,21 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> handleSystemException(Exception e) {
         //  Logging
         e.printStackTrace();
-        Map<String, Object> errors = new HashMap<>();
 
         if (e instanceof AccessDeniedException) {
-            errors.put("error", "Bạn không có thẩm quyền.");
-            return new ResponseEntity<>(errors, HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(
+                    Map.of("errors",
+                            List.of(ServerError.ACCESS_DENIED))
+                    , HttpStatus.UNAUTHORIZED);
         }
 
         if (e instanceof BadCredentialsException) {
             return new ResponseEntity<>(LoginError.WRONG_PASSWORD_OR_USERNAME, HttpStatus.UNAUTHORIZED);
         }
 
-        errors.put("error", "Invalid request.");
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(
+                Map.of("errors", List.of(ServerError.SERVER_ERROR)),
+                HttpStatus.BAD_REQUEST);
     }
 
 }

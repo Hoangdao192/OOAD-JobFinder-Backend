@@ -9,12 +9,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class SpringSecurityConfiguration {
 
     private CustomUserDetailsService userDetailsService;
@@ -36,7 +38,8 @@ public class SpringSecurityConfiguration {
                 .cors().disable()
                 // .and()
                 .authorizeRequests()
-                .antMatchers("/api/login").permitAll();
+                    .antMatchers("/api/login").permitAll()
+                    .antMatchers("api/register").permitAll();
         // .antMatchers("/api/order/list").authenticated()
         //// .antMatchers("/api/login", "/api/account/create").permitAll()
         //// .antMatchers("/users/get").authenticated();

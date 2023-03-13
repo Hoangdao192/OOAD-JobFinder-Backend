@@ -5,9 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,14 +15,12 @@ public class UserModel{
 
     private Long id;
     private String email;
-    private String password;
-    private Boolean enabled;
-    private Boolean locked;
+    private Boolean enabled = false;
+    private Boolean locked = false;
     private List<Role> roles = new ArrayList<>();
 
-    public UserModel(String email, String password, Boolean enabled, Boolean locked) {
+    public UserModel(String email, Boolean enabled, Boolean locked) {
         this.email = email;
-        this.password = password;
         this.enabled = enabled;
         this.locked = locked;
     }

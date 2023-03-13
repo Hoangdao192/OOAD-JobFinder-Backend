@@ -17,6 +17,13 @@ public class UserService {
                 .orElseThrow(() -> new CustomIllegalArgumentException(ServerError.EMAIL_NOT_EXISTS));
     }
 
+    public User getUserById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new CustomIllegalArgumentException(
+                        ServerError.USER_ID_NOT_EXISTS
+                ));
+    }
+
     @Autowired
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
