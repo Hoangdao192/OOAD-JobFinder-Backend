@@ -16,9 +16,41 @@ với một email không tồn tại trong hệ thống
 }
 ```
 
+## Xác thực
+`Server` xác thực người dùng thông qua `JsonWebToken` nên đối với
+các request yêu cầu xác thực thì cần kèm thêm trường `Authorization` vào
+`Header`
+```http request
+Authorization: <token_type> <token>
+# Example
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjc4Nzc5Njg0LCJleHAiOjE2NzkzODQ0ODR9.x7sXeuitQCsygr4LIdqZ8NCU4RUTzoIq7ZJ0mgKwtRAf3ONQ5EOcM3u9mKWJBgvrOpR-Yb_hdBdU9t9TsY3mow
+```
+<br> Ví dụ đây là một request yêu cầu update thông tin công ty
+
+```http request
+PUT http://localhost:5000/api/company
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjc4Nzc5Njg0LCJleHAiOjE2NzkzODQ0ODR9.x7sXeuitQCsygr4LIdqZ8NCU4RUTzoIq7ZJ0mgKwtRAf3ONQ5EOcM3u9mKWJBgvrOpR-Yb_hdBdU9t9TsY3mow
+Content-Type: application/json
+
+{
+  "companyName" : "Misa",
+  "companyLogo" : "...",
+  "companyDescription" : "A good company",
+  "numberOfEmployee" : "200+",
+  "address" : {
+    "province" : "...",
+    "district" : "...",
+    "ward" : "...",
+    "detailAddress" : "...",
+    "longitude" : 1.1223,
+    "latitude" : 1.2334   
+  }
+}
+```
+
 ## Các API
 ### 1. Đăng kí tài khoản
-Front-end sẽ có 3 trang 
+`Front-end` sẽ có 3 trang 
 1. Trang nhập email, mật khẩu và chọn loại tài khoản
 2. Trang nhập mã xác thực
 3. Trang nhập thông tin chi tiết của người dùng
@@ -27,8 +59,7 @@ Front-end sẽ có 3 trang
 
 <b>LƯU Ý: Chỉ có 2 loại tài khoản người dùng là Company và Employee</b>
 
-<b>Bước 1. Nhập email mật khẩu và chọn loại tài khoản</b>
-<br><i>Request</i>
+<b>Bước 1. Nhập email, mật khẩu và chọn loại tài khoản</b>
 ```http request
 POST http://localhost:5000/api/register
 Content-Type: application/json
@@ -39,7 +70,6 @@ Content-Type: application/json
  "role" : "Company"
 }
 ```
-<br><i>Response</i>
 ```json
 {
   "id": 4,
@@ -56,7 +86,6 @@ Content-Type: application/json
 
 <b>Bước 2. Nhập mã xác thực được gửi về email</b>
 <br>`Front-end` yêu cầu người dùng nhập mã xác thực và gửi request lên `Server`
-<br><i>Request</i>
 ```http request
 POST http://localhost:5000/api/register/confirm
 Content-Type: application/json
@@ -66,8 +95,7 @@ Content-Type: application/json
   "confirmationKey" : "626081"
 }
 ```
-<i>Response</i>
-<br><b>Lưu ý: `Front-end` phải lưu lại `token(tokenType, accessToken` được trả về
+<br><b>Lưu ý: `Front-end` phải lưu lại `token(tokenType, accessToken)` được trả về
 để thực hiện các `request` tiếp theo</b>
 ```json
 {
