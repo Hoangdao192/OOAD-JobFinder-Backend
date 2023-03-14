@@ -14,6 +14,8 @@ public enum ServerError {
     ACCESS_DENIED("SVERR5", "You do not have authority to do this."),
     USER_ID_NOT_EXISTS("SVERR6", "User with ID not exists."),
     COMPANY_NOT_EXISTS("SVERR7", "Company not exists."),
+    INVALID_REQUEST("SVERR8", "Invalid request."),
+    INVALID_AUTHORIZATION("SVERR9", "Invalid authorization"),
 
     //  Login error
     WRONG_PASSWORD_OR_USERNAME("LGERR1", "Username or password is incorrect."),

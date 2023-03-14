@@ -30,11 +30,7 @@ public class AuthenticationController {
 
     @PostMapping(path = "register/confirm")
     public ResponseEntity confirmRegister(@RequestBody @Valid ConfirmValidationKeyModel validationKeyModel) {
-        boolean success = authenticationService.confirmRegister(validationKeyModel);
-        if (success) {
-            return ResponseEntity.ok(Map.of("success", true));
-        }
-        return ResponseEntity.ok(Map.of("success", false, "message", "Key is expired."));
+        return ResponseEntity.ok(authenticationService.confirmRegister(validationKeyModel));
     }
 
     @GetMapping(path = "register/confirm/resend")

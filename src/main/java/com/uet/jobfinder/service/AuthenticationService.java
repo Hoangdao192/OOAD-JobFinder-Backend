@@ -15,11 +15,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.time.LocalDateTime;
+import java.io.*;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,33 +45,31 @@ public class AuthenticationService {
         return userModel;
     }
 
-    public Boolean confirmRegister(ConfirmValidationKeyModel confirmValidationKeyModel) {
+    public Map<String, Object> confirmRegister(ConfirmValidationKeyModel confirmValidationKeyModel) {
         User user = userService.getUserByEmail(confirmValidationKeyModel.getEmail());
 
         //  Find validation key
         ValidationKey validationKey = validationKeyService.findByUserAndValidationKey(
-                user, confirmValidationKeyModel.getConfirmationKey().toString()
+                user, confirmValidationKeyModel.getConfirmationKey()
         );
 
-        //  ValidationKey is used.
-        if (validationKey.isActivated()) {
-            throw new CustomIllegalArgumentException(ServerError.EXPIRED_VALIDATION_KEY);
-        }
-
-        //  ValidationKey is expired
-        if (LocalDateTime.now().isAfter(validationKey.getExpirationDate())) {
-            throw new CustomIllegalArgumentException(ServerError.EXPIRED_VALIDATION_KEY);
-        }
-
-        //  TODO: May be this line is not necessary
-        if (LocalDateTime.now().isAfter(validationKey.getExpirationDate())) {
-            return false;
+        if (validationKeyService.isValidationKeyExpired(validationKey)) {
+            throw new CustomIllegalArgumentException(
+                    ServerError.EXPIRED_VALIDATION_KEY
+            );
         }
 
         validationKeyService.activeValidationKey(validationKey);
 
         userService.enableUser(user);
-        return true;
+
+        //  Return JWT
+        String jwt = jwtProvider.generateToken(user);
+        return Map.of(
+                "tokenType", "Bearer",
+                "accessToken", jwt,
+                "user", modelMapper.map(user, UserModel.class)
+        );
     }
 
     public Boolean sendEmailVerification(String email) {
@@ -96,11 +91,11 @@ public class AuthenticationService {
             throw new CustomIllegalArgumentException(ServerError.SERVER_ERROR);
         }
         emailService.sendEmail(user.getEmail(),
-                String.format(emailContent.toString(),validationKey.getValidationKey().toString()));
+                String.format(emailContent.toString(),validationKey.getValidationKey()));
         return true;
     }
 
-    public JsonWebTokenModel login(LoginRequestModel loginRequestModel) {
+    public Map<String, Object> login(LoginRequestModel loginRequestModel) {
         User user = userService.getUserByEmail(loginRequestModel.getEmail());
 
         Authentication authentication = authenticationManager.authenticate(
@@ -112,7 +107,12 @@ public class AuthenticationService {
 
         //  Return JWT
         String jwt = jwtProvider.generateToken((User) authentication.getPrincipal());
-        return new JsonWebTokenModel("Bearer", jwt);
+        return Map.of(
+                "tokenType", "Bearer",
+                "accessToken", jwt,
+                "user", modelMapper.map(user, UserModel.class)
+        );
+//        return new JsonWebTokenModel("Bearer", jwt);
     }
 
     @Autowired

@@ -31,5 +31,5 @@ public class CompanyModel {
     @NotEmpty(message = "Số lượng nhân viên công ty không được để trống")
     private String numberOfEmployee;
 
-    private AddressModel addressModel;
+    private AddressModel address;
 }

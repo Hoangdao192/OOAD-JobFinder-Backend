@@ -9,9 +9,10 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 public class AddressModel {
-    @NotNull(message = "Tỉnh/thành phố không được là null")
-    @NotEmpty(message = "Tỉnh/thành phố không được để trống")
+    @NotNull(message = "SVERR4")
+    @NotEmpty(message = "SVERR3")
     private String province;
+
     @NotNull(message = "Quận/huyện không được là null")
     @NotEmpty(message = "Quận/huyện không được để trống")
     private String district;

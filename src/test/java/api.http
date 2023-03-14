@@ -3,7 +3,7 @@ POST http://localhost:5000/api/login
 Content-Type: application/json
 
 {
-  "email" : "nguyendanghoangdao11a@gmail.com",
+  "email" : "20020390@vnu.edu.vn",
   "password" : "12345678"
 }
 
@@ -14,7 +14,7 @@ POST http://localhost:5000/api/register
 Content-Type: application/json
 
 {
-  "email" : "nguyendanghoangdao11a@gmail.com",
+  "email" : "20020390@vnu.edu.vn",
   "password" : "12345678",
   "role" : "Company"
 }
@@ -24,23 +24,36 @@ POST http://localhost:5000/api/register/confirm
 Content-Type: application/json
 
 {
-  "email" : "nguyendanghoangdao11a@gmail.com",
-  "confirmationKey" : 907983
+  "email" : "20020390@vnu.edu.vn",
+  "confirmationKey" : "618606"
 }
+
+### Send email confirmation
+GET http://localhost:5000/api/register/confirm/resend?email=20020390@vnu.edu.vn
+
+### Get company
+GET http://localhost:5000/api/company/4
 
 ### Update company
 PUT http://localhost:5000/api/company
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjc4NzI0NTcyLCJleHAiOjE2NzkzMjkzNzJ9.o72d2caK53peoZ9Xe8_PD7w630WsaGVR3gsPAHhLD60DT5FMdiEnDWXDrIfiswq1S5KEsg2XTlIU4dAABY11Zg
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjc4ODA4Mzk1LCJleHAiOjE2Nzk0MTMxOTV9.JE6T0TL3sVuI5pf3UROoopW0Cn-n7g_oTwPTlS6-2vUsyMnxjDAZ9M6UKp7IhNYYnPICwsjN3cV9RJI4KQ4Skg
 Content-Type: application/json
 
 {
   "companyName" : "Misa",
   "companyDescription" : "A good company",
-  "numberOfEmployee" : "200+"
+  "numberOfEmployee" : "200+",
+  "companyLogo" : "tempLogo",
+  "address" : {
+    "province" : "Hà Nội",
+    "district" : "Nam Từ Liêm",
+    "ward" : "Phương Canh",
+    "detailAddress" : "Số 48 ngõ 80"
+  }
 }
 
 ### Create job
-POST http://localhost:5000/api/job/create
+POST http://localhost:5000/api/job/
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjc4Njk3Nzg4LCJleHAiOjE2NzkzMDI1ODh9.fOgrkEmI14DGuzpeFdNYNZtQWiAU_fNEY3jC6XAbfxRdYwtxE21NYIUW6aHA6I86MT-raV92PYEkuKF6Igkw-w
 
@@ -57,11 +70,12 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjc4Njk3Nzg4L
 }
 
 ### Update job
-POST http://localhost:5000/api/job/create
+PUT http://localhost:5000/api/job/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjc4Njk3Nzg4LCJleHAiOjE2NzkzMDI1ODh9.fOgrkEmI14DGuzpeFdNYNZtQWiAU_fNEY3jC6XAbfxRdYwtxE21NYIUW6aHA6I86MT-raV92PYEkuKF6Igkw-w
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjc4NzgxNzY1LCJleHAiOjE2NzkzODY1NjV9.elQHPr2g7XdQ4ycjx2uiCvp7XrGacmXx2FwQFMwI9SIH-f5F5wqKVqs3mPo1wlXsbGBZIRNtlQPz_GVXDSOaOw
 
 {
+  "id" : 7,
   "jobTitle" : "Lập trình viên Android",
   "jobDescription" : "Lập trình ứng dụng cho Android",
   "jobAddress" : "Hà Nội",

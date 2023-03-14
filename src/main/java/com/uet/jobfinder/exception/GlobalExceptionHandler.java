@@ -3,6 +3,7 @@ package com.uet.jobfinder.exception;
 import com.uet.jobfinder.error.Error;
 import com.uet.jobfinder.error.LoginError;
 import com.uet.jobfinder.error.ServerError;
+import com.uet.jobfinder.model.ErrorMessageModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -10,6 +11,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -92,6 +94,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> handleSystemException(Exception e) {
         //  Logging
         e.printStackTrace();
+
+        if (e instanceof HttpRequestMethodNotSupportedException) {
+            return ResponseEntity.badRequest()
+                    .body(new ErrorMessageModel(List.of(ServerError.INVALID_REQUEST)));
+        }
 
         if (e instanceof AccessDeniedException) {
             return new ResponseEntity<>(

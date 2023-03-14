@@ -74,8 +74,8 @@ public class JobService {
         Job job = getJobById(jobModel.getId());
         Company company = companyService.getCompanyByUserId(userId);
 
-        //  Check if this company own this job so they can update it information
-        if (job.getCompany().getId().equals(company.getId())
+        //  Check if this company own this job, so they can update it information
+        if (!job.getCompany().getId().equals(company.getId())
                 && !userService.isAdmin(userId)) {
             throw new CustomIllegalArgumentException(
                     ServerError.COMPANY_NOT_OWN_JOB

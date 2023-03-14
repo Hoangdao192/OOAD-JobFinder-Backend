@@ -10,6 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface ValidationKeyRepository extends JpaRepository<ValidationKey, Long> {
-    Optional<ValidationKey> findByUserAndValidationKey(User user, Long validationKey);
+    Optional<ValidationKey> findByUserAndValidationKey(User user, String validationKey);
     List<ValidationKey> findAllByUser(User user);
 }

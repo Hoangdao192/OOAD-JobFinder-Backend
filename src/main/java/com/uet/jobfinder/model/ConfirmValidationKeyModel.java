@@ -13,7 +13,7 @@ import javax.validation.constraints.Pattern;
 public class ConfirmValidationKeyModel {
 
     @NotNull(message = "confirmationKey cannot be null.")
-    private Long confirmationKey;
+    private String confirmationKey;
     @Pattern(regexp = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
             + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$", message = "Email không hợp lệ.")
     private String email;

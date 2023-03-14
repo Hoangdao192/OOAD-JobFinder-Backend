@@ -41,6 +41,7 @@ cd src/main/reactjs
 
 Server front-end sẽ chạy trên port `3000`
 
+## [Đặc tả API](API.md)
 
 # Giải thích một số thành phần mã nguồn
 ## Phần giải thích này chỉ dành cho reactjs thôi nhé

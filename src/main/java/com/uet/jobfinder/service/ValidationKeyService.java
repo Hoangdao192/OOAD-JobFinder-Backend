@@ -15,9 +15,8 @@ import java.util.List;
 public class ValidationKeyService {
 
     //  Second
-    private final Long expirationDuration = 120L;
+    private static final Long EXPIRATION_DURATION = 120L;
 
-    @Autowired
     private ValidationKeyRepository validationKeyRepository;
 
     public ValidationKey createNewValidationKey(User user) {
@@ -36,14 +35,14 @@ public class ValidationKeyService {
             if (currentValidationKeys
                     .stream()
                     .noneMatch(key ->
-                            key.getValidationKey().equals(finalRandomKey))) {
+                            key.getValidationKey().equals(finalRandomKey.toString()))) {
                 isKeyExists = false;
             }
         }
 
         ValidationKey validationKey = new ValidationKey(
-                randomKey, LocalDateTime.now(),
-                LocalDateTime.now().plusSeconds(expirationDuration),
+                randomKey.toString(), LocalDateTime.now(),
+                LocalDateTime.now().plusSeconds(EXPIRATION_DURATION),
                 user
         );
         return validationKeyRepository.save(validationKey);
@@ -54,7 +53,7 @@ public class ValidationKeyService {
             String validationKey
     ) {
         return validationKeyRepository.findByUserAndValidationKey(
-                user, Long.parseLong(validationKey)
+                user, validationKey
         ).orElseThrow(() ->
                 new CustomIllegalArgumentException(ServerError.INCORRECT_VALIDATION_KEY));
     }
@@ -63,5 +62,18 @@ public class ValidationKeyService {
         validationKey.setActivated(true);
         validationKey.setExpirationDate(LocalDateTime.now());
         validationKeyRepository.save(validationKey);
+    }
+
+    /**
+     * If a validation key is activated or expired
+     */
+    public boolean isValidationKeyExpired(ValidationKey validationKey) {
+        return validationKey.isActivated()
+                || LocalDateTime.now().isAfter(validationKey.getExpirationDate());
+    }
+
+    @Autowired
+    public void setValidationKeyRepository(ValidationKeyRepository validationKeyRepository) {
+        this.validationKeyRepository = validationKeyRepository;
     }
 }

@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.nio.file.InvalidPathException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,7 +83,7 @@ public class CompanyService {
                 ));
 
         Address address = company.getAddress();
-        AddressModel addressModel = companyModel.getAddressModel();
+        AddressModel addressModel = companyModel.getAddress();
         if (address == null && addressModel != null) {
             address = Address.builder()
                     .province(addressModel.getProvince())
@@ -94,6 +93,7 @@ public class CompanyService {
                     .latitude(addressModel.getLatitude())
                     .longitude(addressModel.getLongitude())
                     .build();
+            company.setAddress(address);
         } else if (addressModel != null) {
             address.setProvince(addressModel.getProvince());
             address.setDistrict(addressModel.getDistrict());
@@ -143,13 +143,10 @@ public class CompanyService {
 
     public CompanyModel getCompanyById(Long id) {
         Company company = companyRepository.findById(id)
-                .orElseThrow(() -> new InvalidPathException("../api/company/id", "Công ty không tồn tại"));
-        return CompanyModel.builder()
-                .companyName(company.getCompanyName())
-                .companyDescription(company.getCompanyDescription())
-                .companyLogo(company.getCompanyLogo())
-                .numberOfEmployee(company.getNumberOfEmployee())
-                .build();
+                .orElseThrow(() -> new CustomIllegalArgumentException(
+                        ServerError.COMPANY_NOT_EXISTS
+                ));
+        return modelMapper.map(company, CompanyModel.class);
     }
 
 //    public CompanyContext putCompanyById(Long id, CompanyContext companyContext) {

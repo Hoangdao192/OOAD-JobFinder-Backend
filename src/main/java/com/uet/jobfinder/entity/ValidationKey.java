@@ -19,7 +19,7 @@ public class ValidationKey {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private Long validationKey;
+    private String validationKey;
     private LocalDateTime createDate;
     private LocalDateTime expirationDate;
     private boolean activated = false;
@@ -28,7 +28,7 @@ public class ValidationKey {
     private User user;
 
     public ValidationKey(
-            @NotNull Long validationKey, @NotNull LocalDateTime createDate,
+            @NotNull String validationKey, @NotNull LocalDateTime createDate,
             @NotNull LocalDateTime expirationDate, @NotNull User user) {
         this.validationKey = validationKey;
         this.createDate = createDate;
