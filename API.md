@@ -5,7 +5,7 @@ Bất kì lỗi nào server trả về cho front-end đều có dạng `JSON` nh
 
 Ví dụ đây là một lỗi được trả về khi người dùng gửi request đăng nhập
 với một email không tồn tại trong hệ thống
-```
+```json
 {
   "errors": [
     {

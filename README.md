@@ -1,14 +1,24 @@
 # Ứng dụng tìm kiếm việc làm
+
+## Nội dung
+1. [Công nghệ sử dụng](#tech)
+2. [Yêu cầu môi trường](#environment)
+3. [Hướng dẫn chạy](#run)
+4. [Đặc tả API](#api)
+
+<a name="tech"></a>
 ## Công nghệ sử dụng
 * Front - end : [ReactJS](https://reactjs.org/)
 * Back - end : [SpringBoot](https://spring.io/), [JDK11]()
 * Database : [MySQL8](https://dev.mysql.com/downloads/installer/)
 
+<a name="environment"></a>
 ## Yêu cầu môi trường
 * [JDK11](https://www.oracle.com/vn/java/technologies/javase/jdk11-archive-downloads.html)
 * [MySQL 8+](https://dev.mysql.com/downloads/installer/)
 * [NodeJS](https://nodejs.org/en/)
 
+<a name="run"></a>
 ## Hướng dẫn chạy ứng dụng
 ### Backend
 1. Tạo một cơ sở dữ liệu mới (đặt tên tùy ý)
@@ -41,6 +51,7 @@ cd src/main/reactjs
 
 Server front-end sẽ chạy trên port `3000`
 
+<a name="api"></a>
 ## [Đặc tả API](API.md)
 
 # Giải thích một số thành phần mã nguồn
