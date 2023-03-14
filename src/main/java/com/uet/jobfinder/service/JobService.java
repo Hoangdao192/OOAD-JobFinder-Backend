@@ -2,35 +2,33 @@ package com.uet.jobfinder.service;
 
 import com.uet.jobfinder.entity.Company;
 import com.uet.jobfinder.entity.Job;
-import com.uet.jobfinder.entity.User;
 import com.uet.jobfinder.error.ServerError;
 import com.uet.jobfinder.exception.CustomIllegalArgumentException;
 import com.uet.jobfinder.model.JobModel;
+import com.uet.jobfinder.model.PageQueryModel;
 import com.uet.jobfinder.repository.JobRepository;
 import com.uet.jobfinder.security.JsonWebTokenProvider;
-import com.uet.jobfinder.util.JsonWebTokenUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.stream.Collectors;
 
 @Service
 public class JobService {
-    @Autowired
+
     private JobRepository jobRepository;
     private CompanyService companyService;
-    @Autowired
     private UserService userService;
-    @Autowired
     private ModelMapper modelMapper;
-    @Autowired
     private JsonWebTokenProvider jsonWebTokenProvider;
 
-    private JsonWebTokenUtil jsonWebTokenUtil = new JsonWebTokenUtil();
-
-    public JobModel createJob(JobModel jobModel) {
-        Company company = companyService.getCompanyByUserId(jobModel.getUserId());
+    public JobModel createJob(JobModel jobModel, HttpServletRequest request) {
+        Long userId = jsonWebTokenProvider.getUserIdFromRequest(request);
+        Company company = companyService.getCompanyByUserId(userId);
 
         Job job = Job.builder()
                 .company(company)
@@ -50,12 +48,35 @@ public class JobService {
         return jobModel;
     }
 
-    public JobModel updateJob(JobModel jobModel) {
+    public PageQueryModel<JobModel> getAllJob(Long page, Long perPage) {
+        Page<Job> jobPage = jobRepository.findAll(
+                PageRequest.of(page.intValue(), perPage.intValue())
+        );
+
+        return new PageQueryModel<>(
+                new PageQueryModel.PageModel(
+                        jobPage.getPageable().getPageNumber(),
+                        jobPage.getPageable().getPageSize(),
+                        jobPage.getTotalPages()
+                ),
+                jobPage.getContent().stream()
+                        .map(job -> {
+                            JobModel jobModel = new JobModel();
+                            modelMapper.map(job, jobModel);
+                            return jobModel;
+                        }).collect(Collectors.toList())
+        );
+    }
+
+    public JobModel updateJob(JobModel jobModel, HttpServletRequest request) {
+        Long userId = jsonWebTokenProvider.getUserIdFromRequest(request);
+
         Job job = getJobById(jobModel.getId());
-        User user = userService.getUserById(jobModel.getUserId());
+        Company company = companyService.getCompanyByUserId(userId);
 
         //  Check if this company own this job so they can update it information
-        if (job.getCompany().getUser().getId() != user.getId()) {
+        if (job.getCompany().getId().equals(company.getId())
+                && !userService.isAdmin(userId)) {
             throw new CustomIllegalArgumentException(
                     ServerError.COMPANY_NOT_OWN_JOB
             );
@@ -79,13 +100,14 @@ public class JobService {
     }
 
     public boolean deleteJob(Long jobId, HttpServletRequest request) {
-        String jwtToken = jsonWebTokenUtil.getJWTFromRequest(request);
-        Long userId = Long.parseLong(jsonWebTokenProvider.getUserIdFromJWT(jwtToken));
+        Long userId = jsonWebTokenProvider.getUserIdFromRequest(request);
 
         Job job = getJobById(jobId);
         Company company = companyService.getCompanyByUserId(userId);
 
-        if (job.getCompany().getUser().getId() != company.getUser().getId()) {
+        //  Only admin and company whose own the job post can delete the job
+        if (job.getCompany().getId().equals(company.getId())
+                && !userService.isAdmin(userId)) {
             throw new CustomIllegalArgumentException(
                     ServerError.COMPANY_NOT_OWN_JOB
             );
@@ -100,8 +122,35 @@ public class JobService {
                 .orElseThrow(() -> new CustomIllegalArgumentException(ServerError.JOB_NOT_EXISTS));
     }
 
+    public JobModel getJobModelById(Long id) {
+        Job job = getJobById(id);
+        JobModel jobModel = new JobModel();
+        modelMapper.map(job, jobModel);
+        return jobModel;
+    }
+
     @Autowired
     public void setCompanyService(CompanyService companyService) {
         this.companyService = companyService;
+    }
+
+    @Autowired
+    public void setJobRepository(JobRepository jobRepository) {
+        this.jobRepository = jobRepository;
+    }
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    @Autowired
+    public void setModelMapper(ModelMapper modelMapper) {
+        this.modelMapper = modelMapper;
+    }
+
+    @Autowired
+    public void setJsonWebTokenProvider(JsonWebTokenProvider jsonWebTokenProvider) {
+        this.jsonWebTokenProvider = jsonWebTokenProvider;
     }
 }

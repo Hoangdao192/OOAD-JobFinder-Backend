@@ -4,6 +4,7 @@ import com.uet.jobfinder.entity.User;
 import io.jsonwebtoken.*;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 @Component
@@ -45,6 +46,21 @@ public class JsonWebTokenProvider {
             System.out.println("JWT clams string is empty");
         }
         return false;
+    }
+
+    public Long getUserIdFromRequest(HttpServletRequest request) {
+        return Long.parseLong(getUserIdFromJWT(
+                getJWTFromRequest(request)
+        ));
+    }
+
+    private String getJWTFromRequest(HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+        System.out.println("TOKEN: " + token);
+        if (token != null && !token.isEmpty() && token.startsWith("Bearer ")) {
+            return token.substring(7);
+        }
+        return "";
     }
 
 }

@@ -2,6 +2,8 @@ package com.uet.jobfinder.service;
 
 import com.uet.jobfinder.entity.User;
 import com.uet.jobfinder.entity.ValidationKey;
+import com.uet.jobfinder.error.ServerError;
+import com.uet.jobfinder.exception.CustomIllegalArgumentException;
 import com.uet.jobfinder.repository.ValidationKeyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,4 +49,19 @@ public class ValidationKeyService {
         return validationKeyRepository.save(validationKey);
     }
 
+    public ValidationKey findByUserAndValidationKey(
+            User user,
+            String validationKey
+    ) {
+        return validationKeyRepository.findByUserAndValidationKey(
+                user, Long.parseLong(validationKey)
+        ).orElseThrow(() ->
+                new CustomIllegalArgumentException(ServerError.INCORRECT_VALIDATION_KEY));
+    }
+
+    public void activeValidationKey(ValidationKey validationKey) {
+        validationKey.setActivated(true);
+        validationKey.setExpirationDate(LocalDateTime.now());
+        validationKeyRepository.save(validationKey);
+    }
 }

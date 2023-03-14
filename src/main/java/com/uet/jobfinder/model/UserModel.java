@@ -17,16 +17,11 @@ public class UserModel{
     private String email;
     private Boolean enabled = false;
     private Boolean locked = false;
-    private List<Role> roles = new ArrayList<>();
+    private List<String> roles = new ArrayList<>();
 
     public UserModel(String email, Boolean enabled, Boolean locked) {
         this.email = email;
         this.enabled = enabled;
         this.locked = locked;
     }
-
-    public void addRole(Role role) {
-        roles.add(role);
-    }
-
 }

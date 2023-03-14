@@ -28,6 +28,17 @@ Content-Type: application/json
   "confirmationKey" : 907983
 }
 
+### Update company
+PUT http://localhost:5000/api/company
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjc4NzI0NTcyLCJleHAiOjE2NzkzMjkzNzJ9.o72d2caK53peoZ9Xe8_PD7w630WsaGVR3gsPAHhLD60DT5FMdiEnDWXDrIfiswq1S5KEsg2XTlIU4dAABY11Zg
+Content-Type: application/json
+
+{
+  "companyName" : "Misa",
+  "companyDescription" : "A good company",
+  "numberOfEmployee" : "200+"
+}
+
 ### Create job
 POST http://localhost:5000/api/job/create
 Content-Type: application/json

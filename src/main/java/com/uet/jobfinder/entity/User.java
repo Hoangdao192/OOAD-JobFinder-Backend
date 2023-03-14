@@ -22,6 +22,9 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Company company;
+
     private String email;
     private String password;
     private Boolean enabled = false;
@@ -45,7 +48,15 @@ public class User implements UserDetails {
         this.locked = locked;
     }
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    public User(Long id, String email, String password, Boolean enabled, Boolean locked) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.enabled = enabled;
+        this.locked = locked;
+    }
+
+    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),

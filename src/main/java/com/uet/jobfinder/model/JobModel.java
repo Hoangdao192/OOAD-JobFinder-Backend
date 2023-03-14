@@ -15,7 +15,6 @@ import javax.validation.constraints.NotNull;
 public class JobModel {
     private Long id;
 
-//    @NotNull(message = "SVERR4")
     private Long userId;
 
     @NotNull(message = "SVERR4")

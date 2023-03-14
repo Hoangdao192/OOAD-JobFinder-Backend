@@ -6,21 +6,34 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
+@Table(name = "company")
+@Builder
+@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name = "company")
-@Builder
-public class Company {
+public class Company implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "user_id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "user_id")
     private User user;
+
+    private String companyName;
+    private String companyLogo;
+    private String companyDescription;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "address_id")
+    private Address address;
+
+    private String numberOfEmployee;
 
     @OneToMany(mappedBy = "company", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Job> jobList;
