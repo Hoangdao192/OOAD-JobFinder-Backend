@@ -4,6 +4,7 @@ import com.uet.jobfinder.error.Error;
 import com.uet.jobfinder.error.LoginError;
 import com.uet.jobfinder.error.ServerError;
 import com.uet.jobfinder.model.ErrorMessageModel;
+import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -14,7 +15,10 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -90,6 +94,22 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(MultipartException.class)
+    @ResponseStatus(value = HttpStatus.PAYLOAD_TOO_LARGE)
+    public ResponseEntity<Object> handleMultipartException(MultipartException e) {
+        if (e instanceof MaxUploadSizeExceededException) {
+            return ResponseEntity.badRequest()
+                    .body(
+                            new ErrorMessageModel(List.of(ServerError.MAXIMUM_FILE_EXCEEDED))
+                    );
+        }
+
+        return ResponseEntity.badRequest()
+                .body(
+                        new ErrorMessageModel(List.of(ServerError.SERVER_ERROR))
+                );
+    }
+
     @ExceptionHandler({Exception.class})
     public ResponseEntity<Object> handleSystemException(Exception e) {
         //  Logging
@@ -98,6 +118,14 @@ public class GlobalExceptionHandler {
         if (e instanceof HttpRequestMethodNotSupportedException) {
             return ResponseEntity.badRequest()
                     .body(new ErrorMessageModel(List.of(ServerError.INVALID_REQUEST)));
+        }
+
+        if (e instanceof MaxUploadSizeExceededException ||
+            e instanceof SizeLimitExceededException) {
+            return ResponseEntity.badRequest()
+                    .body(
+                            new ErrorMessageModel(List.of(ServerError.MAXIMUM_FILE_EXCEEDED))
+                    );
         }
 
         if (e instanceof AccessDeniedException) {

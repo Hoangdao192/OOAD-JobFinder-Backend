@@ -1,6 +1,7 @@
 package com.uet.jobfinder.service;
 
 import com.uet.jobfinder.entity.Address;
+import com.uet.jobfinder.entity.AppFile;
 import com.uet.jobfinder.entity.Company;
 import com.uet.jobfinder.entity.User;
 import com.uet.jobfinder.error.ServerError;
@@ -15,12 +16,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 
 @Service
 public class CompanyService {
+
+    @Autowired
+    private FileService fileService;
 
     private ModelMapper modelMapper;
     private UserService userService;
@@ -69,7 +74,7 @@ public class CompanyService {
 //        return company;
 //    }
 
-    public CompanyModel updateCompany(CompanyModel companyModel, HttpServletRequest request) {
+    public CompanyModel updateCompany(CompanyModel companyModel, HttpServletRequest request) throws IOException {
         Long userId = jsonWebTokenProvider.getUserIdFromRequest(request);
 
         User user = userRepository.findById(userId)
@@ -107,7 +112,12 @@ public class CompanyService {
             company.setCompanyName(companyModel.getCompanyName());
         }
         if (companyModel.getCompanyLogo() != null) {
-            company.setCompanyLogo(companyModel.getCompanyLogo());
+            AppFile appFile = fileService.saveFile(
+                    companyModel.getCompanyLogoFile().getOriginalFilename(),
+                    companyModel.getCompanyLogoFile().getContentType(),
+                    companyModel.getCompanyLogoFile().getBytes()
+            );
+            company.setCompanyLogo(appFile);
         }
         if (companyModel.getCompanyDescription() != null) {
             company.setCompanyDescription(companyModel.getCompanyDescription());
@@ -131,7 +141,7 @@ public class CompanyService {
             CompanyModel companyModel = CompanyModel.builder()
                     .companyName(company.getCompanyName())
                     .companyDescription(company.getCompanyDescription())
-                    .companyLogo(company.getCompanyLogo())
+                    .companyLogo(company.getCompanyLogo().getFilePath() )
                     .numberOfEmployee(company.getNumberOfEmployee())
                     .build();
 

@@ -87,5 +87,14 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjc4NzgxNzY1L
   "workingForm" : "Fulltime"
 }
 
+### Upload file
+POST http://localhost:5000/api/test
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="2.png"
+
+< D:\2.png
+
 <> 2023-03-06T212754.200.json
 <> 2023-03-06T212740.400.json
