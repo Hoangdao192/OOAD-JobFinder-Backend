@@ -55,7 +55,7 @@ Server front-end sẽ chạy trên port `3000`
 ## [Đặc tả API](API.md)
 
 # Giải thích một số thành phần mã nguồn
-## Phần giải thích này chỉ dành cho reactjs thôi nhé
+## Phần giải thích này chỉ dành cho reactjs thôi.
 ## `src/main/reactjs`
 
 Đây chỉ là một ít gơi ý nhỏ và vẫn còn không rõ ràng, nếu 
