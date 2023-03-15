@@ -13,13 +13,14 @@ import javax.validation.constraints.Pattern;
 @NoArgsConstructor
 public class LoginRequestModel {
 
-    @NotEmpty(message = "Email không được để trống.")
-    @NotNull(message = "Email không được là null.")
-    @Pattern(regexp = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\\\.[A-Z]{2,6}$", message = "Email không hợp lệ.")
+    @NotEmpty(message = "LGERR2")
+    @NotNull(message = "LGERR3")
+    @Pattern(regexp = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
+            + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$", message = "AUERR2")
     private String email;
 
-    @NotEmpty(message = "Mật khẩu không được để trống.")
-    @NotNull(message = "Mật khẩu không được là null.")
+    @NotEmpty(message = "LGERR4")
+    @NotNull(message = "LGERR5")
     private String password;
 
 }

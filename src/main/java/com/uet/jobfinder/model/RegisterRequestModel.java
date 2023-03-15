@@ -14,22 +14,19 @@ import javax.validation.constraints.Pattern;
 @NoArgsConstructor
 public class RegisterRequestModel {
 
-    @NotEmpty(message = "Email không được để trống.")
-    @NotNull(message = "Email không được là null.")
-    @Pattern(regexp = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\\\.[A-Z]{2,6}$", message = "Email không hợp lệ.")
+    @NotEmpty(message = "LGERR2")
+    @NotNull(message = "LGERR3")
+    @Pattern(regexp = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
+            + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$", message = "AUERR2")
     private String email;
 
-    @NotEmpty(message = "Mật khẩu không được để trống.")
-    @NotNull(message = "Mật khẩu không được là null.")
+    @NotEmpty(message = "LGERR4")
+    @NotNull(message = "LGERR5")
     private String password;
 
-    @NotEmpty(message = "Xác nhận mật khẩu không được để trống.")
-    @NotNull(message = "Xác nhận mật khẩu không được là null.")
-    private String confirmPassword;
-
-    @NotEmpty(message = "role không được để trống.")
-    @NotNull(message = "role không được là null.")
-    @RoleConstraint(message = "role không hợp lệ.")
+    @NotEmpty(message = "RGERR5")
+    @NotNull(message = "RGERR5")
+    @RoleConstraint(message = "RGERR5")
     private String role;
 
 }

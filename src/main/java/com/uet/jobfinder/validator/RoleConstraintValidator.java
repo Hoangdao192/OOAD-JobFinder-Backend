@@ -20,7 +20,6 @@ public class RoleConstraintValidator implements
         }
 
         switch (role) {
-            case UserType.ADMIN:
             case UserType.CANDIDATE:
             case UserType.COMPANY: return true;
         }

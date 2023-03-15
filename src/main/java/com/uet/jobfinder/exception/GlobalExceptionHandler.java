@@ -1,31 +1,57 @@
 package com.uet.jobfinder.exception;
 
+import com.uet.jobfinder.error.Error;
+import com.uet.jobfinder.error.LoginError;
+import com.uet.jobfinder.error.ServerError;
+import com.uet.jobfinder.model.ErrorMessageModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler({MethodArgumentNotValidException.class})
-    public ResponseEntity<Map<String, String>> handleValidationExceptions(
+    public ResponseEntity<Map<String, Object>> handleValidationExceptions(
             MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
+
+        List<Object> errorList = new ArrayList<>();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
+            String code = "undefined";
+            String message = error.getDefaultMessage();
+
+            for (ServerError serverError : ServerError.values()) {
+                if (error.getDefaultMessage().equals(serverError.getCode())) {
+                    code = serverError.getCode();
+
+                    if (error.getDefaultMessage().equals("SVERR3") ||
+                            error.getDefaultMessage().equals("SVERR4")) {
+                        message = ((FieldError) error).getField() + " " + serverError.getMessage();
+                    } else {
+                        message = serverError.getMessage();
+                    }
+                }
+            }
+            errorList.add(
+                    Map.of("code", code, "message", message)
+            );
         });
 
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(
+                Map.of("errors", errorList), HttpStatus.BAD_REQUEST);
     }
 
 //    @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -38,24 +64,56 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler({CustomIllegalArgumentException.class})
+    public ResponseEntity<Map<String, Object>> handleValidationExceptions(
+            CustomIllegalArgumentException ex) {
+        return new ResponseEntity<>(
+                Map.of("errors", List.of(ex.getError()))
+                , HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({LockedException.class})
+    public ResponseEntity<Map<String, String>> handleLoginExceptions(
+            LockedException e
+    ) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error", e.getMessage());
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({DisabledException.class})
+    public ResponseEntity<Map<String, String>> handleLoginExceptions(
+            DisabledException e
+    ) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error", e.getMessage());
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler({Exception.class})
-    public ResponseEntity<Map<String, String>> handleSystemException(Exception e) {
+    public ResponseEntity<Object> handleSystemException(Exception e) {
         //  Logging
         e.printStackTrace();
-        Map<String, String> errors = new HashMap<>();
+
+        if (e instanceof HttpRequestMethodNotSupportedException) {
+            return ResponseEntity.badRequest()
+                    .body(new ErrorMessageModel(List.of(ServerError.INVALID_REQUEST)));
+        }
 
         if (e instanceof AccessDeniedException) {
-            errors.put("error", "Bạn không có thẩm quyền.");
-            return new ResponseEntity<>(errors, HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(
+                    Map.of("errors",
+                            List.of(ServerError.ACCESS_DENIED))
+                    , HttpStatus.UNAUTHORIZED);
         }
 
         if (e instanceof BadCredentialsException) {
-            errors.put("error", "Tên đăng nhập hoặc mật khẩu không đúng.");
-            return new ResponseEntity<>(errors, HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(LoginError.WRONG_PASSWORD_OR_USERNAME, HttpStatus.UNAUTHORIZED);
         }
 
-        errors.put("error", "Invalid request.");
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(
+                Map.of("errors", List.of(ServerError.SERVER_ERROR)),
+                HttpStatus.BAD_REQUEST);
     }
 
 }

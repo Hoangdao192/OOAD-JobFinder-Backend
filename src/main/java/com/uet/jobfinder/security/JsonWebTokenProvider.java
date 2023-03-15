@@ -1,16 +1,19 @@
 package com.uet.jobfinder.security;
 
 import com.uet.jobfinder.entity.User;
+import com.uet.jobfinder.error.ServerError;
+import com.uet.jobfinder.exception.CustomIllegalArgumentException;
 import io.jsonwebtoken.*;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 @Component
 public class JsonWebTokenProvider {
 
-    private final String JWT_SECRET = "UET_JOB_FINDER";
-    private final Long JWT_EXPIRATION = 604800000L;
+    private static final String JWT_SECRET = "UET_JOB_FINDER";
+    private static final Long JWT_EXPIRATION = 604800000L;
 
     public String generateToken(User user) {
         Date now = new Date();
@@ -45,6 +48,24 @@ public class JsonWebTokenProvider {
             System.out.println("JWT clams string is empty");
         }
         return false;
+    }
+
+    public Long getUserIdFromRequest(HttpServletRequest request) {
+        return Long.parseLong(getUserIdFromJWT(
+                getJWTFromRequest(request)
+        ));
+    }
+
+    private String getJWTFromRequest(HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+
+        if (token == null || !token.startsWith("Bearer ")) {
+            throw new CustomIllegalArgumentException(
+                    ServerError.INVALID_AUTHORIZATION
+            );
+        }
+
+        return token.substring(7);
     }
 
 }
