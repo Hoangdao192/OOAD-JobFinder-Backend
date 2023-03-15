@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.UUID;
 
 @Service
@@ -17,6 +19,8 @@ public class FileService {
 
     @Value("${upload.path}")
     private String fileStoragePath;
+    @Value("${domain.url}")
+    private String domainUrl;
 
     @Autowired
     private FileRepository fileRepository;
@@ -38,5 +42,45 @@ public class FileService {
         appFile.setFilePath(file.getPath());
         return fileRepository.save(appFile);
     }
+
+    public byte[] getImageFile(Long id) {
+        AppFile appFile = getFileById(id);
+        if (!isImageFile(appFile)) {
+            throw new CustomIllegalArgumentException(
+                    ServerError.INVALID_FILE_TYPE
+            );
+        }
+
+        File file = new File(appFile.getFilePath());
+        FileInputStream fileInputStream = null;
+        try {
+            fileInputStream = new FileInputStream(file);
+            return fileInputStream.readAllBytes();
+        } catch (IOException ioException) {
+            throw new CustomIllegalArgumentException(ServerError.FILE_NOT_EXISTS);
+        }
+    }
+
+    public String generateFileUrl(Long id) {
+        AppFile appFile = getFileById(id);
+        if (isImageFile(appFile)) {
+            return domainUrl + "image/id";
+        }
+        return "";
+    }
+
+    public boolean isImageFile(AppFile appFile) {
+        return true;
+    }
+
+
+    public AppFile getFileById(Long id) {
+        return fileRepository.findById(id)
+                .orElseThrow(() ->
+                    new CustomIllegalArgumentException(
+                            ServerError.FILE_NOT_EXISTS
+                    ));
+    }
+
 
 }

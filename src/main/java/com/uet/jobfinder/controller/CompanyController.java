@@ -14,6 +14,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("company")
+@CrossOrigin("http://localhost:3000")
 public class CompanyController {
     @Autowired
     CompanyService companyService;

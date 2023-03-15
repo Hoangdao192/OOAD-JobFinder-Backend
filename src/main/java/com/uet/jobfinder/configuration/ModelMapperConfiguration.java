@@ -5,8 +5,10 @@ import com.uet.jobfinder.model.AddressModel;
 import com.uet.jobfinder.model.CompanyModel;
 import com.uet.jobfinder.model.JobModel;
 import com.uet.jobfinder.model.UserModel;
+import com.uet.jobfinder.service.FileService;
 import org.modelmapper.*;
 import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,6 +18,9 @@ import java.util.stream.Collectors;
 
 @Configuration
 public class ModelMapperConfiguration {
+
+    @Autowired
+    private FileService fileService;
 
     @Bean
     public ModelMapper modelMapper() {
@@ -65,6 +70,16 @@ public class ModelMapperConfiguration {
         companyMapper.addMappings(mapper ->
                 mapper.using(addressConverter)
                         .map(Company::getAddress, CompanyModel::setAddress));
+
+        Converter<AppFile, String> fileConverter = mappingContext -> {
+            if (mappingContext.getSource() != null) {
+                return fileService.generateFileUrl(mappingContext.getSource().getId());
+            }
+            return null;
+        };
+        companyMapper.addMappings(mapper ->
+                mapper.using(fileConverter)
+                        .map(Company::getCompanyLogo, CompanyModel::setCompanyLogo));
     }
 
 }

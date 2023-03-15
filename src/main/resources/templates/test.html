@@ -12,4 +12,27 @@
         <button type="submit">Submit</button>
     </form>
 </body>
+<script>
+    let request = new XMLHttpRequest();
+    request.open("PUT", "http://localhost:5000/company")
+    request.setRequestHeader(
+        "Authorization",
+        "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjc4ODg2MjI1LCJleHAiOjE2Nzk0OTEwMjV9.niL5C7Tq_J41n7nNn4R_bVR0_TfNh6rm3esAqj007I6sR7Ja--33i-PUuyK7njooCBUzPHlBCSHFzR-YuZ-Quw"
+    )
+    request.setRequestHeader(
+        "Content-Type", "multipart/form-data"
+    )
+    let formData = new FormData();
+    formData.append("address", new Blob([JSON.stringify({
+        province: "Hà Nội"
+    })], {
+        type: "application/json"
+    }))
+    request.send(formData);
+    request.onload = function() {
+        if (this.status == 200) {
+            console.log(this.response);
+        }
+    }
+</script>
 </html>
