@@ -1,21 +1,37 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-
+import { useNavigate } from "react-router-dom";
+import Authentication from "../../services/Authentication/Authentication";
+import { toast } from "react-toastify";
 function SignIn() {
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
     watch,
-    formState: { errors },
-  } = useForm();
-  const onSubmit = (data) => console.log(data);
+    reset,
 
-  const responseMessage = (response) => {
-    console.log(response);
+    formState: { errors, isSubmitSuccessful },
+  } = useForm();
+  const onSubmit = (data) => {
+    console.log(data);
+    Authentication.login(data.email, data.password)
+      .then(() => {
+        navigate("/");
+      })
+      .catch((errors) => {
+        console.log(errors);
+        toast.error("Invalid email or password");
+      });
   };
-  const errorMessage = (error) => {
-    console.log(error);
-  };
+
+  useEffect(() => {
+    reset({
+      email: "",
+      password: "",
+    });
+  }, [isSubmitSuccessful, reset]);
 
   return (
     <div className="">
@@ -37,10 +53,16 @@ function SignIn() {
               autoFocus
               {...register("email", {
                 required: true,
+                pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
               })}
               className="border border-slate-200 focus:outline-none p-2 rounded-md"
             />
-            {errors.email && <p>This field is required</p>}
+            {errors.email && errors.email.type === "required" && (
+              <p className="text-red-500">This field is required</p>
+            )}
+            {errors.email && errors.email.type === "pattern" && (
+              <p className="text-red-500">Invalid email address</p>
+            )}
           </div>
 
           <div className="flex flex-col gap-2">
