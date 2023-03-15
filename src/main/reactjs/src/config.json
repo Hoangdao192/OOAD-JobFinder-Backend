@@ -2,6 +2,9 @@
   "comment" : "Config server api url",
   "server" : {
     "api" : {
+      "login" : {
+        "url" : "http://localhost:5000/api/login"
+      },
       "account" : {
         "get" : {
           "url" : ""
