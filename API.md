@@ -95,7 +95,7 @@ Content-Type: application/json
   "confirmationKey" : "626081"
 }
 ```
-<br><b>Lưu ý: `Front-end` phải lưu lại `token(tokenType, accessToken)` được trả về
+<b>Lưu ý: `Front-end` phải lưu lại `token(tokenType, accessToken)` được trả về
 để thực hiện các `request` tiếp theo</b>
 ```json
 {
@@ -117,7 +117,6 @@ xác thực thì gửi request như sau
 ```http request
 GET http://localhost:5000/api/register/confirm/resend?email=20020390@vnu.edu.vn
 ```
-<i>Response</i>
 ```json
 {
   "success": true

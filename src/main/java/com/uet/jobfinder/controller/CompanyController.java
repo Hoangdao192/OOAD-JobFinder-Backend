@@ -39,6 +39,10 @@ public class CompanyController {
         return ResponseEntity.ok(companyService.updateCompany(companyModel, request));
     }
 
+//    public ResponseEntity<CompanyModel> updateCompanyMultipart(@ModelAttribute CompanyModel companyModel) {
+//
+//    }
+
     @DeleteMapping(path = "/{id}")
     @PreAuthorize("hasAnyAuthozity('Admin', 'Company')")
     public ResponseEntity<Object> deleteCompany(@PathVariable Long id, HttpServletRequest request) {
