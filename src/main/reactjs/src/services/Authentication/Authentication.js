@@ -47,21 +47,23 @@ class Authentication {
     
                     localStorage.setItem("authToken", authToken);
                     localStorage.setItem("tokenType", tokenType);
-    
-                    fetch(config.server.api.account.data.url, {
-                        headers: {
-                            'Authorization': tokenType + " " + authToken
-                        }
-                    }).then((response) => {
-                        if (response.status == 200) {
-                            return response.json()
-                        }
-                    }).then((data) => {
-                        if (data != undefined) {
-                            localStorage.setItem('user', JSON.stringify(data))
-                            resolve()
-                        }
-                    })
+
+                    localStorage.setItem("user", response["user"]);
+                    resolve()
+                    // fetch(config.server.api.account.data.url, {
+                    //     headers: {
+                    //         'Authorization': tokenType + " " + authToken
+                    //     }
+                    // }).then((response) => {
+                    //     if (response.status == 200) {
+                    //         return response.json()
+                    //     }
+                    // }).then((data) => {
+                    //     if (data != undefined) {
+                    //         localStorage.setItem('user', JSON.stringify(data))
+                    //         resolve()
+                    //     }
+                    // })
                     // return true;
                 } else {
                     let errors = ServerMessageParser.parse(this.response)
@@ -69,7 +71,7 @@ class Authentication {
                 }
             }
             request.send(JSON.stringify({
-                username: username,
+                email: username,
                 password: password
             }))
         })
