@@ -16,6 +16,9 @@ public enum ServerError {
     COMPANY_NOT_EXISTS("SVERR7", "Company not exists."),
     INVALID_REQUEST("SVERR8", "Invalid request."),
     INVALID_AUTHORIZATION("SVERR9", "Invalid authorization"),
+    MAXIMUM_FILE_EXCEEDED("SVERR10", "File is too large. File size limit is 25MB."),
+    FILE_NOT_EXISTS("SVERR11", "File is not exists."),
+    INVALID_FILE_TYPE("SVERR12", "Incorrect file type."),
 
     //  Login error
     WRONG_PASSWORD_OR_USERNAME("LGERR1", "Username or password is incorrect."),

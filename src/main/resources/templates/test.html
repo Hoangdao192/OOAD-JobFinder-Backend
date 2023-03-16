@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="http://localhost:5000/api/test" method="post" enctype="multipart/form-data">
+        <input name="file" type="file">
+        <button type="submit">Submit</button>
+    </form>
+    <button id="login">Login</button>
+</body>
+<script>
+    document.getElementById("login").addEventListener("click", () => login());
+    function login() {
+        let request = new XMLHttpRequest();
+        request.open("POST", "http://localhost:5000/api/login")
+        request.setRequestHeader(
+            "Content-Type", "application/json;charset=UTF-8"
+        )
+        request.onload = function() {
+            if (this.status >= 200 && this.status < 400) {
+                console.log(this.responseText);
+            }
+        }
+        request.send(JSON.stringify({
+            email: "20020390@vnu.edu.vn",
+            password: "1234567"
+        }));
+    }
+    
+</script>
+</html>

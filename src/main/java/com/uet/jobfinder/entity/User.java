@@ -25,7 +25,8 @@ public class User implements UserDetails {
     @JsonIgnore
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Company company;
-
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Candidate candidate;
     private String email;
     private String password;
     private Boolean enabled = false;

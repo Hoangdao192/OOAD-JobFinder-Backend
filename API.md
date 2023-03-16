@@ -129,31 +129,97 @@ Tùy vào loại tài khoản của người dùng là `Company` hay `Employee`
 thì `request` sẽ khác nhau.
 <br>
 <b>Company</b>
+<br>`Front-end` sẽ gửi `request` với các trường như sau (Các trường này đều
+không bắt buộc)
+```
+(Text) companyName: Tên công ty 
+(Text) companyDescription: Mô tả công ty
+(Text) numberOfEmployee: Số lượng nhân viên
+(Text) address.province: Tỉnh
+(Text) address.district: Huyện
+(Text) address.ward: Xã/Phường
+(Text) address.detailAddress: Địa chỉ
+(Float) address.longitude: Kinh độ
+(Float) address.latitude: Vĩ độ
+(ImageFile) companyLogoFile: Ảnh logo công ty
+```
+<i>Form</i>
+```html
+<form action="http://localhost:5000/api/company" method="put" enctype="multipart/form-data">
+    <input type="text" name="companyName">
+    <input type="text" name="companyDescription">
+    <input type="text" name="numberOfEmployee">
+    <input type="text" name="address.province">
+    <input type="text" name="address.district">
+    <input type="text" name="address.ward">
+    <input type="text" name="address.longitude">
+    <input type="text" name="address.latitude">
+    <input type="file" name="companyLogoFile">
+</form>
+```
+<i>Raw request (đọc cho vui)</i>
 ```http request
 PUT http://localhost:5000/api/company
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjc4Nzc5Njg0LCJleHAiOjE2NzkzODQ0ODR9.x7sXeuitQCsygr4LIdqZ8NCU4RUTzoIq7ZJ0mgKwtRAf3ONQ5EOcM3u9mKWJBgvrOpR-Yb_hdBdU9t9TsY3mow
-Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjc4ODg2MjI1LCJleHAiOjE2Nzk0OTEwMjV9.niL5C7Tq_J41n7nNn4R_bVR0_TfNh6rm3esAqj007I6sR7Ja--33i-PUuyK7njooCBUzPHlBCSHFzR-YuZ-Quw
+Content-Type: multipart/form-data; boundary=boundary
 
-{
-  "companyName" : "Misa",
-  "companyLogo" : "...",
-  "companyDescription" : "A good company",
-  "numberOfEmployee" : "200+",
-  "address" : {
-    "province" : "...",
-    "district" : "...",
-    "ward" : "...",
-    "detailAddress" : "...",
-    "longitude" : 1.1223,
-    "latitude" : 1.2334   
-  }
-}
+--boundary
+Content-Disposition: form-data; name="companyName"
+Content-Type: text/plain
+
+Misa
+--boundary
+Content-Disposition: form-data; name="companyDescription"
+Content-Type: text/plain
+
+A good company
+--boundary
+Content-Disposition: form-data; name="numberOfEmployee"
+Content-Type: text/plain
+
+200+
+--boundary
+Content-Disposition: form-data; name="companyLogoFile"; filename="2.png"
+
+< D:\2.png
+--boundary
+Content-Disposition: form-data; name="address.province"
+Content-Type: text/json
+
+Hà Nội
+--boundary
+Content-Disposition: form-data; name="address.district"
+Content-Type: text/json
+
+Nam Từ Liêm
+--boundary
+Content-Disposition: form-data; name="address.ward"
+Content-Type: text/json
+
+Phương Canh
+--boundary
+Content-Disposition: form-data; name="address.detailAddress"
+Content-Type: text/json
+
+Số 48 Ngõ 80
+--boundary
+Content-Disposition: form-data; name="address.latitude"
+Content-Type: text/json
+
+1.222
+--boundary
+Content-Disposition: form-data; name="address.longitude"
+Content-Type: text/json
+
+1.3333
+
+--boundary--
 ```
 ```json
 {
   "userId": 4,
   "companyName": "Misa",
-  "companyLogo": "tempLogo",
+  "companyLogo": "http://localhost:5000/file/image/7",
   "companyDescription": "A good company",
   "numberOfEmployee": "200+",
   "address": {

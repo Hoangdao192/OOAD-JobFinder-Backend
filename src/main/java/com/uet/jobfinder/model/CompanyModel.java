@@ -20,8 +20,8 @@ public class CompanyModel {
     @NotEmpty(message = "Tên công ty không được để trống")
     private String companyName;
 
-    @NotNull(message = "Logo công ty không được là null")
-    @NotEmpty(message = "Logo công ty không được để trống")
+//    @NotNull(message = "Logo công ty không được là null")
+//    @NotEmpty(message = "Logo công ty không được để trống")
     private String companyLogo;
 
     private MultipartFile companyLogoFile;

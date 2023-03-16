@@ -25,7 +25,7 @@ Content-Type: application/json
 
 {
   "email" : "20020390@vnu.edu.vn",
-  "confirmationKey" : "618606"
+  "confirmationKey" : "608169"
 }
 
 ### Send email confirmation
@@ -36,21 +36,34 @@ GET http://localhost:5000/api/company/4
 
 ### Update company
 PUT http://localhost:5000/api/company
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjc4ODA4Mzk1LCJleHAiOjE2Nzk0MTMxOTV9.JE6T0TL3sVuI5pf3UROoopW0Cn-n7g_oTwPTlS6-2vUsyMnxjDAZ9M6UKp7IhNYYnPICwsjN3cV9RJI4KQ4Skg
-Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjc4ODg2MjI1LCJleHAiOjE2Nzk0OTEwMjV9.niL5C7Tq_J41n7nNn4R_bVR0_TfNh6rm3esAqj007I6sR7Ja--33i-PUuyK7njooCBUzPHlBCSHFzR-YuZ-Quw
+Content-Type: multipart/form-data; boundary=boundary
 
-{
-  "companyName" : "Misa",
-  "companyDescription" : "A good company",
-  "numberOfEmployee" : "200+",
-  "companyLogo" : "tempLogo",
-  "address" : {
-    "province" : "Hà Nội",
-    "district" : "Nam Từ Liêm",
-    "ward" : "Phương Canh",
-    "detailAddress" : "Số 48 ngõ 80"
-  }
-}
+--boundary
+Content-Disposition: form-data; name="companyName"
+Content-Type: text/plain
+
+Misa
+--boundary
+Content-Disposition: form-data; name="companyDescription"
+Content-Type: text/plain
+
+A good company
+--boundary
+Content-Disposition: form-data; name="numberOfEmployee"
+Content-Type: text/plain
+
+200+
+--boundary
+Content-Disposition: form-data; name="companyLogoFile"; filename="2.png"
+
+< D:\2.png
+--boundary
+Content-Disposition: form-data; name="address" filename="blob"
+Content-Type: text/json
+
+ewogICJwcm92aW5jZSIgOiAiSMOgIE7hu5lpIgp9
+--boundary--
 
 ### Create job
 POST http://localhost:5000/api/job/
@@ -86,6 +99,15 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjc4NzgxNzY1L
   "sex" : "Nam",
   "workingForm" : "Fulltime"
 }
+
+### Upload file
+POST http://localhost:5000/api/test
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="2.png"
+
+< D:\2.png
 
 <> 2023-03-06T212754.200.json
 <> 2023-03-06T212740.400.json
