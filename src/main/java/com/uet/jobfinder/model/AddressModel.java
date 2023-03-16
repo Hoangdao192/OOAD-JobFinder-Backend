@@ -1,13 +1,14 @@
 package com.uet.jobfinder.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-@Getter
-@Setter
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class AddressModel {
     @NotNull(message = "SVERR4")
     @NotEmpty(message = "SVERR3")

@@ -29,13 +29,19 @@ public class AuthenticationService {
     private EmailService emailService;
     private UserService userService;
     private CompanyService companyService;
+    @Autowired
+    private CandidateService candidateService;
 
     public UserModel register(RegisterRequestModel registerRequestModel) {
         User user = userService.createUser(registerRequestModel);
 
         //  Create a company
-        if (user.getRoles().stream().anyMatch(role -> role.getName().equals(UserType.COMPANY))) {
+        if (userService.isCompany(user)) {
             companyService.createEmptyCompany(user);
+        }
+        //  Create a candidate
+        else if (userService.isCandidate(user)) {
+            candidateService.createEmptyCandidate(user);
         }
 
         sendEmailVerification(user.getEmail());

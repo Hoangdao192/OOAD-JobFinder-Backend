@@ -65,6 +65,14 @@ public class UserService {
                 .anyMatch(role -> role.getName().equals(UserType.ADMIN));
     }
 
+    public boolean isCandidate(User user) {
+        return user.getRoles().stream().anyMatch(role -> role.getName().equals(UserType.COMPANY));
+    }
+
+    public boolean isCompany(User user) {
+        return user.getRoles().stream().anyMatch(role -> role.getName().equals(UserType.COMPANY));
+    }
+
     @Autowired
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
