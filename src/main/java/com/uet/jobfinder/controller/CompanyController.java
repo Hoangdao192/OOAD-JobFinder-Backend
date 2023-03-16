@@ -3,10 +3,13 @@ package com.uet.jobfinder.controller;
 import com.uet.jobfinder.model.CompanyModel;
 import com.uet.jobfinder.service.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
@@ -14,7 +17,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("company")
-@CrossOrigin("http://localhost:3000")
 public class CompanyController {
     @Autowired
     CompanyService companyService;
@@ -40,6 +42,17 @@ public class CompanyController {
     public ResponseEntity<CompanyModel> updateCompany(@ModelAttribute CompanyModel companyModel, HttpServletRequest request) throws IOException {
         return ResponseEntity.ok(companyService.updateCompany(companyModel, request));
     }
+
+//    @PutMapping
+//    @PreAuthorize("hasAnyAuthority('Admin', 'Company')")
+//    public ResponseEntity<CompanyModel> updateCompany(
+//            @RequestParam("company") String company,
+//            HttpServletRequest request) throws IOException {
+//
+//        System.out.println(company);
+//        return ResponseEntity.ok(new CompanyModel());
+////        return ResponseEntity.ok(companyService.updateCompany(companyModel, file, request));
+//    }
 
 //    public ResponseEntity<CompanyModel> updateCompanyMultipart(@ModelAttribute CompanyModel companyModel) {
 //

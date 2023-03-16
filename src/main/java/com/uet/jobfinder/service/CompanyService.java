@@ -14,6 +14,7 @@ import com.uet.jobfinder.security.JsonWebTokenProvider;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -111,11 +112,71 @@ public class CompanyService {
         if (companyModel.getCompanyName() != null) {
             company.setCompanyName(companyModel.getCompanyName());
         }
-        if (companyModel.getCompanyLogo() != null) {
+        if (companyModel.getCompanyLogoFile() != null) {
             AppFile appFile = fileService.saveFile(
                     companyModel.getCompanyLogoFile().getOriginalFilename(),
                     companyModel.getCompanyLogoFile().getContentType(),
                     companyModel.getCompanyLogoFile().getBytes()
+            );
+            company.setCompanyLogo(appFile);
+        }
+        if (companyModel.getCompanyDescription() != null) {
+            company.setCompanyDescription(companyModel.getCompanyDescription());
+        }
+        if (address != null) {
+            company.setAddress(address);
+        }
+        if (companyModel.getNumberOfEmployee() != null) {
+            company.setNumberOfEmployee(companyModel.getNumberOfEmployee());
+        }
+
+        company = companyRepository.save(company);
+
+        return modelMapper.map(company, CompanyModel.class);
+    }
+
+    public CompanyModel updateCompany(CompanyModel companyModel, MultipartFile logoFile, HttpServletRequest request) throws IOException {
+        Long userId = jsonWebTokenProvider.getUserIdFromRequest(request);
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomIllegalArgumentException(
+                        ServerError.USER_ID_NOT_EXISTS
+                ));
+
+        Company company = companyRepository.findByUser(user)
+                .orElseThrow(() -> new CustomIllegalArgumentException(
+                        ServerError.USER_ID_NOT_EXISTS
+                ));
+
+        Address address = company.getAddress();
+        AddressModel addressModel = companyModel.getAddress();
+        if (address == null && addressModel != null) {
+            address = Address.builder()
+                    .province(addressModel.getProvince())
+                    .district(addressModel.getDistrict())
+                    .ward(addressModel.getWard())
+                    .detailAddress(addressModel.getDetailAddress())
+                    .latitude(addressModel.getLatitude())
+                    .longitude(addressModel.getLongitude())
+                    .build();
+            company.setAddress(address);
+        } else if (addressModel != null) {
+            address.setProvince(addressModel.getProvince());
+            address.setDistrict(addressModel.getDistrict());
+            address.setWard(addressModel.getWard());
+            address.setDetailAddress(addressModel.getDetailAddress());
+            address.setLatitude(addressModel.getLatitude());
+            address.setLongitude(addressModel.getLongitude());
+        }
+
+        if (companyModel.getCompanyName() != null) {
+            company.setCompanyName(companyModel.getCompanyName());
+        }
+        if (logoFile != null) {
+            AppFile appFile = fileService.saveFile(
+                    logoFile.getOriginalFilename(),
+                    logoFile.getContentType(),
+                    logoFile.getBytes()
             );
             company.setCompanyLogo(appFile);
         }

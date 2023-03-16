@@ -97,6 +97,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MultipartException.class)
     @ResponseStatus(value = HttpStatus.PAYLOAD_TOO_LARGE)
     public ResponseEntity<Object> handleMultipartException(MultipartException e) {
+        e.printStackTrace();
         if (e instanceof MaxUploadSizeExceededException) {
             return ResponseEntity.badRequest()
                     .body(

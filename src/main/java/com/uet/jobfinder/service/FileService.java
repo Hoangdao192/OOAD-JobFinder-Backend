@@ -31,6 +31,7 @@ public class FileService {
         try {
             FileCopyUtils.copy(bytes, file);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new CustomIllegalArgumentException(
                     ServerError.SERVER_ERROR
             );
@@ -64,7 +65,7 @@ public class FileService {
     public String generateFileUrl(Long id) {
         AppFile appFile = getFileById(id);
         if (isImageFile(appFile)) {
-            return domainUrl + "image/id";
+            return domainUrl + "api/file/image/" + id;
         }
         return "";
     }

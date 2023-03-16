@@ -11,28 +11,26 @@
         <input name="file" type="file">
         <button type="submit">Submit</button>
     </form>
+    <button id="login">Login</button>
 </body>
 <script>
-    let request = new XMLHttpRequest();
-    request.open("PUT", "http://localhost:5000/company")
-    request.setRequestHeader(
-        "Authorization",
-        "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjc4ODg2MjI1LCJleHAiOjE2Nzk0OTEwMjV9.niL5C7Tq_J41n7nNn4R_bVR0_TfNh6rm3esAqj007I6sR7Ja--33i-PUuyK7njooCBUzPHlBCSHFzR-YuZ-Quw"
-    )
-    request.setRequestHeader(
-        "Content-Type", "multipart/form-data"
-    )
-    let formData = new FormData();
-    formData.append("address", new Blob([JSON.stringify({
-        province: "Hà Nội"
-    })], {
-        type: "application/json"
-    }))
-    request.send(formData);
-    request.onload = function() {
-        if (this.status == 200) {
-            console.log(this.response);
+    document.getElementById("login").addEventListener("click", () => login());
+    function login() {
+        let request = new XMLHttpRequest();
+        request.open("POST", "http://localhost:5000/api/login")
+        request.setRequestHeader(
+            "Content-Type", "application/json;charset=UTF-8"
+        )
+        request.onload = function() {
+            if (this.status >= 200 && this.status < 400) {
+                console.log(this.responseText);
+            }
         }
+        request.send(JSON.stringify({
+            email: "20020390@vnu.edu.vn",
+            password: "1234567"
+        }));
     }
+    
 </script>
 </html>
