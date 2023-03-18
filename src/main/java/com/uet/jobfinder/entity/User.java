@@ -29,7 +29,9 @@ public class User implements UserDetails {
     private Candidate candidate;
     private String email;
     private String password;
+    @Builder.Default
     private Boolean enabled = false;
+    @Builder.Default
     private Boolean locked = false;
 
     public User(String email, String password) {
@@ -64,6 +66,7 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
+    @Builder.Default
     private Set<Role> roles = new HashSet<>();
 
     public void addRole(Role role) {

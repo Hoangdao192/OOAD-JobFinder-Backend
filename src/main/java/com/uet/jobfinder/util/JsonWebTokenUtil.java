@@ -1,7 +1,5 @@
 package com.uet.jobfinder.util;
 
-import org.springframework.stereotype.Component;
-
 import javax.servlet.http.HttpServletRequest;
 
 public class JsonWebTokenUtil {

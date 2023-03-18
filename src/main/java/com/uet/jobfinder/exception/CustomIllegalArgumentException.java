@@ -1,6 +1,5 @@
 package com.uet.jobfinder.exception;
 
-import com.uet.jobfinder.error.Error;
 import com.uet.jobfinder.error.ServerError;
 
 public class CustomIllegalArgumentException extends IllegalArgumentException {

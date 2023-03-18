@@ -33,5 +33,4 @@ public class Job {
     private Integer numberOfHiring;
     private String requireExperience;
     private String sex;
-    private String workingForm;
-}
+    private String workingForm;}

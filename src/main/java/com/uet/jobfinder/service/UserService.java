@@ -5,7 +5,6 @@ import com.uet.jobfinder.entity.UserType;
 import com.uet.jobfinder.error.ServerError;
 import com.uet.jobfinder.exception.CustomIllegalArgumentException;
 import com.uet.jobfinder.model.RegisterRequestModel;
-import com.uet.jobfinder.model.UserModel;
 import com.uet.jobfinder.repository.RoleRepository;
 import com.uet.jobfinder.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

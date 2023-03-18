@@ -11,6 +11,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
 public class CustomUsernamePasswordFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -21,9 +22,9 @@ public class CustomUsernamePasswordFilter extends UsernamePasswordAuthentication
             super.doFilter(request, response, chain);
         } catch (Exception e) {
             ((HttpServletResponse) response).setStatus(HttpStatus.UNAUTHORIZED.value());
-            response.getWriter().write(convertObjectToJson(new Object() {
-                public String error = "Unauthorized request";
-            }));
+            response.getWriter().write(convertObjectToJson(
+                Map.of("error", "Unauthorized request")
+            ));
         }
     }
 

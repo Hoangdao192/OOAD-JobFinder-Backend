@@ -1,7 +1,5 @@
 package com.uet.jobfinder.validator;
 
-import org.springframework.stereotype.Component;
-
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;

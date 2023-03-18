@@ -20,6 +20,9 @@ public enum ServerError {
     FILE_NOT_EXISTS("SVERR11", "File is not exists."),
     INVALID_FILE_TYPE("SVERR12", "Incorrect file type."),
 
+    //  Company error
+    NULL_COMPANY_LOGO("SVERR13", "Company logo cannot be null"),
+
     //  Login error
     WRONG_PASSWORD_OR_USERNAME("LGERR1", "Username or password is incorrect."),
     EMAIL_NOT_EMPTY("LGERR2", "Email cannot be empty."),

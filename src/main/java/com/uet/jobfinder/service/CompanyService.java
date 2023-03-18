@@ -14,7 +14,6 @@ import com.uet.jobfinder.security.JsonWebTokenProvider;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -35,7 +34,6 @@ public class CompanyService {
     private JsonWebTokenProvider jsonWebTokenProvider;
 
     public Company getCompanyByUserId(Long userId) {
-        //  TODO: Replace by find company
         User user = userService.getUserById(userId);
         return companyRepository.findByUser(user)
                 .orElseThrow(() -> new CustomIllegalArgumentException(
@@ -88,6 +86,12 @@ public class CompanyService {
                         ServerError.USER_ID_NOT_EXISTS
                 ));
 
+        if (companyModel.getCompanyLogoFile() == null && company.getCompanyLogo() == null) {
+            throw new CustomIllegalArgumentException(
+                    ServerError.NULL_COMPANY_LOGO
+            );
+        }
+
         Address address = company.getAddress();
         AddressModel addressModel = companyModel.getAddress();
         if (address == null && addressModel != null) {
@@ -100,7 +104,7 @@ public class CompanyService {
                     .longitude(addressModel.getLongitude())
                     .build();
             company.setAddress(address);
-        } else if (addressModel != null) {
+        } else if (addressModel != null && address != null) {
             address.setProvince(addressModel.getProvince());
             address.setDistrict(addressModel.getDistrict());
             address.setWard(addressModel.getWard());

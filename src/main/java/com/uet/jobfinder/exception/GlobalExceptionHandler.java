@@ -1,6 +1,5 @@
 package com.uet.jobfinder.exception;
 
-import com.uet.jobfinder.error.Error;
 import com.uet.jobfinder.error.LoginError;
 import com.uet.jobfinder.error.ServerError;
 import com.uet.jobfinder.model.ErrorMessageModel;

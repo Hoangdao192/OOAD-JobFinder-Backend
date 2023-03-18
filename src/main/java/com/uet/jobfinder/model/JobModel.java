@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -14,7 +13,6 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class JobModel {
     private Long id;
-
     private Long userId;
 
     @NotNull(message = "SVERR4")
@@ -44,5 +42,4 @@ public class JobModel {
     private String requireExperience;
     private String sex;
     private String workingForm;
-
 }

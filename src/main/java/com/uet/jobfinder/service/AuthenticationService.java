@@ -1,7 +1,6 @@
 package com.uet.jobfinder.service;
 
 import com.uet.jobfinder.entity.User;
-import com.uet.jobfinder.entity.UserType;
 import com.uet.jobfinder.entity.ValidationKey;
 import com.uet.jobfinder.error.ServerError;
 import com.uet.jobfinder.exception.CustomIllegalArgumentException;
@@ -88,10 +87,10 @@ public class AuthenticationService {
             File file = new File("src/main/resources/templates/email_verification.html");
             FileReader fileReader = new FileReader(file);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
-
             for (String line : bufferedReader.lines().collect(Collectors.toList())) {
                 emailContent.append(line);
             }
+            bufferedReader.close();
         } catch (IOException e) {
             e.printStackTrace();
             throw new CustomIllegalArgumentException(ServerError.SERVER_ERROR);

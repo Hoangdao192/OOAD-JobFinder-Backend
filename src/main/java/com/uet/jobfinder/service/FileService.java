@@ -56,7 +56,9 @@ public class FileService {
         FileInputStream fileInputStream = null;
         try {
             fileInputStream = new FileInputStream(file);
-            return fileInputStream.readAllBytes();
+            byte[] bytes = fileInputStream.readAllBytes();
+            fileInputStream.close();
+            return bytes;
         } catch (IOException ioException) {
             throw new CustomIllegalArgumentException(ServerError.FILE_NOT_EXISTS);
         }

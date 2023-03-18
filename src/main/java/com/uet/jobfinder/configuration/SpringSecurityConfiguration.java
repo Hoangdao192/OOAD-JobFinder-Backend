@@ -62,9 +62,9 @@ public class SpringSecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                .authorizeRequests()
-                    .antMatchers("/api/login").permitAll()
-                    .antMatchers("api/register").permitAll();
+                .authorizeHttpRequests()
+                .antMatchers("/api/login").permitAll()
+                .antMatchers("api/register").permitAll();
         http.addFilterBefore(jwtAuthenticationFilter(), CustomUsernamePasswordFilter.class);
         return http.build();
     }

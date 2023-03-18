@@ -15,6 +15,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
@@ -47,9 +48,9 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } catch (Exception e) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            response.getWriter().write(convertObjectToJson(new Object() {
-                public String error = "Unauthorized request";
-            }));
+            response.getWriter().write(convertObjectToJson(
+                Map.of("error", "Unauthorized request")
+            ));
         }
     }
 

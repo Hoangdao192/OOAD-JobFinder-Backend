@@ -9,15 +9,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class DatabaseInitializeService {
 
-    private RoleRepository roleRepository;
-
     public DatabaseInitializeService() {
 
     }
 
     @Autowired
     public void setRoleRepository(RoleRepository roleRepository) {
-        this.roleRepository = roleRepository;
         if (roleRepository.findByName(UserType.ADMIN).isEmpty()) {
             roleRepository.save(new Role(UserType.ADMIN));
         }

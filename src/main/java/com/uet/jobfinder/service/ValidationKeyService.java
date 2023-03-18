@@ -27,7 +27,7 @@ public class ValidationKeyService {
             key.setExpirationDate(LocalDateTime.now());
         }
 
-        Long randomKey = null;
+        Long randomKey = ((Double) (Math.random() * 1000000)).longValue();
         boolean isKeyExists = true;
         while (isKeyExists) {
             randomKey  = ((Double) (Math.random() * 1000000)).longValue();

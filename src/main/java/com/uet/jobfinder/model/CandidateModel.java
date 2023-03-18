@@ -1,6 +1,5 @@
 package com.uet.jobfinder.model;
 
-import com.uet.jobfinder.entity.Address;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
