@@ -4,12 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import java.util.Date;
+
+import java.time.LocalDate;
 
 @Data
 @Builder
@@ -17,20 +20,19 @@ import java.util.Date;
 @NoArgsConstructor
 public class CandidateModel {
 
-    @NotNull(message = "Tên ứng viên không được là null")
-    @NotEmpty(message = "Tên ứng viên không được để trống")
+    @NotNull(message = "SVERR4")
+    @NotEmpty(message = "SVERR3")
     private String fullName;
 
     private String sex;
 
-    private Date dateOfBirth;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate dateOfBirth;
 
     @Pattern(regexp = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
             + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$", message = "AUERR2")
     private String contactEmail;
 
-//    @Pattern(regexp = "/^[\\+]?[(]?[0-9]{3}[)]?[-\\s\\.]?[0-9]{3}[-\\s\\.]?[0-9]{4,6}$/im", message = "Số điện thoại không hợp lệ.")
-    //1234567890
     private String phoneNumber;
 
     private String selfDescription;
@@ -40,5 +42,5 @@ public class CandidateModel {
     private AddressModel address;
 
     private String avatar;
-    private MultipartFile avatarFile;
+    private MultipartFile candidateAvatarFile;
 }

@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +36,8 @@ public class CompanyController {
 
     @PutMapping
     @PreAuthorize("hasAnyAuthority('Admin', 'Company')")
-    public ResponseEntity<CompanyModel> updateCompany(@ModelAttribute CompanyModel companyModel, HttpServletRequest request) throws IOException {
+    public ResponseEntity<CompanyModel> updateCompany(
+            @ModelAttribute @Valid CompanyModel companyModel, HttpServletRequest request) throws IOException {
         return ResponseEntity.ok(companyService.updateCompany(companyModel, request));
     }
 

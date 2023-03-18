@@ -16,7 +16,7 @@ Content-Type: application/json
 {
   "email" : "20020390@vnu.edu.vn",
   "password" : "12345678",
-  "role" : "Company"
+  "role" : "Candidate"
 }
 
 ### Confirm user
@@ -25,7 +25,7 @@ Content-Type: application/json
 
 {
   "email" : "20020390@vnu.edu.vn",
-  "confirmationKey" : "608169"
+  "confirmationKey" : "427012"
 }
 
 ### Send email confirmation
@@ -63,6 +63,74 @@ Content-Disposition: form-data; name="address" filename="blob"
 Content-Type: text/json
 
 ewogICJwcm92aW5jZSIgOiAiSMOgIE7hu5lpIgp9
+--boundary--
+
+### Update
+PUT http://localhost:5000/api/candidate
+Content-Type: multipart/form-data; boundary=boundary
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjc5MTUyODU0LCJleHAiOjE2Nzk3NTc2NTR9.-uQ7cpiiOVIlUnSv42hlTvCXQoU94DyNm64ASlKrJG_0A1DPEarbNJ1jlmmaDw5F4-Ram6GlP8g4Iw9SPZiqiQ
+
+--boundary
+Content-Disposition: form-data; name="candidateAvatarFile" filename="2.png"
+
+< D:/2.png
+--boundary
+Content-Disposition: form-date; name="fullName"
+Content-Type: text/plain
+
+Hello
+--boundary--
+
+### Update candidate
+PUT http://localhost:5000/api/candidate
+Content-Type: multipart/form-data; boundary=boundary
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjc5MTUyODU0LCJleHAiOjE2Nzk3NTc2NTR9.-uQ7cpiiOVIlUnSv42hlTvCXQoU94DyNm64ASlKrJG_0A1DPEarbNJ1jlmmaDw5F4-Ram6GlP8g4Iw9SPZiqiQ
+
+--boundary
+Content-Disposition: form-data; name="candidateAvatarFile" filename="2.png"
+
+< D:/2.png
+--boundary
+Content-Disposition: form-data; name="fullName"
+Content-Type: text/plain
+
+Nguyễn Văn A
+--boundary
+Content-Disposition: form-data; name="sex"
+Content-Type: text/plain
+
+Nam
+--boundary
+Content-Disposition: form-data; name="dateOfBirth"
+Content-Type: text/plain
+
+2002-02-19
+--boundary
+Content-Disposition: form-data; name="contactEmail"
+Content-Type: text/plain
+
+20020390@vnu.edu.vn
+--boundary
+Content-Disposition: form-data; name="phoneNumber"
+Content-Type: text/plain
+
+0325135251
+--boundary
+Content-Disposition: form-data; name="selfDescription"
+Content-Type: text/plain
+
+I'm studying at University of Technology and Engineering.
+I'm on my third year.
+--boundary
+Content-Disposition: form-data; name="experience"
+Content-Type: text/plain
+
+I have 1 year experience in IT.
+--boundary
+Content-Disposition: form-data; name="education"
+Content-Type: text/plain
+
+University
 --boundary--
 
 ### Create job

@@ -10,6 +10,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
+import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -30,9 +31,40 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({MethodArgumentNotValidException.class})
     public ResponseEntity<Map<String, Object>> handleValidationExceptions(
             MethodArgumentNotValidException ex) {
-
+        ex.printStackTrace();
         List<Object> errorList = new ArrayList<>();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String code = "undefined";
+            String message = error.getDefaultMessage();
+
+            for (ServerError serverError : ServerError.values()) {
+                if (error.getDefaultMessage().equals(serverError.getCode())) {
+                    code = serverError.getCode();
+
+                    if (error.getDefaultMessage().equals("SVERR3") ||
+                            error.getDefaultMessage().equals("SVERR4")) {
+                        message = ((FieldError) error).getField() + " " + serverError.getMessage();
+                    } else {
+                        message = serverError.getMessage();
+                    }
+                }
+            }
+            errorList.add(
+                    Map.of("code", code, "message", message)
+            );
+        });
+
+        return new ResponseEntity<>(
+                Map.of("errors", errorList), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({BindException.class})
+    public ResponseEntity<Map<String, Object>> handleValidationExceptions(
+            BindException e
+    ) {
+        e.printStackTrace();
+        List<Object> errorList = new ArrayList<>();
+        e.getAllErrors().forEach((error) -> {
             String code = "undefined";
             String message = error.getDefaultMessage();
 

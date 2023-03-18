@@ -128,6 +128,7 @@ gửi lên `Server`.
 Tùy vào loại tài khoản của người dùng là `Company` hay `Employee`
 thì `request` sẽ khác nhau.
 <br>
+
 <b>Company</b>
 <br>`Front-end` sẽ gửi `request` với các trường như sau (Các trường này đều
 không bắt buộc)
@@ -230,6 +231,51 @@ Content-Type: text/json
     "longitude": null,
     "latitude": null
   }
+}
+```
+<br>
+<b>Candidate</b>
+<br>`Front-end` sẽ gửi `request` với các trường như sau (Các trường này đều
+không bắt buộc)
+
+```
+(Text) fullName: Họ và tên - Bắt buộc
+(Text) sex: Giới tính
+(Text) dateOfBirth: Ngày sinh
+(Text) contactEmail: Email dùng để liên hệ
+(Text) phoneNumber: Số điện thoại
+(Text) selfDescription: Mô tả bản thân
+(Text) experience: Kinh nghiệm
+(Text) education: Học vấn
+(ImageFile) candidateAvatarFile: Avatar
+```
+<i>Form</i>
+```html
+<form action="http://localhost:5000/api/candidate" method="put" enctype="multipart/form-data">
+    <input type="text" name="fullName">
+    <input type="text" name="sex">
+    <input type="text" name="dateOfBirth">
+    <input type="text" name="contactEmail">
+    <input type="text" name="phoneNumber">
+    <input type="text" name="selfDescription">
+    <input type="text" name="experience">
+    <input type="text" name="education">
+    <input type="file" name="candidateAvatarFile">
+</form>
+```
+```json
+{
+  "fullName": "Hello",
+  "sex": "Nam",
+  "dateOfBirth": null,
+  "contactEmail": null,
+  "phoneNumber": null,
+  "selfDescription": null,
+  "experience": null,
+  "education": null,
+  "address": null,
+  "avatar": "http://localhost:5000/api/file/image/6",
+  "candidateAvatarFile": null
 }
 ```
 

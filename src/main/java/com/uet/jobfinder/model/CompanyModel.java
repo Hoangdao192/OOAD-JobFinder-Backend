@@ -16,22 +16,17 @@ import javax.validation.constraints.NotNull;
 public class CompanyModel {
     private Long userId;
 
-    @NotNull(message = "Tên công ty không được là null")
-    @NotEmpty(message = "Tên công ty không được để trống")
+    @NotNull(message = "SVERR4")
+    @NotEmpty(message = "SVERR3")
     private String companyName;
 
-    @NotNull(message = "Logo công ty không được là null")
-    @NotEmpty(message = "Logo công ty không được để trống")
+    @NotNull(message = "SVERR4")
+    @NotEmpty(message = "SVERR3")
     private String companyLogo;
 
     private MultipartFile companyLogoFile;
 
-//    @NotNull(message = "Mô tả công ty không được là null")
-//    @NotEmpty(message = "Mô tả công ty không được để trống")
     private String companyDescription;
-
-//    @NotNull(message = "Số lượng nhân viên công ty không được là null")
-//    @NotEmpty(message = "Số lượng nhân viên công ty không được để trống")
     private String numberOfEmployee;
 
     private AddressModel address;

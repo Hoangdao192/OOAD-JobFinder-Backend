@@ -76,9 +76,9 @@ public class CandidateService {
     }
 
     public Candidate createEmptyCandidate(User user) {
-        return candidateRepository.save(
-                Candidate.builder().user(user).build()
-        );
+        Candidate candidate = new Candidate();
+        candidate.setUser(user);
+        return candidateRepository.save(candidate);
     }
 
     public List<CandidateContext> getAllCandidate() {
@@ -157,11 +157,11 @@ public class CandidateService {
             candidate.setAddress(address);
         }
 
-        if (candidateModel.getAvatarFile() != null) {
+        if (candidateModel.getCandidateAvatarFile() != null) {
             AppFile appFile = fileService.saveFile(
-                    candidateModel.getAvatarFile().getOriginalFilename(),
-                    candidateModel.getAvatarFile().getContentType(),
-                    candidateModel.getAvatarFile().getBytes()
+                    candidateModel.getCandidateAvatarFile().getOriginalFilename(),
+                    candidateModel.getCandidateAvatarFile().getContentType(),
+                    candidateModel.getCandidateAvatarFile().getBytes()
             );
             candidate.setAvatar(appFile);
         }

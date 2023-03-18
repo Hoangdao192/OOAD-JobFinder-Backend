@@ -13,7 +13,6 @@ import java.util.*;
 @Entity
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 @Builder
 public class User implements UserDetails {
 
@@ -25,27 +24,45 @@ public class User implements UserDetails {
     @JsonIgnore
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Company company;
+
+    @ToString.Exclude
+    @JsonIgnore
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Candidate candidate;
+
     private String email;
     private String password;
-    @Builder.Default
-    private Boolean enabled = false;
-    @Builder.Default
-    private Boolean locked = false;
+    private Boolean enabled;
+    private Boolean locked;
+    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles;
+
+    public User() {
+        this.enabled = false;
+        this.locked = false;
+        this.roles = new HashSet<>();
+    }
 
     public User(String email, String password) {
+        this();
         this.email = email;
         this.password = password;
     }
 
     public User(String email, String password, Set<Role> roles) {
+        this();
         this.email = email;
         this.password = password;
         this.roles = roles;
     }
 
     public User(String email, String password, Boolean enabled, Boolean locked) {
+        this();
         this.email = email;
         this.password = password;
         this.enabled = enabled;
@@ -53,21 +70,13 @@ public class User implements UserDetails {
     }
 
     public User(Long id, String email, String password, Boolean enabled, Boolean locked) {
+        this();
         this.id = id;
         this.email = email;
         this.password = password;
         this.enabled = enabled;
         this.locked = locked;
     }
-
-    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "user_role",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    @Builder.Default
-    private Set<Role> roles = new HashSet<>();
 
     public void addRole(Role role) {
         roles.add(role);

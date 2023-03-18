@@ -5,15 +5,18 @@ import com.uet.jobfinder.model.CandidateModel;
 import com.uet.jobfinder.service.CandidateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/candidate")
+@PreAuthorize("isAuthenticated()")
 public class CandidateController {
     @Autowired
     CandidateService candidateService;
@@ -35,15 +38,18 @@ public class CandidateController {
     }
 
     @PutMapping
+    @PreAuthorize("hasAnyAuthority('Admin', 'Candidate')")
     public ResponseEntity<CandidateModel> putCandidateById(
-            @ModelAttribute CandidateModel candidateModel,
+            @ModelAttribute @Valid CandidateModel candidateModel,
             HttpServletRequest request) throws IOException {
+        System.out.println(candidateModel.getCandidateAvatarFile().getOriginalFilename());
         return ResponseEntity.ok(
                 candidateService.updateCandidate(candidateModel, request)
         );
     }
 
     @DeleteMapping(path = "/{id}")
+    @PreAuthorize("hasAnyAuthority('Admin', 'Candidate')")
     public ResponseEntity<Map<String, Object>> deleteCandidateById(
             @PathVariable Long id,
             HttpServletRequest request) {

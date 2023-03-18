@@ -93,6 +93,16 @@ public class ModelMapperConfiguration {
         candidateMapper.addMappings(mapper ->
                 mapper.using(addressConverter)
                         .map(Candidate::getAddress, CandidateModel::setAddress));
+
+        Converter<AppFile, String> fileConverter = mappingContext -> {
+            if (mappingContext.getSource() != null) {
+                return fileService.generateFileUrl(mappingContext.getSource().getId());
+            }
+            return null;
+        };
+        candidateMapper.addMappings(mapper -> 
+                mapper.using(fileConverter)
+                    .map(Candidate::getAvatar, CandidateModel::setAvatar));
     }
 
 }

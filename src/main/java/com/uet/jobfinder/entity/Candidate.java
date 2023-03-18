@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "candidate")
@@ -33,7 +33,7 @@ public class Candidate implements Serializable {
     @OneToOne(cascade = CascadeType.ALL)
     private Address address;
 
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
     private String contactEmail;
     private String phoneNumber;
     private String selfDescription;
