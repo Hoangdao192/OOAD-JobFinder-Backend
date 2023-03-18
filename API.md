@@ -158,64 +158,6 @@ không bắt buộc)
     <input type="file" name="companyLogoFile">
 </form>
 ```
-<i>Raw request (đọc cho vui)</i>
-```http request
-PUT http://localhost:5000/api/company
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjc4ODg2MjI1LCJleHAiOjE2Nzk0OTEwMjV9.niL5C7Tq_J41n7nNn4R_bVR0_TfNh6rm3esAqj007I6sR7Ja--33i-PUuyK7njooCBUzPHlBCSHFzR-YuZ-Quw
-Content-Type: multipart/form-data; boundary=boundary
-
---boundary
-Content-Disposition: form-data; name="companyName"
-Content-Type: text/plain
-
-Misa
---boundary
-Content-Disposition: form-data; name="companyDescription"
-Content-Type: text/plain
-
-A good company
---boundary
-Content-Disposition: form-data; name="numberOfEmployee"
-Content-Type: text/plain
-
-200+
---boundary
-Content-Disposition: form-data; name="companyLogoFile"; filename="2.png"
-
-< D:\2.png
---boundary
-Content-Disposition: form-data; name="address.province"
-Content-Type: text/json
-
-Hà Nội
---boundary
-Content-Disposition: form-data; name="address.district"
-Content-Type: text/json
-
-Nam Từ Liêm
---boundary
-Content-Disposition: form-data; name="address.ward"
-Content-Type: text/json
-
-Phương Canh
---boundary
-Content-Disposition: form-data; name="address.detailAddress"
-Content-Type: text/json
-
-Số 48 Ngõ 80
---boundary
-Content-Disposition: form-data; name="address.latitude"
-Content-Type: text/json
-
-1.222
---boundary
-Content-Disposition: form-data; name="address.longitude"
-Content-Type: text/json
-
-1.3333
-
---boundary--
-```
 ```json
 {
   "userId": 4,
