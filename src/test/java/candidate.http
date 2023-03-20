@@ -1,0 +1,3 @@
+### Get candidate
+GET http://localhost:5000/api/candidate/4
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNjc5MzI0MDA4LCJleHAiOjE2Nzk5Mjg4MDh9.903xQJcw98ITqHGluPqSJuqbz0J3xRA1msgoTE6zHLPgw91Nl7EF1mlhZJiDXoZSKV12H3lz8WZpNgUN9PbMhw

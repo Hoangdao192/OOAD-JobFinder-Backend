@@ -6,6 +6,7 @@ import com.uet.jobfinder.error.ServerError;
 import com.uet.jobfinder.exception.CustomIllegalArgumentException;
 import com.uet.jobfinder.model.JobModel;
 import com.uet.jobfinder.model.PageQueryModel;
+import com.uet.jobfinder.repository.CompanyRepository;
 import com.uet.jobfinder.repository.JobRepository;
 import com.uet.jobfinder.security.JsonWebTokenProvider;
 import org.modelmapper.ModelMapper;
@@ -25,6 +26,8 @@ public class JobService {
     private UserService userService;
     private ModelMapper modelMapper;
     private JsonWebTokenProvider jsonWebTokenProvider;
+    @Autowired
+    private CompanyRepository companyRepository;
 
     public JobModel createJob(JobModel jobModel, HttpServletRequest request) {
         Long userId = jsonWebTokenProvider.getUserIdFromRequest(request);
@@ -106,13 +109,15 @@ public class JobService {
         Company company = companyService.getCompanyByUserId(userId);
 
         //  Only admin and company whose own the job post can delete the job
-        if (job.getCompany().getId().equals(company.getId())
+        if (!job.getCompany().getId().equals(company.getId())
                 && !userService.isAdmin(userId)) {
             throw new CustomIllegalArgumentException(
                     ServerError.COMPANY_NOT_OWN_JOB
             );
         }
 
+        company.getJobList().remove(job);
+        companyRepository.save(company);
         jobRepository.delete(job);
         return true;
     }

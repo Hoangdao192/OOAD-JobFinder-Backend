@@ -49,6 +49,23 @@ Content-Type: application/json
 ```
 
 ## Các API
+1. [Đăng kí tài khoản](#signup_api)
+2. [Đăng nhập](#signin_api)
+3. [API Công ty](#company_api)
+<br>a. [Cập nhập thông tin công ty](#company_update)
+<br>b. [Lấy danh sách công ty](#company_list)
+<br>c. [Lấy thông tin công ty](#company_get)
+4. [API Ứng viên](#candidate_api)
+<br>a. [Cập nhập thông tin ứng viên](#candidate_update)
+<br>b. [Lấy thông tin ứng viên](#candidate_get)
+5. [API Công việc](#job_api)
+<br>a. [Tạo công việc](#job_create)
+<br>b. [Cập nhập công việc](#job_update)
+<br>c. [Lấy danh sách công việc](#job_list)
+<br>c. [Lấy thông tin một công việc](#job_list)
+<br>c. [Xóa công việc](#job_list)
+
+<a name="signup_api"></a>
 ### 1. Đăng kí tài khoản
 `Front-end` sẽ có 3 trang 
 1. Trang nhập email, mật khẩu và chọn loại tài khoản
@@ -221,6 +238,7 @@ không bắt buộc)
 }
 ```
 
+<a name="signin_api"></a>
 ## 2. Đăng nhập
 `Front-end` yêu cầu người dùng nhập email và mật khẩu rồi gửi `request` lên `Server`
 ```http request
@@ -228,7 +246,7 @@ POST http://localhost:5000/api/login
 Content-Type: application/json
 
 {
-  "email" : "nguyendanghoangao11a@gmail.com",
+  "email" : "nguyendanghoangdao11a@gmail.com",
   "password" : "12345678"
 }
 ```
@@ -248,8 +266,92 @@ Content-Type: application/json
   }
 }
 ```
-
-## 3. Lấy thông tin một công ty
+<a name="company_api"></a>
+## 3. API Công ty
+<a name="company_update"></a>
+### a. Cập nhập thông tin công ty
+`Front-end` sẽ gửi `request` với các trường như sau (Các trường này đều
+không bắt buộc)
+```
+(Text) companyName: Tên công ty 
+(Text) companyDescription: Mô tả công ty
+(Text) numberOfEmployee: Số lượng nhân viên
+(Text) address.province: Tỉnh
+(Text) address.district: Huyện
+(Text) address.ward: Xã/Phường
+(Text) address.detailAddress: Địa chỉ
+(Float) address.longitude: Kinh độ
+(Float) address.latitude: Vĩ độ
+(ImageFile) companyLogoFile: Ảnh logo công ty
+```
+<i>Form</i>
+```html
+<form action="http://localhost:5000/api/company" method="put" enctype="multipart/form-data">
+    <input type="text" name="companyName">
+    <input type="text" name="companyDescription">
+    <input type="text" name="numberOfEmployee">
+    <input type="text" name="address.province">
+    <input type="text" name="address.district">
+    <input type="text" name="address.ward">
+    <input type="text" name="address.longitude">
+    <input type="text" name="address.latitude">
+    <input type="file" name="companyLogoFile">
+</form>
+```
+```json
+{
+  "userId": 4,
+  "companyName": "Misa",
+  "companyLogo": "http://localhost:5000/file/image/7",
+  "companyDescription": "A good company",
+  "numberOfEmployee": "200+",
+  "address": {
+    "province": "Hà Nội",
+    "district": "Nam Từ Liêm",
+    "ward": "Phương Canh",
+    "detailAddress": "Số 48 ngõ 80",
+    "longitude": null,
+    "latitude": null
+  }
+}
+```
+<a name="company_list"></a>
+### b. Lấy danh sách công ty
+Mặc định `page = 0` và `pageSize = 0`
+```http request
+GET http://localhost:5000/api/company?page=0&pageSize=10
+```
+```json
+{
+  "page": {
+    "currentPage": 0,
+    "pageSize": 10,
+    "totalPage": 1
+  },
+  "elements": [
+    {
+      "userId": 7,
+      "companyName": null,
+      "companyLogo": null,
+      "companyLogoFile": null,
+      "companyDescription": null,
+      "numberOfEmployee": null,
+      "address": null
+    },
+    {
+      "userId": 9,
+      "companyName": "Dũng ngu loz",
+      "companyLogo": "http://localhost:5000/api/file/image/11",
+      "companyLogoFile": null,
+      "companyDescription": null,
+      "numberOfEmployee": null,
+      "address": null
+    }
+  ]
+}
+```
+<a name="company_get"></a>
+### c. Lấy thông tin một công ty
 ```http request
 GET http://localhost:5000/api/company/{id}
 # Example
@@ -270,6 +372,209 @@ GET http://localhost:5000/api/company/4
     "longitude": null,
     "latitude": null
   }
+}
+```
+<a name="candidate_api"></a>
+## 4. API Ứng viên
+<a name="candidate_update"></a>
+### a. Cập nhập thông tin ứng viên
+<b>Candidate</b>
+<br>`Front-end` sẽ gửi `request` với các trường như sau (Các trường này đều
+không bắt buộc)
+
+```
+(Text) fullName: Họ và tên - Bắt buộc
+(Text) sex: Giới tính
+(Text) dateOfBirth: Ngày sinh
+(Text) contactEmail: Email dùng để liên hệ
+(Text) phoneNumber: Số điện thoại
+(Text) selfDescription: Mô tả bản thân
+(Text) experience: Kinh nghiệm
+(Text) education: Học vấn
+(ImageFile) candidateAvatarFile: Avatar
+```
+<i>Form</i>
+```html
+<form action="http://localhost:5000/api/candidate" method="put" enctype="multipart/form-data">
+    <input type="text" name="fullName">
+    <input type="text" name="sex">
+    <input type="text" name="dateOfBirth">
+    <input type="text" name="contactEmail">
+    <input type="text" name="phoneNumber">
+    <input type="text" name="selfDescription">
+    <input type="text" name="experience">
+    <input type="text" name="education">
+    <input type="file" name="candidateAvatarFile">
+</form>
+```
+```json
+{
+  "fullName": "Hello",
+  "sex": "Nam",
+  "dateOfBirth": null,
+  "contactEmail": null,
+  "phoneNumber": null,
+  "selfDescription": null,
+  "experience": null,
+  "education": null,
+  "address": null,
+  "avatar": "http://localhost:5000/api/file/image/6",
+  "candidateAvatarFile": null
+}
+```
+<a name="candidate_get"></a>
+### b. Lấy thông tin một ứng viên
+```http request
+GET http://localhost:5000/api/candidate/4
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNjc5MzI0MDA4LCJleHAiOjE2Nzk5Mjg4MDh9.903xQJcw98ITqHGluPqSJuqbz0J3xRA1msgoTE6zHLPgw91Nl7EF1mlhZJiDXoZSKV12H3lz8WZpNgUN9PbMhw
+```
+```json
+{
+  "userId": 4,
+  "fullName": "Hello",
+  "sex": "Nam",
+  "dateOfBirth": null,
+  "contactEmail": null,
+  "phoneNumber": null,
+  "selfDescription": null,
+  "experience": null,
+  "education": null,
+  "address": null,
+  "avatar": "http://localhost:5000/api/file/image/6",
+  "candidateAvatarFile": null
+}
+```
+<a name="job_api"></a>
+## 5. API Công việc
+<a name="job_create"></a>
+### a. Tạo công việc
+```http request
+POST http://localhost:5000/api/job
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNjc5MzI0MDA4LCJleHAiOjE2Nzk5Mjg4MDh9.903xQJcw98ITqHGluPqSJuqbz0J3xRA1msgoTE6zHLPgw91Nl7EF1mlhZJiDXoZSKV12H3lz8WZpNgUN9PbMhw
+
+{
+  "jobTitle" : "Lập trình viên Android",
+  "jobDescription" : "Lập trình ứng dụng cho Android",
+  "jobAddress" : "Hà Nội",
+  "major" : "Information Technology",
+  "salary" : "5 triệu",
+  "numberOfHiring" : 10,
+  "requireExperience" : "6 tháng",
+  "sex" : "Nam",
+  "workingForm" : "Full-time"
+}
+```
+```json
+{
+  "id": 13,
+  "userId": 9,
+  "jobTitle": "Lập trình viên Android",
+  "jobDescription": "Lập trình ứng dụng cho Android",
+  "jobAddress": "Hà Nội",
+  "major": "Information Technology",
+  "salary": "5 triệu",
+  "numberOfHiring": 10,
+  "requireExperience": "6 tháng",
+  "sex": "Nam",
+  "workingForm": "Full-time"
+}
+```
+<a name="job_update"></a>
+### b. Cập nhập công việc
+```http request
+PUT http://localhost:5000/api/job
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNjc5MzI0MDA4LCJleHAiOjE2Nzk5Mjg4MDh9.903xQJcw98ITqHGluPqSJuqbz0J3xRA1msgoTE6zHLPgw91Nl7EF1mlhZJiDXoZSKV12H3lz8WZpNgUN9PbMhw
+
+{
+  "id" : 13,
+  "jobTitle" : "Lập trình viên Android Fake",
+  "jobDescription" : "Lập trình ứng dụng cho Android",
+  "jobAddress" : "Hà Nội",
+  "major" : "Information Technology",
+  "salary" : "5 triệu",
+  "numberOfHiring" : 10,
+  "requireExperience" : "6 tháng",
+  "sex" : "Nam",
+  "workingForm" : "Full-time"
+}
+```
+```json
+{
+  "id": 13,
+  "userId": 9,
+  "jobTitle": "Lập trình viên Android Fake",
+  "jobDescription": "Lập trình ứng dụng cho Android",
+  "jobAddress": "Hà Nội",
+  "major": "Information Technology",
+  "salary": "5 triệu",
+  "numberOfHiring": 10,
+  "requireExperience": "6 tháng",
+  "sex": "Nam",
+  "workingForm": "Full-time"
+}
+```
+<a name="job_list"></a>
+### c. Lấy danh sách công việc
+```http request
+GET http://localhost:5000/api/job?page=0&pageSize=10
+# Default page = 0, pageSize = 10
+GET http://localhost:5000/api/job
+```
+```json
+{
+  "page": {
+    "currentPage": 0,
+    "pageSize": 10,
+    "totalPage": 1
+  },
+  "elements": [
+    {
+      "id": 13,
+      "userId": 9,
+      "jobTitle": "Lập trình viên Android Fake",
+      "jobDescription": "Lập trình ứng dụng cho Android",
+      "jobAddress": "Hà Nội",
+      "major": "Information Technology",
+      "salary": "5 triệu",
+      "numberOfHiring": 10,
+      "requireExperience": "6 tháng",
+      "sex": "Nam",
+      "workingForm": "Full-time"
+    }
+  ]
+}
+```
+<a name="job_get"></a>
+### d. Lấy thông tin một công việc
+```http request
+GET http://localhost:5000/api/job/13
+```
+```json
+{
+  "id": 13,
+  "userId": 9,
+  "jobTitle": "Lập trình viên Android Fake",
+  "jobDescription": "Lập trình ứng dụng cho Android",
+  "jobAddress": "Hà Nội",
+  "major": "Information Technology",
+  "salary": "5 triệu",
+  "numberOfHiring": 10,
+  "requireExperience": "6 tháng",
+  "sex": "Nam",
+  "workingForm": "Full-time"
+}
+```
+<a name="job_delete"></a>
+### e. Xóa công việc
+```http request
+DELETE http://localhost:5000/api/job/13
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNjc5MzI0MDA4LCJleHAiOjE2Nzk5Mjg4MDh9.903xQJcw98ITqHGluPqSJuqbz0J3xRA1msgoTE6zHLPgw91Nl7EF1mlhZJiDXoZSKV12H3lz8WZpNgUN9PbMhw
+```
+```json
+{
+  "success" : true
 }
 ```
 

@@ -20,6 +20,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class CandidateModel {
 
+    private Long userId;
+
     @NotNull(message = "SVERR4")
     @NotEmpty(message = "SVERR3")
     private String fullName;

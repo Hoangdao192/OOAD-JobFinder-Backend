@@ -20,8 +20,8 @@ public class CompanyModel {
     @NotEmpty(message = "SVERR3")
     private String companyName;
 
-    @NotNull(message = "SVERR4")
-    @NotEmpty(message = "SVERR3")
+//    @NotNull(message = "SVERR4")
+//    @NotEmpty(message = "SVERR3")
     private String companyLogo;
 
     private MultipartFile companyLogoFile;

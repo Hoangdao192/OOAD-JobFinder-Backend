@@ -1,0 +1,20 @@
+### Login
+POST http://localhost:5000/api/login
+Content-Type: application/json
+
+{
+  "email" : "nguyendanghoangdao11a@gmail.com",
+  "password" : "12345678"
+}
+
+### Confirm user
+POST http://localhost:5000/api/register/confirm
+Content-Type: application/json
+
+{
+  "email" : "nguyendanghoangdao11a@gmail.com",
+  "confirmationKey" : "862235"
+}
+
+### Send email confirmation
+GET http://localhost:5000/api/register/confirm/resend?email=nguyendanghoangdao11a@gmail.com

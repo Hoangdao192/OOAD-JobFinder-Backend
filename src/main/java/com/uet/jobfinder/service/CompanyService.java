@@ -8,17 +8,22 @@ import com.uet.jobfinder.error.ServerError;
 import com.uet.jobfinder.exception.CustomIllegalArgumentException;
 import com.uet.jobfinder.model.AddressModel;
 import com.uet.jobfinder.model.CompanyModel;
+import com.uet.jobfinder.model.PageQueryModel;
 import com.uet.jobfinder.repository.CompanyRepository;
 import com.uet.jobfinder.repository.UserRepository;
 import com.uet.jobfinder.security.JsonWebTokenProvider;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -72,6 +77,23 @@ public class CompanyService {
 //        companyRepository.save(company);
 //        return company;
 //    }
+
+    public PageQueryModel<CompanyModel> listCompany(Integer page, Integer pageSize) {
+        Page<Company> companyPage = companyRepository.findAll(
+                PageRequest.of(page, pageSize)
+        );
+        return new PageQueryModel<>(
+                new PageQueryModel.PageModel(
+                        companyPage.getPageable().getPageNumber(),
+                        companyPage.getPageable().getPageSize(),
+                        companyPage.getTotalPages()
+                ),
+                companyPage.getContent()
+                        .stream()
+                        .map(company -> modelMapper.map(company, CompanyModel.class))
+                        .collect(Collectors.toList())
+        );
+    }
 
     public CompanyModel updateCompany(CompanyModel companyModel, HttpServletRequest request) throws IOException {
         Long userId = jsonWebTokenProvider.getUserIdFromRequest(request);

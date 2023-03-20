@@ -1,6 +1,7 @@
 package com.uet.jobfinder.controller;
 
 import com.uet.jobfinder.model.CompanyModel;
+import com.uet.jobfinder.model.PageQueryModel;
 import com.uet.jobfinder.service.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,9 +25,17 @@ public class CompanyController {
 //        return companyService.createCompany(id, companyAddressContext.getCompanyModel(), companyAddressContext.getAddressModel());
 //    }
 
+//    @GetMapping
+//    public ResponseEntity<List<CompanyModel>> getAllCompany() {
+//        return ResponseEntity.ok().body(companyService.getAllCompany());
+//    }
+
     @GetMapping
-    public ResponseEntity<List<CompanyModel>> getAllCompany() {
-        return ResponseEntity.ok().body(companyService.getAllCompany());
+    public ResponseEntity<PageQueryModel> getAllCompany(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer pageSize
+    ) {
+        return ResponseEntity.ok(companyService.listCompany(page, pageSize));
     }
 
     @GetMapping(path = "/{id}")

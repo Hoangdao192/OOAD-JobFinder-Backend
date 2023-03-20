@@ -84,6 +84,13 @@ public class ModelMapperConfiguration {
         TypeMap<Candidate, CandidateModel> candidateMapper = modelMapper.createTypeMap(
                 Candidate.class, CandidateModel.class
         );
+
+        Converter<User, Long> userConverter = mappingContext ->
+                mappingContext.getSource().getId();
+        candidateMapper.addMappings(mapper ->
+                mapper.using(userConverter)
+                        .map(Candidate::getUser, CandidateModel::setUserId));
+
         Converter<Address, AddressModel> addressConverter = mappingContext -> {
             if (mappingContext.getSource() != null) {
                 return modelMapper.map(mappingContext.getSource(), AddressModel.class);
