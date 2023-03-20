@@ -62,8 +62,8 @@ Content-Type: application/json
 <br>a. [Tạo công việc](#job_create)
 <br>b. [Cập nhập công việc](#job_update)
 <br>c. [Lấy danh sách công việc](#job_list)
-<br>c. [Lấy thông tin một công việc](#job_list)
-<br>c. [Xóa công việc](#job_list)
+<br>c. [Lấy thông tin một công việc](#job_get)
+<br>c. [Xóa công việc](#job_delete)
 
 <a name="signup_api"></a>
 ### 1. Đăng kí tài khoản
