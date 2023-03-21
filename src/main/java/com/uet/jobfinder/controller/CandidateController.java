@@ -42,7 +42,7 @@ public class CandidateController {
     public ResponseEntity<CandidateModel> putCandidateById(
             @ModelAttribute @Valid CandidateModel candidateModel,
             HttpServletRequest request) throws IOException {
-        System.out.println(candidateModel.getCandidateAvatarFile().getOriginalFilename());
+//        System.out.println(candidateModel.getCandidateAvatarFile().getOriginalFilename());
         return ResponseEntity.ok(
                 candidateService.updateCandidate(candidateModel, request)
         );

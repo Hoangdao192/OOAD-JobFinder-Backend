@@ -10,10 +10,11 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AddressModel {
+    private Long id;
+
     @NotNull(message = "SVERR4")
     @NotEmpty(message = "SVERR3")
     private String province;
-
     @NotNull(message = "Quận/huyện không được là null")
     @NotEmpty(message = "Quận/huyện không được để trống")
     private String district;

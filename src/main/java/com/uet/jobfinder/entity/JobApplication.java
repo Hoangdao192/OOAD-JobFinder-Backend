@@ -1,8 +1,11 @@
 package com.uet.jobfinder.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 import javax.persistence.*;
 
@@ -11,6 +14,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "job_application")
+@Builder
 public class JobApplication {
 
     @Id
@@ -29,4 +33,7 @@ public class JobApplication {
     private AppFile cvFile;
 
     private String status;
+
+    private LocalDateTime appliedDate;
+    private LocalDateTime updatedDate;
 }

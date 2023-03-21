@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "candidate")
@@ -39,4 +40,7 @@ public class Candidate implements Serializable {
     private String selfDescription;
     private String experience;
     private String education;
+
+    @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL)
+    private List<JobApplication> jobApplications;
 }

@@ -12,6 +12,7 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -87,6 +88,14 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(
                 Map.of("errors", errorList), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({HttpMediaTypeNotSupportedException.class})
+    public ResponseEntity<Map<String, Object>> handleInvalidContentType(
+            HttpMediaTypeNotSupportedException e
+    ) {
+        return new ResponseEntity<>(
+                Map.of("errors", List.of(ServerError.INVALID_REQUEST)), HttpStatus.BAD_REQUEST);
     }
 
 //    @ResponseStatus(HttpStatus.BAD_REQUEST)

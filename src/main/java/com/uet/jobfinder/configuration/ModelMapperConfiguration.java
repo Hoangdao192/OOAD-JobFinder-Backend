@@ -28,6 +28,7 @@ public class ModelMapperConfiguration {
         configMapJobToJobModel(modelMapper);
         configMapCompanyToCompanyModel(modelMapper);
         configMapCandidateToCandidateModel(modelMapper);
+        configMapJobApplicationToJobApplicationModel(modelMapper);
 
         TypeMap<User, UserModel> userMapper = modelMapper.createTypeMap(User.class, UserModel.class);
         Converter<Set<Role>, List<String>> roleConverter = mappingContext -> mappingContext
@@ -53,21 +54,9 @@ public class ModelMapperConfiguration {
         TypeMap<Company, CompanyModel> companyMapper = modelMapper.createTypeMap(
                 Company.class, CompanyModel.class
         );
-        Converter<User, Long> userConverter = mappingContext ->
-                mappingContext.getSource().getId();
         companyMapper.addMappings(mapper ->
-                mapper.using(userConverter)
+                mapper.using(userToLongConverter())
                         .map(Company::getUser, CompanyModel::setUserId));
-
-        Converter<Address, AddressModel> addressConverter = mappingContext -> {
-            if (mappingContext.getSource() != null) {
-                return modelMapper.map(mappingContext.getSource(), AddressModel.class);
-            }
-            return null;
-        };
-        companyMapper.addMappings(mapper ->
-                mapper.using(addressConverter)
-                        .map(Company::getAddress, CompanyModel::setAddress));
 
         Converter<AppFile, String> fileConverter = mappingContext -> {
             if (mappingContext.getSource() != null) {
@@ -85,31 +74,65 @@ public class ModelMapperConfiguration {
                 Candidate.class, CandidateModel.class
         );
 
-        Converter<User, Long> userConverter = mappingContext ->
-                mappingContext.getSource().getId();
         candidateMapper.addMappings(mapper ->
-                mapper.using(userConverter)
+                mapper.using(userToLongConverter())
                         .map(Candidate::getUser, CandidateModel::setUserId));
 
-        Converter<Address, AddressModel> addressConverter = mappingContext -> {
+        candidateMapper.addMappings(mapper -> 
+                mapper.using(appFileToUrlConverter())
+                    .map(Candidate::getAvatar, CandidateModel::setAvatar));
+    }
+
+    private void configMapJobApplicationToJobApplicationModel(ModelMapper modelMapper) {
+        TypeMap<JobApplication, JobApplicationModel> jobApplicationMapper =
+                modelMapper.createTypeMap(JobApplication.class, JobApplicationModel.class);
+
+        jobApplicationMapper.addMappings(mapper ->
+                mapper.using(candidateToLongConverter())
+                        .map(JobApplication::getCandidate, JobApplicationModel::setCandidateId));
+
+        jobApplicationMapper.addMappings(mapper ->
+                mapper.using(jobToLongConverter())
+                        .map(JobApplication::getJob, JobApplicationModel::setJobId));
+
+        jobApplicationMapper.addMappings(mapper ->
+                mapper.using(appFileToUrlConverter())
+                        .map(JobApplication::getCvFile, JobApplicationModel::setCv));
+    }
+
+    private Converter<User, Long> userToLongConverter() {
+        return mappingContext -> {
             if (mappingContext.getSource() != null) {
-                return modelMapper.map(mappingContext.getSource(), AddressModel.class);
+                return mappingContext.getSource().getId();
             }
             return null;
         };
-        candidateMapper.addMappings(mapper ->
-                mapper.using(addressConverter)
-                        .map(Candidate::getAddress, CandidateModel::setAddress));
+    }
 
-        Converter<AppFile, String> fileConverter = mappingContext -> {
+    private Converter<AppFile, String> appFileToUrlConverter() {
+        return mappingContext -> {
             if (mappingContext.getSource() != null) {
                 return fileService.generateFileUrl(mappingContext.getSource().getId());
             }
             return null;
         };
-        candidateMapper.addMappings(mapper -> 
-                mapper.using(fileConverter)
-                    .map(Candidate::getAvatar, CandidateModel::setAvatar));
     }
 
+    private Converter<Candidate, Long> candidateToLongConverter() {
+        return mappingContext -> {
+            if (mappingContext.getSource() != null) {
+                return mappingContext.getSource().getId();
+            }
+            return null;
+        };
+    }
+
+    private Converter<Job, Long> jobToLongConverter() {
+        return mappingContext -> {
+            if (mappingContext.getSource() != null) {
+                return mappingContext.getSource().getId();
+            }
+            return null;
+        };
+    }
 }

@@ -39,7 +39,11 @@ public enum ServerError {
 
     //  Job error
     JOB_NOT_EXISTS("JBERR1", "Job is not exists."),
-    COMPANY_NOT_OWN_JOB("JBERR1", "This company not have authority to edit this job.")
+    COMPANY_NOT_OWN_JOB("JBERR1", "This company not have authority to edit this job."),
+
+    //  Job application
+    CANDIDATE_ALREADY_APPLIED("JAERR1", "Candidate had already applied the job."),
+    JOB_APPLICATION_NOT_EXISTS("JAERR2", "Job application not exists.")
     ;
 
     private String code;
