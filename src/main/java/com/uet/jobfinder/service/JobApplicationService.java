@@ -195,7 +195,7 @@ public class JobApplicationService {
         Job job = jobService.getJobById(jobId);
 
         //  Only company own this job and admin can do this
-        if (job.getCompany().getUser().getId().equals(userId)
+        if (!job.getCompany().getUser().getId().equals(userId)
             && !userService.isAdmin(userId)) {
             throw new CustomIllegalArgumentException(
                     ServerError.ACCESS_DENIED
@@ -218,6 +218,24 @@ public class JobApplicationService {
         );
     }
 
+    public boolean deleteJobApplication(Long jobApplicationId, HttpServletRequest request) {
+        Long userId = jsonWebTokenProvider.getUserIdFromRequest(request);
+
+        Candidate candidate = candidateService.getCandidateById(userId);
+
+        JobApplication jobApplication = getJobApplicationById(jobApplicationId);
+
+        if (jobApplication.getCandidate().getId() != userId) {
+            throw new CustomIllegalArgumentException(
+                ServerError.ACCESS_DENIED
+            );
+        }
+
+        candidate.getJobApplications().remove(jobApplication);
+        jobApplicationRepository.delete(jobApplication);
+        return true;
+    }
+
     public PageQueryModel<JobApplicationModel> getAllJobApplicationByCandidateId(
             Integer page, Integer pageSize, Long candidateId, HttpServletRequest request
     ) {
@@ -226,7 +244,7 @@ public class JobApplicationService {
         Candidate candidate = candidateService.getCandidateById(candidateId);
 
         //  Only candidate and admin can do this
-        if (candidateId.equals(userId) && !userService.isAdmin(userId)) {
+        if (!candidateId.equals(userId) && !userService.isAdmin(userId)) {
             throw new CustomIllegalArgumentException(
                     ServerError.ACCESS_DENIED
             );

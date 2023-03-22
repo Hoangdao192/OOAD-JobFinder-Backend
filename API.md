@@ -64,6 +64,12 @@ Content-Type: application/json
 <br>c. [Lấy danh sách công việc](#job_list)
 <br>c. [Lấy thông tin một công việc](#job_get)
 <br>c. [Xóa công việc](#job_delete)
+6. [API Ứng tuyển](#application_api)
+<br>a. [Ứng viên ứng tuyển](#application_create)
+<br>b. [Công ty chấp nhận đơn ứng tuyển](#application_accept)
+<br>c. [Công ty từ chối đơn ứng tuyển](#application_reject)
+<br>d. [Ứng viên hủy ứng tuyển](#application_delete)
+<br>e. [Lấy danh sách đơn ứng tuyển](#application_list)
 
 <a name="signup_api"></a>
 ### 1. Đăng kí tài khoản
@@ -577,4 +583,129 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNjc5MzI0MDA4L
   "success" : true
 }
 ```
+
+<a name="application_api"></a>
+## 5. API Ứng tuyển
+<a name="application_create"></a>
+### a. Ứng viên ứng tuyển
+Các trường thông tin
+```
+(Long) candidateId: id ứng viên (Bắt buộc)
+(Long) jobId: id công việc (Bắt buộc)
+(Text) description: ghi chú, có thể là mô tả ngắn của ứng viên
+(File pdf) cvFile: file cv
+```
+<i>Form</i>
+```html
+<form action="http://localhost:5000/api/job-application" method="put" enctype="multipart/form-data">
+    <input type="text" name="candidateId">
+    <input type="text" name="jobId">
+    <input type="text" name="description">
+    <input type="file" name="cvFile">
+</form>
+```
+```json
+{
+  "id": 17,
+  "candidateId": 4,
+  "jobId": 15,
+  "status": "Waiting",
+  "description": null,
+  "cvFile": null,
+  "cv": null,
+  "appliedDate": "2023-03-22T17:18:00.5217132",
+  "updatedDate": null
+}
+```
+<a name="application_accept"></a>
+### b. Chấp nhận đơn ứng tuyển
+```http request
+GET http://localhost:5000/api/job-application/accept/17
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNjc5MzI0MDA4LCJleHAiOjE2Nzk5Mjg4MDh9.903xQJcw98ITqHGluPqSJuqbz0J3xRA1msgoTE6zHLPgw91Nl7EF1mlhZJiDXoZSKV12H3lz8WZpNgUN9PbMhw
+```
+```json
+{
+  "success" : true
+}
+```
+<a name="application_reject"></a>
+### c. Từ chối đơn ứng tuyển
+```http request
+GET http://localhost:5000/api/job-application/reject/17
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNjc5MzI0MDA4LCJleHAiOjE2Nzk5Mjg4MDh9.903xQJcw98ITqHGluPqSJuqbz0J3xRA1msgoTE6zHLPgw91Nl7EF1mlhZJiDXoZSKV12H3lz8WZpNgUN9PbMhw
+```
+```json
+{
+  "success" : true
+}
+```
+<a name="application_delete"></a>
+### d. Ứng viên hủy ứng tuyển
+```http request
+DELETE http://localhost:5000/api/job-application/17
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjc5MzYxMjcyLCJleHAiOjE2Nzk5NjYwNzJ9.EE_Y6H1fYqZ1t9nkI-wpFY-eiE25JmdzjW6hpoKTpQXew8uodJ4o3B2n81oMPYMpmCvBkWHKb6nQD5eRSNsx0w
+```
+```json
+{
+  "success" : true
+}
+```
+<a name="application_list"></a>
+### e. Lấy danh sách đơn ứng tuyển
+#### Ứng viên lấy danh sách đơn ứng tuyển đã gửi
+```http request
+GET http://localhost:5000/api/job-application?candidateId=4
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjc5MzYxMjcyLCJleHAiOjE2Nzk5NjYwNzJ9.EE_Y6H1fYqZ1t9nkI-wpFY-eiE25JmdzjW6hpoKTpQXew8uodJ4o3B2n81oMPYMpmCvBkWHKb6nQD5eRSNsx0w
+```
+```json
+{
+  "page": {
+    "currentPage": 0,
+    "pageSize": 10,
+    "totalPage": 1
+  },
+  "elements": [
+    {
+      "id": 18,
+      "candidateId": 4,
+      "jobId": 15,
+      "status": "Waiting",
+      "description": null,
+      "cvFile": null,
+      "cv": null,
+      "appliedDate": "2023-03-22T17:25:17.015413",
+      "updatedDate": null
+    }
+  ]
+}
+```
+#### Công ty lấy danh sách đơn ứng tuyển cho một công việc nhất định
+```http request
+GET http://localhost:5000/api/job-application?jobId=15
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNjc5MzI0MDA4LCJleHAiOjE2Nzk5Mjg4MDh9.903xQJcw98ITqHGluPqSJuqbz0J3xRA1msgoTE6zHLPgw91Nl7EF1mlhZJiDXoZSKV12H3lz8WZpNgUN9PbMhw
+```
+```json
+{
+  "page": {
+    "currentPage": 0,
+    "pageSize": 10,
+    "totalPage": 1
+  },
+  "elements": [
+    {
+      "id": 18,
+      "candidateId": 4,
+      "jobId": 15,
+      "status": "Waiting",
+      "description": null,
+      "cvFile": null,
+      "cv": null,
+      "appliedDate": "2023-03-22T17:25:17.015413",
+      "updatedDate": null
+    }
+  ]
+}
+```
+
+
 

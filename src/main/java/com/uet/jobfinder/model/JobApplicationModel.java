@@ -2,7 +2,6 @@ package com.uet.jobfinder.model;
 
 import java.time.LocalDateTime;
 
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.web.multipart.MultipartFile;

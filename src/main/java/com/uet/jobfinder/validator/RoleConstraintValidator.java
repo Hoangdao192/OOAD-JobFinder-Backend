@@ -10,7 +10,7 @@ public class RoleConstraintValidator implements
 
     @Override
     public void initialize(RoleConstraint roleConstraint) {
-
+        
     }
 
     @Override

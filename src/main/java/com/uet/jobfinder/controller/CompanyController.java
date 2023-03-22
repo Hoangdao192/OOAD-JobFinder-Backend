@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -31,7 +30,7 @@ public class CompanyController {
 //    }
 
     @GetMapping
-    public ResponseEntity<PageQueryModel> getAllCompany(
+    public ResponseEntity<PageQueryModel<CompanyModel>> getAllCompany(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer pageSize
     ) {

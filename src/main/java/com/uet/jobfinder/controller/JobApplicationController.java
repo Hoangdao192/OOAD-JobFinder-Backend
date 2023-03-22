@@ -54,6 +54,20 @@ public class JobApplicationController {
         ));
     }
 
+    @PreAuthorize("hasAnyAuthority('Admin', 'Candidate')")
+    @DeleteMapping("{applicationId}")
+    public ResponseEntity<Map<String, Object>> deleteJobApplication(
+            @PathVariable Long applicationId,
+            HttpServletRequest request
+    ) {
+        return ResponseEntity.ok(
+            Map.of(
+                "success",
+                jobApplicationService.deleteJobApplication(applicationId, request)
+            )
+        );
+    }
+
     @GetMapping("accept/{applicationId}")
     @PreAuthorize("hasAnyAuthority('Admin', 'Company')")
     public ResponseEntity<Map<String, Object>> acceptApplication(
