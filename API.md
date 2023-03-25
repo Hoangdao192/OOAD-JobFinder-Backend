@@ -451,6 +451,46 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNjc5MzI0MDA4L
 }
 ```
 <a name="job_api"></a>
+### c. Lấy danh sách ứng viên
+`page` và `pageSize` có thể có hoặc không.
+<br>Mặc định `page = 0` và `pageSize = 10`
+```http request
+GET http://localhost:5000/api/candidate?page=0&pageSize=10
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjc5MzYxMjcyLCJleHAiOjE2Nzk5NjYwNzJ9.EE_Y6H1fYqZ1t9nkI-wpFY-eiE25JmdzjW6hpoKTpQXew8uodJ4o3B2n81oMPYMpmCvBkWHKb6nQD5eRSNsx0w
+```
+```json
+{
+  "page": {
+    "currentPage": 0,
+    "pageSize": 10,
+    "totalPage": 1
+  },
+  "elements": [
+    {
+      "userId": 4,
+      "fullName": "Dao",
+      "sex": null,
+      "dateOfBirth": null,
+      "contactEmail": null,
+      "phoneNumber": null,
+      "selfDescription": null,
+      "experience": null,
+      "education": null,
+      "address": {
+        "id": 14,
+        "province": "HaNoi",
+        "district": null,
+        "ward": null,
+        "detailAddress": null,
+        "longitude": null,
+        "latitude": null
+      },
+      "avatar": "http://localhost:5000/api/file/image/6",
+      "candidateAvatarFile": null
+    }
+  ]
+}
+```
 ## 5. API Công việc
 <a name="job_create"></a>
 ### a. Tạo công việc

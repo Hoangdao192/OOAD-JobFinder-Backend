@@ -9,12 +9,15 @@ import com.uet.jobfinder.exception.CustomIllegalArgumentException;
 import com.uet.jobfinder.model.AddressModel;
 import com.uet.jobfinder.model.CandidateContext;
 import com.uet.jobfinder.model.CandidateModel;
+import com.uet.jobfinder.model.PageQueryModel;
 import com.uet.jobfinder.repository.AddressRepository;
 import com.uet.jobfinder.repository.CandidateRepository;
 import com.uet.jobfinder.repository.UserRepository;
 import com.uet.jobfinder.security.JsonWebTokenProvider;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +26,7 @@ import java.io.IOException;
 import java.nio.file.InvalidPathException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CandidateService {
@@ -81,41 +85,23 @@ public class CandidateService {
         return candidateRepository.save(candidate);
     }
 
-    public List<CandidateContext> getAllCandidate() {
-        List<Candidate> candidates = candidateRepository.findAll();
-        List<CandidateContext> candidateContexts = new ArrayList<>();
+    public PageQueryModel<CandidateModel> getAllCandidate(
+            Integer page, Integer pageSize
+    ) {
+        Page<Candidate> candidates = candidateRepository.findAll(
+                PageRequest.of(page, pageSize)
+        );
 
-        for (Candidate candidate : candidates) {
-            Address address = addressRepository.findById(candidate.getAddress().getId())
-                    .orElseThrow(() -> new InvalidPathException("../api/candidate/id", "Địa chỉ không tồn tại."));
-            AddressModel addressModel = AddressModel.builder()
-                    .province(address.getProvince())
-                    .district(address.getDistrict())
-                    .ward(address.getWard())
-                    .detailAddress(address.getDetailAddress())
-                    .longitude(address.getLongitude())
-                    .latitude(address.getLatitude())
-                    .build();
-
-            CandidateModel candidateModel = CandidateModel.builder()
-                    .fullName(candidate.getFullName())
-                    .sex(candidate.getSex())
-                    .dateOfBirth(candidate.getDateOfBirth())
-                    .contactEmail(candidate.getContactEmail())
-                    .phoneNumber(candidate.getPhoneNumber())
-                    .selfDescription(candidate.getSelfDescription())
-                    .experience(candidate.getExperience())
-                    .education(candidate.getEducation())
-                    .build();
-
-            CandidateContext candidateContext = CandidateContext.builder()
-                    .addressModel(addressModel)
-                    .candidateModel(candidateModel)
-                    .build();
-
-            candidateContexts.add(candidateContext);
-        }
-        return candidateContexts;
+        return new PageQueryModel<>(
+                new PageQueryModel.PageModel(
+                        candidates.getPageable().getPageNumber(),
+                        candidates.getPageable().getPageSize(),
+                        candidates.getTotalPages()
+                ),
+                candidates.getContent().stream().map(
+                        candidate -> modelMapper.map(candidate, CandidateModel.class)
+                ).collect(Collectors.toList())
+        );
     }
 
     public Candidate getCandidateById(Long id) {

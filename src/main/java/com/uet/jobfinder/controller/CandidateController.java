@@ -2,6 +2,7 @@ package com.uet.jobfinder.controller;
 
 import com.uet.jobfinder.model.CandidateContext;
 import com.uet.jobfinder.model.CandidateModel;
+import com.uet.jobfinder.model.PageQueryModel;
 import com.uet.jobfinder.service.CandidateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,8 +29,11 @@ public class CandidateController {
 //    }
 
     @GetMapping
-    public ResponseEntity<List<CandidateContext>> getAllCandidate() {
-        return ResponseEntity.ok().body(candidateService.getAllCandidate());
+    public ResponseEntity<PageQueryModel<CandidateModel>> getAllCandidate(
+            @RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(required = false, defaultValue = "10") Integer pageSize
+    ) {
+        return ResponseEntity.ok().body(candidateService.getAllCandidate(page, pageSize));
     }
 
     @GetMapping(path = "/{id}")
