@@ -58,6 +58,7 @@ Content-Type: application/json
 4. [API Ứng viên](#candidate_api)
 <br>a. [Cập nhập thông tin ứng viên](#candidate_update)
 <br>b. [Lấy thông tin ứng viên](#candidate_get)
+<br>c. [Lấy danh sách ứng viên](#candidate_list)
 5. [API Công việc](#job_api)
 <br>a. [Tạo công việc](#job_create)
 <br>b. [Cập nhập công việc](#job_update)
@@ -450,7 +451,7 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNjc5MzI0MDA4L
   "candidateAvatarFile": null
 }
 ```
-<a name="job_api"></a>
+<a name="candidate_list></a>
 ### c. Lấy danh sách ứng viên
 `page` và `pageSize` có thể có hoặc không.
 <br>Mặc định `page = 0` và `pageSize = 10`
@@ -491,6 +492,7 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjc5MzYxMjcyL
   ]
 }
 ```
+<a name="job_api"></a>
 ## 5. API Công việc
 <a name="job_create"></a>
 ### a. Tạo công việc
