@@ -18,6 +18,16 @@ public class JobController {
 
     private JobService jobService;
 
+    @GetMapping("count")
+    @PreAuthorize("isAuthenticated() and hasAnyAuthority('Company')")
+    public ResponseEntity<Long> countJobByCompanyId(
+            @RequestParam Long companyId, HttpServletRequest request
+    ) {
+        return ResponseEntity.ok(
+                jobService.countOpenJobByCompanyId(companyId, request)
+        );
+    }
+
     @PostMapping
     @PreAuthorize("hasAnyAuthority('Company') and isAuthenticated()")
     public ResponseEntity<JobModel> createJob(@RequestBody @Valid JobModel jobModel, HttpServletRequest request) {
@@ -31,10 +41,17 @@ public class JobController {
 
     @GetMapping
     public ResponseEntity<PageQueryModel<JobModel>> getJobList(
-            @RequestParam(defaultValue = "0") Long page,
-            @RequestParam(defaultValue = "10") Long perPage
+            @RequestParam(defaultValue = "0", required = false) Long page,
+            @RequestParam(defaultValue = "10", required = false) Long perPage,
+            @RequestParam(required = false) Long companyId,
+            @RequestParam(required = false) String jobTitle,
+            @RequestParam(required = false) String major,
+            @RequestParam(required = false) String workingForm
     ) {
-        return ResponseEntity.ok(jobService.getAllJob(page, perPage));
+        return ResponseEntity.ok(
+                jobService.getAllJob(page, perPage, companyId, jobTitle,
+                        major, workingForm)
+        );
     }
 
     @PutMapping

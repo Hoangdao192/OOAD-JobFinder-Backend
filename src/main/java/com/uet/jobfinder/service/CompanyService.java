@@ -10,6 +10,7 @@ import com.uet.jobfinder.model.AddressModel;
 import com.uet.jobfinder.model.CompanyModel;
 import com.uet.jobfinder.model.PageQueryModel;
 import com.uet.jobfinder.repository.CompanyRepository;
+import com.uet.jobfinder.repository.JobApplicationRepository;
 import com.uet.jobfinder.repository.UserRepository;
 import com.uet.jobfinder.security.JsonWebTokenProvider;
 import org.modelmapper.ModelMapper;
@@ -36,6 +37,8 @@ public class CompanyService {
     private CompanyRepository companyRepository;
     private UserRepository userRepository;
     private JsonWebTokenProvider jsonWebTokenProvider;
+    @Autowired
+    private JobApplicationRepository jobApplicationRepository;
 
     public Company getCompanyByUserId(Long userId) {
         User user = userService.getUserById(userId);
@@ -183,6 +186,19 @@ public class CompanyService {
                         ServerError.COMPANY_NOT_EXISTS
                 ));
         return modelMapper.map(company, CompanyModel.class);
+    }
+
+    public Long countComingApplication(Long companyId, HttpServletRequest request) {
+        Long userId = jsonWebTokenProvider.getUserIdFromRequest(request);
+        if (!companyId.equals(userId)) {
+            throw new CustomIllegalArgumentException(
+                    ServerError.ACCESS_DENIED
+            );
+        }
+
+        Company company = getCompanyByUserId(companyId);
+
+        return jobApplicationRepository.countCompanyComingApplication(companyId);
     }
 
 //    public CompanyContext putCompanyById(Long id, CompanyContext companyContext) {

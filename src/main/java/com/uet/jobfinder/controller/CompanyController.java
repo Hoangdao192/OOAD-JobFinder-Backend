@@ -29,6 +29,18 @@ public class CompanyController {
 //        return ResponseEntity.ok().body(companyService.getAllCompany());
 //    }
 
+    @GetMapping("/application/count")
+    @PreAuthorize("isAuthenticated() and hasAnyAuthority('Company')")
+    public ResponseEntity<Long> countComingApplication(
+            @RequestParam Long companyId,
+            HttpServletRequest request
+    ) {
+        return ResponseEntity.ok(
+                companyService.countComingApplication(companyId,request)
+        );
+    }
+
+
     @GetMapping
     public ResponseEntity<PageQueryModel<CompanyModel>> getAllCompany(
             @RequestParam(defaultValue = "0") Integer page,
@@ -43,7 +55,7 @@ public class CompanyController {
     }
 
     @PutMapping
-    @PreAuthorize("hasAnyAuthority('Admin', 'Company')")
+    @PreAuthorize("isAuthenticated() and hasAnyAuthority('Admin', 'Company')")
     public ResponseEntity<CompanyModel> updateCompany(
             @ModelAttribute @Valid CompanyModel companyModel, HttpServletRequest request) throws IOException {
         return ResponseEntity.ok(companyService.updateCompany(companyModel, request));
@@ -65,7 +77,7 @@ public class CompanyController {
 //    }
 
     @DeleteMapping(path = "/{id}")
-    @PreAuthorize("hasAnyAuthozity('Admin', 'Company')")
+    @PreAuthorize("isAuthenticated() and hasAnyAuthority('Admin', 'Company')")
     public ResponseEntity<Object> deleteCompany(@PathVariable Long id, HttpServletRequest request) {
         return ResponseEntity.ok(
                 Map.of("success", companyService.deleteCompanyById(id, request))

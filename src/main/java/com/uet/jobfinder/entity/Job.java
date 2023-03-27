@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -33,4 +35,13 @@ public class Job {
     private Integer numberOfHiring;
     private String requireExperience;
     private String sex;
-    private String workingForm;}
+    private String workingForm;
+
+    private LocalDateTime openDateTime;
+    @Min(value = 0, message = "duration must bigger than 0.")
+    private Long duration;
+
+    @Enumerated(EnumType.ORDINAL)
+    @Column(columnDefinition = "ENUM('OPEN', 'CLOSE')")
+    private JobStatus status;
+}

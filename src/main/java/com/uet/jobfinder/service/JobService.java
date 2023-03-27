@@ -2,6 +2,7 @@ package com.uet.jobfinder.service;
 
 import com.uet.jobfinder.entity.Company;
 import com.uet.jobfinder.entity.Job;
+import com.uet.jobfinder.entity.JobStatus;
 import com.uet.jobfinder.error.ServerError;
 import com.uet.jobfinder.exception.CustomIllegalArgumentException;
 import com.uet.jobfinder.model.JobModel;
@@ -14,8 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,6 +31,21 @@ public class JobService {
     private JsonWebTokenProvider jsonWebTokenProvider;
     @Autowired
     private CompanyRepository companyRepository;
+
+    public Long countOpenJobByCompanyId(
+            Long companyId, HttpServletRequest request
+    ) {
+        Long userId = jsonWebTokenProvider.getUserIdFromRequest(request);
+        Company company = companyService.getCompanyByUserId(userId);
+
+        if (!userId.equals(companyId)) {
+            throw new CustomIllegalArgumentException(
+                    ServerError.ACCESS_DENIED
+            );
+        }
+
+        return jobRepository.countJobByCompanyAndStatus(company, JobStatus.OPEN);
+    }
 
     public JobModel createJob(JobModel jobModel, HttpServletRequest request) {
         Long userId = jsonWebTokenProvider.getUserIdFromRequest(request);
@@ -44,14 +62,21 @@ public class JobService {
                 .requireExperience(jobModel.getRequireExperience())
                 .sex(jobModel.getSex())
                 .workingForm(jobModel.getWorkingForm())
+                .status(JobStatus.OPEN)
+                .openDateTime(LocalDateTime.now())
                 .build();
+
         Job newJob = jobRepository.save(job);
 
         modelMapper.map(newJob, jobModel);
         return jobModel;
     }
 
-    public PageQueryModel<JobModel> getAllJob(Long page, Long perPage) {
+    public PageQueryModel<JobModel> getAllJob(
+            Long page, Long perPage,
+            Long companyId, String jobTitle,
+            String major, String workingForm
+    ) {
         Page<Job> jobPage = jobRepository.findAll(
                 PageRequest.of(page.intValue(), perPage.intValue())
         );
