@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -38,9 +38,10 @@ public class Job {
     private String sex;
     private String workingForm;
 
-    private LocalDateTime openDateTime;
-    @Min(value = 0, message = "duration must bigger than 0.")
-    private Long duration;
+    @Column(nullable = false)
+    private LocalDate openDate;
+    @Column(nullable = false)
+    private LocalDate closeDate;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

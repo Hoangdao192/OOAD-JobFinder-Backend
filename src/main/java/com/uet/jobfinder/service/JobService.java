@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
@@ -63,6 +64,12 @@ public class JobService {
         Long userId = jsonWebTokenProvider.getUserIdFromRequest(request);
         Company company = companyService.getCompanyByUserId(userId);
 
+        if (jobModel.getCloseDate().isBefore(LocalDate.now())) {
+            throw new CustomIllegalArgumentException(
+                    ServerError.INVALID_JOB_CLOSE_DATE
+            );
+        }
+
         Job job = Job.builder()
                 .company(company)
                 .jobTitle(jobModel.getJobTitle())
@@ -74,7 +81,8 @@ public class JobService {
                 .sex(jobModel.getSex())
                 .workingForm(jobModel.getWorkingForm())
                 .status(JobStatus.OPEN)
-                .openDateTime(LocalDateTime.now())
+                .openDate(LocalDate.now())
+                .closeDate(jobModel.getCloseDate())
                 .build();
 
         if (jobModel.getJobAddress() != null) {

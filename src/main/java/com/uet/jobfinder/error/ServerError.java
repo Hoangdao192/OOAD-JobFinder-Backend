@@ -40,6 +40,8 @@ public enum ServerError {
     //  Job error
     JOB_NOT_EXISTS("JBERR1", "Job is not exists."),
     COMPANY_NOT_OWN_JOB("JBERR1", "This company not have authority to edit this job."),
+    INVALID_JOB_CLOSE_DATE("JBERR2", "Invalid job close date."),
+    JOB_CLOSED("JBERR3", "Job has been closed."),
 
     //  Job application
     CANDIDATE_ALREADY_APPLIED("JAERR1", "Candidate had already applied the job."),

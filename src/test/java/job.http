@@ -14,7 +14,8 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjc5OTk0NzI0L
   "numberOfHiring" : 10,
   "requireExperience" : "6 tháng",
   "sex" : "Nam",
-  "workingForm" : "Full-time"
+  "workingForm" : "Full-time",
+  "closeDate" : "2023-04-28"
 }
 
 ### Update job

@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -40,6 +41,12 @@ public class JobApplicationService {
         Candidate candidate = candidateService
                 .getCandidateById(jobApplicationModel.getCandidateId());
         Job job = jobService.getJobById(jobApplicationModel.getJobId());
+
+        if (job.getCloseDate().isBefore(LocalDate.now())) {
+            throw new CustomIllegalArgumentException(
+                    ServerError.JOB_CLOSED
+            );
+        }
 
         //  Because client can send any candidateId in jobApplicationModel
         //  So we need to check if this candidate id is jobApplicationModel.candidateId or not.
