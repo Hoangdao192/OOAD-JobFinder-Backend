@@ -25,8 +25,9 @@ public class Job {
     private String jobTitle;
     @Column(nullable = false)
     private String jobDescription;
-    @Column(nullable = false)
-    private String jobAddress;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "address_id")
+    private Address jobAddress;
     @Column(nullable = false)
     private String major;
     @Column(nullable = false)
@@ -41,7 +42,7 @@ public class Job {
     @Min(value = 0, message = "duration must bigger than 0.")
     private Long duration;
 
-    @Enumerated(EnumType.ORDINAL)
-    @Column(columnDefinition = "ENUM('OPEN', 'CLOSE')")
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private JobStatus status;
 }

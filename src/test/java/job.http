@@ -1,12 +1,14 @@
 ### Create job
 POST http://localhost:5000/api/job
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNjc5MzI0MDA4LCJleHAiOjE2Nzk5Mjg4MDh9.903xQJcw98ITqHGluPqSJuqbz0J3xRA1msgoTE6zHLPgw91Nl7EF1mlhZJiDXoZSKV12H3lz8WZpNgUN9PbMhw
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjc5OTk0NzI0LCJleHAiOjE2ODA1OTk1MjR9.IAA1OucUm32m4F9EmlM99RoONcZwpVJaApGx1PidHU274uapiBwg-WcWHdm_gCNpGD6PYpsBOnv8AJFiwY8emg
 
 {
   "jobTitle" : "Lập trình viên Android",
   "jobDescription" : "Lập trình ứng dụng cho Android",
-  "jobAddress" : "Hà Nội",
+  "jobAddress" : {
+    "province" : "Ha Noi"
+  },
   "major" : "Information Technology",
   "salary" : "5 triệu",
   "numberOfHiring" : 10,

@@ -20,4 +20,9 @@ public class FileController {
         return fileService.getImageFile(id);
     }
 
+    @GetMapping(value = "pdf/{id}", produces = MediaType.APPLICATION_PDF_VALUE)
+    public @ResponseBody byte[] getPdf(@PathVariable Long id) {
+        return fileService.getPdfFile(id);
+    }
+
 }

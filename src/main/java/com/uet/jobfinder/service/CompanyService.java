@@ -51,6 +51,11 @@ public class CompanyService {
     public Company createEmptyCompany(User user) {
         Company company = new Company();
         company.setUser(user);
+        return companyRepository.saveAndFlush(company);
+    }
+
+    public Company createCompany(Company company) {
+        company.setId(null);
         return companyRepository.save(company);
     }
 

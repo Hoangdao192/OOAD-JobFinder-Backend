@@ -20,16 +20,6 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ToString.Exclude
-    @JsonIgnore
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private Company company;
-
-    @ToString.Exclude
-    @JsonIgnore
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private Candidate candidate;
-
     private String email;
     private String password;
     private Boolean enabled;

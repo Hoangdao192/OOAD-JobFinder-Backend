@@ -17,6 +17,16 @@
 		<java.version>11</java.version>
 	</properties>
 	<dependencies>
+<!--		<dependency>-->
+<!--			<groupId>org.hibernate</groupId>-->
+<!--			<artifactId>hibernate-search-elasticsearch</artifactId>-->
+<!--			<version>5.11.12.Final</version>-->
+<!--		</dependency>-->
+<!--		<dependency>-->
+<!--			<groupId>org.hibernate</groupId>-->
+<!--			<artifactId>hibernate-search-orm</artifactId>-->
+<!--			<version>5.11.12.Final</version>-->
+<!--		</dependency>-->
 		<dependency>
 			<groupId>org.zalando</groupId>
 			<artifactId>logbook-spring-boot-starter</artifactId>

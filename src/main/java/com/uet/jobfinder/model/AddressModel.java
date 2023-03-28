@@ -24,9 +24,9 @@ public class AddressModel {
     @NotNull(message = "Địa chỉ chi tiết không được là null")
     @NotEmpty(message = "Địa chỉ chi tiết không được để trống")
     private String detailAddress;
-    @NotNull(message = "Kinh độ không được là null")
+//    @NotNull(message = "Kinh độ không được là null")
     private Float longitude;
-    @NotNull(message = "Vĩ độ không được là null")
+//    @NotNull(message = "Vĩ độ không được là null")
     private Float latitude;
 
 }

@@ -36,7 +36,7 @@ public class UserService {
                                 new CustomIllegalArgumentException(ServerError.INVALID_USER_ROLE))
         );
 
-        return userRepository.save(user);
+        return userRepository.saveAndFlush(user);
     }
 
     public User getUserByEmail(String email) {

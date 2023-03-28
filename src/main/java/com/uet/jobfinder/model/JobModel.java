@@ -1,5 +1,6 @@
 package com.uet.jobfinder.model;
 
+import com.uet.jobfinder.entity.JobStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,9 +24,7 @@ public class JobModel {
     @NotEmpty(message = "SVERR3")
     private String jobDescription;
 
-    @NotNull(message = "SVERR4")
-    @NotEmpty(message = "SVERR3")
-    private String jobAddress;
+    private AddressModel jobAddress;
 
     @NotNull(message = "SVERR4")
     @NotEmpty(message = "SVERR3")
@@ -42,4 +41,6 @@ public class JobModel {
     private String requireExperience;
     private String sex;
     private String workingForm;
+
+    private JobStatus status;
 }

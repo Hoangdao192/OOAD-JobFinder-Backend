@@ -1,12 +1,15 @@
 package com.uet.jobfinder.service;
 
+import com.uet.jobfinder.entity.Address;
 import com.uet.jobfinder.entity.Company;
 import com.uet.jobfinder.entity.Job;
 import com.uet.jobfinder.entity.JobStatus;
 import com.uet.jobfinder.error.ServerError;
 import com.uet.jobfinder.exception.CustomIllegalArgumentException;
+import com.uet.jobfinder.model.AddressModel;
 import com.uet.jobfinder.model.JobModel;
 import com.uet.jobfinder.model.PageQueryModel;
+import com.uet.jobfinder.repository.AddressRepository;
 import com.uet.jobfinder.repository.CompanyRepository;
 import com.uet.jobfinder.repository.JobRepository;
 import com.uet.jobfinder.security.JsonWebTokenProvider;
@@ -31,6 +34,15 @@ public class JobService {
     private JsonWebTokenProvider jsonWebTokenProvider;
     @Autowired
     private CompanyRepository companyRepository;
+    @Autowired
+    private AddressRepository addressRepository;
+
+    public Page<Job> findJob() {
+        return jobRepository.findAllWithJobTitle(
+                PageRequest.of(0, 10),
+                9L, "Lập trình", null, null
+        );
+    }
 
     public Long countOpenJobByCompanyId(
             Long companyId, HttpServletRequest request
@@ -55,7 +67,6 @@ public class JobService {
                 .company(company)
                 .jobTitle(jobModel.getJobTitle())
                 .jobDescription(jobModel.getJobDescription())
-                .jobAddress(jobModel.getJobAddress())
                 .major(jobModel.getMajor())
                 .salary(jobModel.getSalary())
                 .numberOfHiring(jobModel.getNumberOfHiring())
@@ -65,6 +76,20 @@ public class JobService {
                 .status(JobStatus.OPEN)
                 .openDateTime(LocalDateTime.now())
                 .build();
+
+        if (jobModel.getJobAddress() != null) {
+            AddressModel addressModel = jobModel.getJobAddress();
+            Address address = Address.builder()
+                    .province(addressModel.getProvince())
+                    .district(addressModel.getDistrict())
+                    .ward(addressModel.getWard())
+                    .detailAddress(addressModel.getDetailAddress())
+                    .build();
+            address = addressRepository.save(address);
+            job.setJobAddress(address);
+        } else if (company.getAddress() != null) {
+            job.setJobAddress(company.getAddress());
+        }
 
         Job newJob = jobRepository.save(job);
 
@@ -77,8 +102,12 @@ public class JobService {
             Long companyId, String jobTitle,
             String major, String workingForm
     ) {
-        Page<Job> jobPage = jobRepository.findAll(
-                PageRequest.of(page.intValue(), perPage.intValue())
+//        Page<Job> jobPage = jobRepository.findAll(
+//                PageRequest.of(page.intValue(), perPage.intValue())
+//        );
+        Page<Job> jobPage = jobRepository.findAllWithJobTitle(
+                PageRequest.of(0, 10),
+                9L, "Lập trình", null, null
         );
 
         return new PageQueryModel<>(
@@ -113,7 +142,15 @@ public class JobService {
         //  Update job information
         job.setJobTitle(jobModel.getJobTitle());
         job.setJobDescription(jobModel.getJobDescription());
-        job.setJobAddress(jobModel.getJobAddress());
+        if (jobModel.getJobAddress() != null) {
+            AddressModel addressModel = jobModel.getJobAddress();
+            job.setJobAddress(Address.builder()
+                    .province(addressModel.getProvince())
+                    .district(addressModel.getDistrict())
+                    .ward(addressModel.getWard())
+                    .detailAddress(addressModel.getDetailAddress())
+                    .build());
+        }
         job.setMajor(jobModel.getMajor());
         job.setSalary(jobModel.getSalary());
         job.setNumberOfHiring(jobModel.getNumberOfHiring());

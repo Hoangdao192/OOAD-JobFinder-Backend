@@ -64,6 +64,26 @@ public class FileService {
         }
     }
 
+    public byte[] getPdfFile(Long id) {
+        AppFile appFile = getFileById(id);
+        if (!isPdfFile(appFile)) {
+            throw new CustomIllegalArgumentException(
+                    ServerError.INVALID_FILE_TYPE
+            );
+        }
+
+        File file = new File(appFile.getFilePath());
+        FileInputStream fileInputStream = null;
+        try {
+            fileInputStream = new FileInputStream(file);
+            byte[] bytes = fileInputStream.readAllBytes();
+            fileInputStream.close();
+            return bytes;
+        } catch (IOException ioException) {
+            throw new CustomIllegalArgumentException(ServerError.FILE_NOT_EXISTS);
+        }
+    }
+
     public String generateFileUrl(Long id) {
         AppFile appFile = getFileById(id);
         if (isImageFile(appFile)) {
@@ -76,6 +96,10 @@ public class FileService {
         return true;
     }
 
+
+    public boolean isPdfFile(AppFile appFile) {
+        return appFile.getFileType().equals("application/pdf");
+    }
 
     public AppFile getFileById(Long id) {
         return fileRepository.findById(id)

@@ -20,7 +20,7 @@ public class Company implements Serializable {
     @Column(name = "user_id")
     private Long id;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REFRESH)
     @MapsId
     @JoinColumn(name = "user_id")
     private User user;
