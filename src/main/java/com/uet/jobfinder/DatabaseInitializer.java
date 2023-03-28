@@ -1,9 +1,6 @@
 package com.uet.jobfinder;
 
-import com.uet.jobfinder.entity.Company;
-import com.uet.jobfinder.entity.Role;
-import com.uet.jobfinder.entity.User;
-import com.uet.jobfinder.entity.UserType;
+import com.uet.jobfinder.entity.*;
 import com.uet.jobfinder.error.ServerError;
 import com.uet.jobfinder.exception.CustomIllegalArgumentException;
 import com.uet.jobfinder.model.RegisterRequestModel;
@@ -92,6 +89,13 @@ public class DatabaseInitializer implements ApplicationRunner {
                         .companyDescription("A good company")
                         .companyName("UET Software")
                         .numberOfEmployee("1000+")
+                        .address(
+                                Address.builder()
+                                        .province("Hà Nội")
+                                        .district("Cầu Giấy")
+                                        .ward("Xuân Thủy")
+                                        .detailAddress("144").build()
+                        )
                         .build()
         );
     }

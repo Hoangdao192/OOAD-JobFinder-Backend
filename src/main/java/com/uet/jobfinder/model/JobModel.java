@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -43,4 +44,7 @@ public class JobModel {
     private String workingForm;
 
     private JobStatus status;
+    private LocalDateTime openDateTime;
+    @NotNull(message = "SVERR4")
+    private Long duration;
 }

@@ -451,7 +451,7 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNjc5MzI0MDA4L
   "candidateAvatarFile": null
 }
 ```
-<a name="candidate_list></a>
+<a name="candidate_list"></a>
 ### c. Lấy danh sách ứng viên
 `page` và `pageSize` có thể có hoặc không.
 <br>Mặc định `page = 0` và `pageSize = 10`
