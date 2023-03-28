@@ -496,6 +496,21 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjc5MzYxMjcyL
 ## 5. API Công việc
 <a name="job_create"></a>
 ### a. Tạo công việc
+`requireExperience` nhận giá trị với các format sau
+<br>
+`1 year` : 1 năm <br>
+`6 month` : 6 tháng <br>
+`< 1 year` : ít hơn 1 năm <br>
+`> 1 year` : trên 1 năm <br>
+`1 - 2 year` : 1 đến 2 năm <br>
+<br>
+`salary` nhận giá trị với định dạng sau <br>
+`5000000` : cố định 5 triệu đồng <br>
+`> 5000000` : trên 5 triệu <br>
+`1000000 - 5000000`: Từ 1 triệu đến 5 triệu <br>
+`< 5000000` : cao nhất 5 triệu
+
+
 ```http request
 POST http://localhost:5000/api/job
 Content-Type: application/json
@@ -509,8 +524,9 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNjc5MzI0MDA4L
   "salary" : "5 triệu",
   "numberOfHiring" : 10,
   "requireExperience" : "6 tháng",
-  "sex" : "Nam",
-  "workingForm" : "Full-time"
+  "sex" : "Male",
+  "workingForm" : "Full-time",
+  "closeDate" : "2023-04-28"
 }
 ```
 ```json
