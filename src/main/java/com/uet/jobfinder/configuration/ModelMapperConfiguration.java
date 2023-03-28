@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 @Configuration
 public class ModelMapperConfiguration {
 
-    @Autowired
     private FileService fileService;
 
     @Bean
@@ -134,5 +133,10 @@ public class ModelMapperConfiguration {
             }
             return null;
         };
+    }
+
+    @Autowired
+    public void setFileService(FileService fileService) {
+        this.fileService = fileService;
     }
 }

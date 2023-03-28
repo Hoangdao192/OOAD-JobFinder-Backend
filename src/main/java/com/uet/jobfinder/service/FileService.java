@@ -86,6 +86,10 @@ public class FileService {
 
     public String generateFileUrl(Long id) {
         AppFile appFile = getFileById(id);
+        if (isPdfFile(appFile)) {
+            return domainUrl + "api/file/pdf" + id;
+        }
+
         if (isImageFile(appFile)) {
             return domainUrl + "api/file/image/" + id;
         }

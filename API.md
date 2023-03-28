@@ -519,7 +519,12 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNjc5MzI0MDA4L
 {
   "jobTitle" : "Lập trình viên Android",
   "jobDescription" : "Lập trình ứng dụng cho Android",
-  "jobAddress" : "Hà Nội",
+  "jobAddress" : {
+    "province" : "Hà Nội",
+    "district" : "Nam Từ Liêm",
+    "ward" : "Xuân Thủy",
+    "detailAddress" : "144"
+  },
   "major" : "Information Technology",
   "salary" : "5 triệu",
   "numberOfHiring" : 10,
@@ -535,7 +540,13 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNjc5MzI0MDA4L
   "userId": 9,
   "jobTitle": "Lập trình viên Android",
   "jobDescription": "Lập trình ứng dụng cho Android",
-  "jobAddress": "Hà Nội",
+  "jobAddress" : {
+    "id" : 1,
+    "province" : "Hà Nội",
+    "district" : "Nam Từ Liêm",
+    "ward" : "Xuân Thủy",
+    "detailAddress" : "144"
+  },
   "major": "Information Technology",
   "salary": "5 triệu",
   "numberOfHiring": 10,
@@ -555,7 +566,12 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNjc5MzI0MDA4L
   "id" : 13,
   "jobTitle" : "Lập trình viên Android Fake",
   "jobDescription" : "Lập trình ứng dụng cho Android",
-  "jobAddress" : "Hà Nội",
+  "jobAddress" : {
+    "province" : "Hà Nội",
+    "district" : "Nam Từ Liêm",
+    "ward" : "Xuân Thủy",
+    "detailAddress" : "144"
+  },
   "major" : "Information Technology",
   "salary" : "5 triệu",
   "numberOfHiring" : 10,
@@ -570,7 +586,13 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNjc5MzI0MDA4L
   "userId": 9,
   "jobTitle": "Lập trình viên Android Fake",
   "jobDescription": "Lập trình ứng dụng cho Android",
-  "jobAddress": "Hà Nội",
+  "jobAddress" : {
+    "id" : 1,
+    "province" : "Hà Nội",
+    "district" : "Nam Từ Liêm",
+    "ward" : "Xuân Thủy",
+    "detailAddress" : "144"
+  },
   "major": "Information Technology",
   "salary": "5 triệu",
   "numberOfHiring": 10,
@@ -581,10 +603,19 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNjc5MzI0MDA4L
 ```
 <a name="job_list"></a>
 ### c. Lấy danh sách công việc
+API này cung cấp các param sau (đều không bắt buộc)<br>
+`page` : Số thứ tự của trang<br>
+`pageSize` : Số kết quả trả về<br>
+`companyId` : Lọc công việc theo Company<br>
+`jobTitle` : Lọc công việc theo tiêu đề<br>
+`major` : Lọc theo chuyên ngành<br>
+`workingForm` : Lọc theo hình thức làm việc<br>
 ```http request
 GET http://localhost:5000/api/job?page=0&pageSize=10
-# Default page = 0, pageSize = 10
+### Default page = 0, pageSize = 10
 GET http://localhost:5000/api/job
+### Filter by company
+GET http://localhost:5000/api/job?companyId=1
 ```
 ```json
 {
@@ -599,7 +630,13 @@ GET http://localhost:5000/api/job
       "userId": 9,
       "jobTitle": "Lập trình viên Android Fake",
       "jobDescription": "Lập trình ứng dụng cho Android",
-      "jobAddress": "Hà Nội",
+      "jobAddress" : {
+        "id" : 1,
+        "province" : "Hà Nội",
+        "district" : "Nam Từ Liêm",
+        "ward" : "Xuân Thủy",
+        "detailAddress" : "144"
+      },
       "major": "Information Technology",
       "salary": "5 triệu",
       "numberOfHiring": 10,
@@ -621,7 +658,13 @@ GET http://localhost:5000/api/job/13
   "userId": 9,
   "jobTitle": "Lập trình viên Android Fake",
   "jobDescription": "Lập trình ứng dụng cho Android",
-  "jobAddress": "Hà Nội",
+  "jobAddress" : {
+    "id" : 1,
+    "province" : "Hà Nội",
+    "district" : "Nam Từ Liêm",
+    "ward" : "Xuân Thủy",
+    "detailAddress" : "144"
+  },
   "major": "Information Technology",
   "salary": "5 triệu",
   "numberOfHiring": 10,
