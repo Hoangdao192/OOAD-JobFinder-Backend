@@ -38,10 +38,6 @@ public class CandidateModel {
     private String phoneNumber;
 
     private String selfDescription;
-    private String experience;
-    private String education;
-
-    private AddressModel address;
 
     private String avatar;
     private MultipartFile candidateAvatarFile;

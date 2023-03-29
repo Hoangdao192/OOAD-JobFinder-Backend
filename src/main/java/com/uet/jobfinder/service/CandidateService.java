@@ -23,9 +23,6 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.nio.file.InvalidPathException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -62,13 +59,10 @@ public class CandidateService {
                 .user(user)
                 .fullName(candidateModel.getFullName())
                 .sex(candidateModel.getSex())
-                .address(address)
                 .dateOfBirth(candidateModel.getDateOfBirth())
                 .contactEmail(candidateModel.getContactEmail())
                 .phoneNumber(candidateModel.getPhoneNumber())
                 .selfDescription(candidateModel.getSelfDescription())
-                .experience(candidateModel.getExperience())
-                .education(candidateModel.getEducation())
                 .build();
 
         candidateRepository.save(candidate);
@@ -82,6 +76,11 @@ public class CandidateService {
     public Candidate createEmptyCandidate(User user) {
         Candidate candidate = new Candidate();
         candidate.setUser(user);
+        return candidateRepository.save(candidate);
+    }
+
+    public Candidate createCandidate(Candidate candidate) {
+        candidate.setId(null);
         return candidateRepository.save(candidate);
     }
 
@@ -125,24 +124,6 @@ public class CandidateService {
                 ));
         Candidate candidate = getCandidateByUser(user);
 
-        if (candidateModel.getAddress() != null) {
-            AddressModel addressModel = candidateModel.getAddress();
-            Address address;
-            if (candidate.getAddress() == null) {
-                address = new Address();
-            } else {
-                address = candidate.getAddress();
-            }
-
-            address.setProvince(addressModel.getProvince());
-            address.setDistrict(addressModel.getDistrict());
-            address.setWard(addressModel.getWard());
-            address.setDetailAddress(addressModel.getDetailAddress());
-            address.setLongitude(addressModel.getLongitude());
-            address.setLatitude(addressModel.getLatitude());
-            candidate.setAddress(address);
-        }
-
         if (candidateModel.getCandidateAvatarFile() != null) {
             AppFile appFile = fileService.saveFile(
                     candidateModel.getCandidateAvatarFile().getOriginalFilename(),
@@ -158,8 +139,6 @@ public class CandidateService {
         candidate.setContactEmail(candidateModel.getContactEmail());
         candidate.setPhoneNumber(candidateModel.getPhoneNumber());
         candidate.setSelfDescription(candidateModel.getSelfDescription());
-        candidate.setExperience(candidateModel.getExperience());
-        candidate.setEducation(candidateModel.getEducation());
 
         candidate = candidateRepository.save(candidate);
         return modelMapper.map(candidate, CandidateModel.class);

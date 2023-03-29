@@ -46,7 +46,8 @@ public class JobController {
             @RequestParam(required = false) Long companyId,
             @RequestParam(required = false) String jobTitle,
             @RequestParam(required = false) String major,
-            @RequestParam(required = false) String workingForm
+            @RequestParam(required = false) String workingForm,
+            @RequestParam(required = false) Boolean isJobOpen
     ) {
         return ResponseEntity.ok(
                 jobService.getAllJob(page, perPage, companyId, jobTitle,

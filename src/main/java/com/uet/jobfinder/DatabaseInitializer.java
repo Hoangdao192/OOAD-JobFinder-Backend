@@ -19,6 +19,8 @@ import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+
 @Component
 public class DatabaseInitializer implements ApplicationRunner {
 
@@ -37,7 +39,7 @@ public class DatabaseInitializer implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         createUserRole();
         createTestCompany();
-//        createTestCandidate();
+        createTestCandidate();
     }
 
     @EventListener(ApplicationReadyEvent.class)
@@ -59,24 +61,25 @@ public class DatabaseInitializer implements ApplicationRunner {
     }
 
     private void createTestCandidate() {
-        RegisterRequestModel companyRequestModel = new RegisterRequestModel();
-        companyRequestModel.setEmail("20020376@vnu.edu.vn");
-        companyRequestModel.setPassword(passwordEncoder.encode("12345678"));
-        companyRequestModel.setRole(UserType.CANDIDATE);
-        User user = userService.createUser(
-                companyRequestModel
-        );
+        User user = new User("20020376@vnu.edu.vn", passwordEncoder.encode("12345678"));
+        user.addRole(roleRepository.findByName(UserType.CANDIDATE)
+                .orElseThrow(() ->
+                        new CustomIllegalArgumentException(ServerError.INVALID_USER_ROLE)));
+        user.setEnabled(true);
 
-        if (userService.isCandidate(user)) {
-            candidateService.createEmptyCandidate(user);
-        }
+        candidateService.createCandidate(
+                Candidate.builder().user(user)
+                        .fullName("Hoàng Đạo")
+                        .sex("Male")
+                        .dateOfBirth(LocalDate.of(2002, 2, 19))
+                        .contactEmail("20020376@vnu.edu.vn")
+                        .selfDescription("Sinh viên CNTT")
+                        .phoneNumber("0325135251")
+                        .build()
+        );
     }
 
     private void createTestCompany() {
-        RegisterRequestModel companyRequestModel = new RegisterRequestModel();
-        companyRequestModel.setEmail("20020390@vnu.edu.vn");
-        companyRequestModel.setPassword("12345678");
-        companyRequestModel.setRole(UserType.COMPANY);
         User user = new User("20020390@vnu.edu.vn", passwordEncoder.encode("12345678"));
         user.addRole(roleRepository.findByName(UserType.COMPANY)
                 .orElseThrow(() ->

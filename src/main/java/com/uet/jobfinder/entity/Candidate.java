@@ -31,15 +31,10 @@ public class Candidate implements Serializable {
 
     private String fullName;
     private String sex;
-    @OneToOne(cascade = CascadeType.ALL)
-    private Address address;
-
     private LocalDate dateOfBirth;
     private String contactEmail;
     private String phoneNumber;
     private String selfDescription;
-    private String experience;
-    private String education;
 
     @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL)
     private List<JobApplication> jobApplications;

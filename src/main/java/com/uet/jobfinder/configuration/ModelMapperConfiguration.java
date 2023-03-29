@@ -28,6 +28,7 @@ public class ModelMapperConfiguration {
         configMapCompanyToCompanyModel(modelMapper);
         configMapCandidateToCandidateModel(modelMapper);
         configMapJobApplicationToJobApplicationModel(modelMapper);
+        configMapSavedJobToSaveJobModel(modelMapper);
 
         TypeMap<User, UserModel> userMapper = modelMapper.createTypeMap(User.class, UserModel.class);
         Converter<Set<Role>, List<String>> roleConverter = mappingContext -> mappingContext
@@ -97,6 +98,18 @@ public class ModelMapperConfiguration {
         jobApplicationMapper.addMappings(mapper ->
                 mapper.using(appFileToUrlConverter())
                         .map(JobApplication::getCvFile, JobApplicationModel::setCv));
+    }
+
+    private void configMapSavedJobToSaveJobModel(ModelMapper modelMapper) {
+        TypeMap<SavedJob, SavedJobModel> savedJobMapper =
+                modelMapper.createTypeMap(SavedJob.class, SavedJobModel.class);
+
+        savedJobMapper.addMappings(mapper ->
+                mapper.using(candidateToLongConverter())
+                        .map(SavedJob::getCandidate, SavedJobModel::setCandidateId));
+//        savedJobMapper.addMappings(mapper ->
+//                mapper.using(jobToLongConverter())
+//                        .map(SavedJob::getJob, SavedJobModel::setJobId));
     }
 
     private Converter<User, Long> userToLongConverter() {

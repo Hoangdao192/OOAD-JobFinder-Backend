@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -199,6 +200,8 @@ public class JobService {
         jobRepository.delete(job);
         return true;
     }
+
+
 
     public Job getJobById(Long id) {
         return jobRepository.findById(id)

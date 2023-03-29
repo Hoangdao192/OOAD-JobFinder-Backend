@@ -45,7 +45,9 @@ public enum ServerError {
 
     //  Job application
     CANDIDATE_ALREADY_APPLIED("JAERR1", "Candidate had already applied the job."),
-    JOB_APPLICATION_NOT_EXISTS("JAERR2", "Job application not exists.")
+    JOB_APPLICATION_NOT_EXISTS("JAERR2", "Job application not exists."),
+    JOB_ALREADY_SAVED("JAERR3", "Candidate has already saved this job."),
+    SAVED_JOB_NOT_EXISTS("JBERR4", "Saved job not exists.")
     ;
 
     private String code;
