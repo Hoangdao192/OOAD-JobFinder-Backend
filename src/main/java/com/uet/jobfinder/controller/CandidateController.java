@@ -19,7 +19,7 @@ import java.util.Map;
 @PreAuthorize("isAuthenticated()")
 public class CandidateController {
     @Autowired
-    CandidateService candidateService;
+    private CandidateService candidateService;
 
 //    @PostMapping(path = "/{id}")
 //    public ResponseEntity<CandidateContext> createCandidate(@PathVariable Long id,

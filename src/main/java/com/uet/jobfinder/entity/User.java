@@ -30,6 +30,7 @@ public class User implements UserDetails {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Candidate candidate;
 
+
     private String email;
     private String password;
     private Boolean enabled;

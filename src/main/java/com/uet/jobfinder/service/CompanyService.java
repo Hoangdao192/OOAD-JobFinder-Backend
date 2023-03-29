@@ -1,15 +1,14 @@
 package com.uet.jobfinder.service;
 
-import com.uet.jobfinder.entity.Address;
-import com.uet.jobfinder.entity.AppFile;
-import com.uet.jobfinder.entity.Company;
-import com.uet.jobfinder.entity.User;
+import com.uet.jobfinder.entity.*;
 import com.uet.jobfinder.error.ServerError;
 import com.uet.jobfinder.exception.CustomIllegalArgumentException;
 import com.uet.jobfinder.model.AddressModel;
 import com.uet.jobfinder.model.CompanyModel;
 import com.uet.jobfinder.model.PageQueryModel;
+import com.uet.jobfinder.model.SearchCompanyModel;
 import com.uet.jobfinder.repository.CompanyRepository;
+import com.uet.jobfinder.repository.EvaluateStarRepository;
 import com.uet.jobfinder.repository.UserRepository;
 import com.uet.jobfinder.security.JsonWebTokenProvider;
 import org.modelmapper.ModelMapper;
@@ -36,6 +35,7 @@ public class CompanyService {
     private UserService userService;
     private CompanyRepository companyRepository;
     private UserRepository userRepository;
+    private EvaluateStarRepository evaluateStarRepository;
     private JsonWebTokenProvider jsonWebTokenProvider;
 
     public Company getCompanyByUserId(Long userId) {
@@ -237,6 +237,56 @@ public class CompanyService {
         return true;
     }
 
+    public List<CompanyModel> findCompany(SearchCompanyModel searchCompanyModel) {
+        List<Company> companyList = companyRepository.findAll();
+        ArrayList<Company> companyArrayList = new ArrayList<>();
+
+        for (Company company: companyList) {
+            companyArrayList.add(company);
+        }
+
+        if (searchCompanyModel.getStar() != null) {
+            Byte star = searchCompanyModel.getStar();
+            int l = companyArrayList.size();
+            for (int i = 0; i < l; i++) {
+                Company company = companyArrayList.get(i);
+                if (company.getEvaluateStar().getStar() < star) {
+                    companyArrayList.remove(company);
+                    --l;
+                    --i;
+                }
+            }
+        }
+
+        if (searchCompanyModel.getNameCompany() != null && searchCompanyModel.getNameCompany().length() > 0) {
+            String name = searchCompanyModel.getNameCompany();
+
+            int l = companyArrayList.size();
+            for (int i = 0; i < l; i++) {
+                Company company = companyArrayList.get(i);
+                System.out.println(name + " -- " + company.getCompanyName() + ": " + company.getCompanyName().contains(name));
+                if (!company.getCompanyName().contains(name)) {
+                    companyArrayList.remove(company);
+                    --l;
+                    --i;
+                }
+            }
+        }
+
+        List<CompanyModel> companyModels = new ArrayList<>();
+        for (Company company : companyArrayList) {
+            CompanyModel companyModel = CompanyModel.builder()
+                    .companyName(company.getCompanyName())
+                    .companyDescription(company.getCompanyDescription())
+                    .numberOfEmployee(company.getNumberOfEmployee())
+                    .build();
+
+            companyModels.add(companyModel);
+        }
+
+        return companyModels;
+    }
+
     @Autowired
     public void setModelMapper(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
@@ -257,5 +307,10 @@ public class CompanyService {
     @Autowired
     public void setJsonWebTokenProvider(JsonWebTokenProvider jsonWebTokenProvider) {
         this.jsonWebTokenProvider = jsonWebTokenProvider;
+    }
+
+    @Autowired
+    public void setEvaluateStarRepository(EvaluateStarRepository evaluateStarRepository) {
+        this.evaluateStarRepository = evaluateStarRepository;
     }
 }

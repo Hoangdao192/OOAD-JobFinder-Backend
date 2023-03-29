@@ -1,9 +1,7 @@
 package com.uet.jobfinder.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -24,6 +22,12 @@ public class Company implements Serializable {
     @MapsId
     @JoinColumn(name = "user_id")
     private User user;
+
+    @ToString.Exclude
+    @JsonIgnore
+    @OneToOne(mappedBy = "company", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private EvaluateStar evaluateStar;
 
     private String companyName;
 

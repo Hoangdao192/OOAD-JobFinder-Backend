@@ -20,7 +20,7 @@ public class Candidate implements Serializable {
     @Column(name = "user_id")
     private Long id;
 
-    @OneToOne(cascade = CascadeType.REFRESH)
+    @OneToOne
     @MapsId
     @JoinColumn(name = "user_id")
     private User user;

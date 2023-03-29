@@ -17,7 +17,8 @@ import java.util.UUID;
 @Service
 public class FileService {
 
-    @Value("${upload.path}")
+//    @Value("${upload.path}")
+    @Value("upload")
     private String fileStoragePath;
     @Value("${domain.url}")
     private String domainUrl;

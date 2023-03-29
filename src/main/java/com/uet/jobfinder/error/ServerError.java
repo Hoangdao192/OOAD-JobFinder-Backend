@@ -23,6 +23,17 @@ public enum ServerError {
     //  Company error
     NULL_COMPANY_LOGO("SVERR13", "Company logo cannot be null"),
 
+    // Evaluate error
+    EVALUATE_NOT_EXITS("EVALEER1", "Evaluate not exists"),
+    EVALUATE_EXITS("EVALEER2", "Evaluate exists"),
+
+    // Report error
+    REPORT_DESC_NOT_EMPTY("REPORTEER1", "Describe report is empty"),
+    REPORT_DESC_NOT_NULL("REPORTEER2", "Describe report is null"),
+    REPORT_DATE_NOT_NULL("REPORTEER3", "Date report is null"),
+    REPORT_NOT_EXISTED("REPORTEER4", "Report not existed"),
+
+
     //  Login error
     WRONG_PASSWORD_OR_USERNAME("LGERR1", "Username or password is incorrect."),
     EMAIL_NOT_EMPTY("LGERR2", "Email cannot be empty."),
@@ -39,9 +50,7 @@ public enum ServerError {
 
     //  Job error
     JOB_NOT_EXISTS("JBERR1", "Job is not exists."),
-    COMPANY_NOT_OWN_JOB("JBERR1", "This company not have authority to edit this job.")
-    ;
-
+    COMPANY_NOT_OWN_JOB("JBERR1", "This company not have authority to edit this job.");
     private String code;
     private String message;
 

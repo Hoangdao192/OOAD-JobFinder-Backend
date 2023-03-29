@@ -2,6 +2,7 @@ package com.uet.jobfinder.controller;
 
 import com.uet.jobfinder.model.CompanyModel;
 import com.uet.jobfinder.model.PageQueryModel;
+import com.uet.jobfinder.model.SearchCompanyModel;
 import com.uet.jobfinder.service.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ import java.util.Map;
 @RequestMapping("company")
 public class CompanyController {
     @Autowired
-    CompanyService companyService;
+    private CompanyService companyService;
 
 //    @PostMapping(path = "/{id}")
 //    public Company createCompany(@PathVariable Long id,
@@ -71,5 +72,10 @@ public class CompanyController {
         return ResponseEntity.ok(
                 Map.of("success", companyService.deleteCompanyById(id, request))
         );
+    }
+
+    @GetMapping("/listCompany")
+    public ResponseEntity<List<CompanyModel>> findCompany(@RequestBody SearchCompanyModel searchCompanyModel){
+        return ResponseEntity.ok().body(companyService.findCompany(searchCompanyModel));
     }
 }
