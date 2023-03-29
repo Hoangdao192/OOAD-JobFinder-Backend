@@ -71,6 +71,8 @@ Content-Type: application/json
 <br>c. [Công ty từ chối đơn ứng tuyển](#application_reject)
 <br>d. [Ứng viên hủy ứng tuyển](#application_delete)
 <br>e. [Lấy danh sách đơn ứng tuyển](#application_list)
+7. [API Tiện ích](#until_api)
+<br>a. [Lấy danh sách chuyên ngành](#major_api)
 
 <a name="signup_api"></a>
 ### 1. Đăng kí tài khoản
@@ -819,5 +821,47 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNjc5MzI0MDA4L
 }
 ```
 
-
+<a name="until_api"></a>
+## 7. API Tiện ích
+<a name="major_api"></a>
+### a. Lấy danh sách chuyên ngành
+```http request
+GET http://localhost:5000/api/major
+```
+```json
+[
+  {
+    "id": 7,
+    "name": "Công nghệ thông tin"
+  },
+  {
+    "id": 8,
+    "name": "Hệ thống thông tin"
+  },
+  {
+    "id": 9,
+    "name": "An toàn thông tin"
+  },
+  {
+    "id": 10,
+    "name": "Quản trị kinh doanh"
+  },
+  {
+    "id": 11,
+    "name": "Mạng máy tính và truyền thông dữ liệu"
+  },
+  {
+    "id": 12,
+    "name": "Logistics và Quản lý chuỗi cung ứng"
+  },
+  {
+    "id": 13,
+    "name": "Kỹ thuật máy tính"
+  },
+  {
+    "id": 14,
+    "name": "Công nghệ truyền thông"
+  }
+]
+```
 

@@ -1,0 +1,2 @@
+### Get all major
+GET http://localhost:5000/api/major

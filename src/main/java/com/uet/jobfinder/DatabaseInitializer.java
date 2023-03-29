@@ -3,8 +3,10 @@ package com.uet.jobfinder;
 import com.uet.jobfinder.entity.*;
 import com.uet.jobfinder.error.ServerError;
 import com.uet.jobfinder.exception.CustomIllegalArgumentException;
+import com.uet.jobfinder.model.MajorService;
 import com.uet.jobfinder.model.RegisterRequestModel;
 import com.uet.jobfinder.repository.CompanyRepository;
+import com.uet.jobfinder.repository.MajorRepository;
 import com.uet.jobfinder.repository.RoleRepository;
 import com.uet.jobfinder.repository.UserRepository;
 import com.uet.jobfinder.service.CandidateService;
@@ -34,12 +36,17 @@ public class DatabaseInitializer implements ApplicationRunner {
     private RoleRepository roleRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private MajorRepository majorRepository;
+    @Autowired
+    private MajorService majorService;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
         createUserRole();
         createTestCompany();
         createTestCandidate();
+        createMajor();
     }
 
     @EventListener(ApplicationReadyEvent.class)
@@ -101,5 +108,16 @@ public class DatabaseInitializer implements ApplicationRunner {
                         )
                         .build()
         );
+    }
+
+    private void createMajor() {
+        majorService.createMajor(new Major("Công nghệ thông tin"));
+        majorService.createMajor(new Major("Hệ thống thông tin"));
+        majorService.createMajor(new Major("An toàn thông tin"));
+        majorService.createMajor(new Major("Quản trị kinh doanh"));
+        majorService.createMajor(new Major("Mạng máy tính và truyền thông dữ liệu"));
+        majorService.createMajor(new Major("Logistics và Quản lý chuỗi cung ứng"));
+        majorService.createMajor(new Major("Kỹ thuật máy tính"));
+        majorService.createMajor(new Major("Công nghệ truyền thông"));
     }
 }
