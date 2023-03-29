@@ -794,14 +794,25 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNjc5MzI0MDA4L
   },
   "elements": [
     {
-      "id": 18,
-      "candidateId": 4,
-      "jobId": 15,
+      "id": 9,
+      "candidateId": null,
+      "candidate": {
+        "userId": 6,
+        "fullName": "Hoàng Đạo",
+        "sex": "Male",
+        "dateOfBirth": "2002-02-19",
+        "contactEmail": "20020376@vnu.edu.vn",
+        "phoneNumber": "0325135251",
+        "selfDescription": "Sinh viên CNTT",
+        "avatar": null,
+        "candidateAvatarFile": null
+      },
+      "jobId": 8,
       "status": "Waiting",
       "description": null,
       "cvFile": null,
       "cv": null,
-      "appliedDate": "2023-03-22T17:25:17.015413",
+      "appliedDate": "2023-03-29T16:05:46.076455",
       "updatedDate": null
     }
   ]
