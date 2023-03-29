@@ -25,4 +25,14 @@ public interface JobRepository extends JpaRepository<Job, Long> {
                       @Param("jobTitle") String jobTitle, @Param("major") String major,
                       @Param("workingForm") String workingForm
     );
+
+    @Query(nativeQuery = true, value =
+            "select * from job where " +
+                    "   (:companyId is null or job.company_user_id = :companyId) " +
+                    "   and (:major is null or job.major = :major) " +
+                    "   and (:workingForm is null or job.working_form = :workingForm)")
+    Page<Job> findAllWithOutTitle(Pageable pageable, @Param("companyId") Long companyId,
+                                  @Param("major") String major,
+                                  @Param("workingForm") String workingForm
+    );
 }

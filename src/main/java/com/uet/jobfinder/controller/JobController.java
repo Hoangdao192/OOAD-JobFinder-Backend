@@ -41,8 +41,8 @@ public class JobController {
 
     @GetMapping
     public ResponseEntity<PageQueryModel<JobModel>> getJobList(
-            @RequestParam(defaultValue = "0", required = false) Long page,
-            @RequestParam(defaultValue = "10", required = false) Long perPage,
+            @RequestParam(defaultValue = "0", required = false) Integer page,
+            @RequestParam(defaultValue = "10", required = false) Integer perPage,
             @RequestParam(required = false) Long companyId,
             @RequestParam(required = false) String jobTitle,
             @RequestParam(required = false) String major,

@@ -40,7 +40,7 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNjc5MzI0MDA4L
 GET http://localhost:5000/api/job/13
 
 ### List job
-GET http://localhost:5000/api/job
+GET http://localhost:5000/api/job?jobTitle=ap
 
 ### Delete job
 DELETE http://localhost:5000/api/job/13

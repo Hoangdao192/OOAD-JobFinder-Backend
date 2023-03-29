@@ -106,22 +106,30 @@ public class JobService {
     }
 
     public PageQueryModel<JobModel> getAllJob(
-            Long page, Long perPage,
+            Integer page, Integer perPage,
             Long companyId, String jobTitle,
             String major, String workingForm
     ) {
 //        Page<Job> jobPage = jobRepository.findAll(
 //                PageRequest.of(page.intValue(), perPage.intValue())
 //        );
-        Page<Job> jobPage = jobRepository.findAllWithJobTitle(
-                PageRequest.of(0, 10),
-                9L, "Lập trình", null, null
-        );
+        Page<Job> jobPage = null;
+        if (jobTitle == null || jobTitle.length() == 0) {
+            jobPage = jobRepository.findAllWithOutTitle(
+                    PageRequest.of(page, perPage),
+                    companyId, major, workingForm
+            );
+        } else {
+            jobPage = jobRepository.findAllWithJobTitle(
+                    PageRequest.of(page, perPage),
+                    companyId, jobTitle, major, workingForm
+            );
+        }
 
         return new PageQueryModel<>(
                 new PageQueryModel.PageModel(
-                        jobPage.getPageable().getPageNumber(),
-                        jobPage.getPageable().getPageSize(),
+                        jobPage.getPageable() != null ? jobPage.getPageable().getPageNumber() : 0,
+                        jobPage.getPageable() != null ? jobPage.getPageable().getPageSize() : 0,
                         jobPage.getTotalPages()
                 ),
                 jobPage.getContent().stream()
