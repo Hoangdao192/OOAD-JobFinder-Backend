@@ -22,6 +22,8 @@ public class JobApplicationModel {
     @NotNull(message = "SVERR4")
     private Long candidateId;
 
+    private CandidateModel candidate;
+
     @NotNull(message = "SVERR4")
     private Long jobId;
 

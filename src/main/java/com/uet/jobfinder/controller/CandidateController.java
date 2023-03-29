@@ -1,6 +1,5 @@
 package com.uet.jobfinder.controller;
 
-import com.uet.jobfinder.model.CandidateContext;
 import com.uet.jobfinder.model.CandidateModel;
 import com.uet.jobfinder.model.PageQueryModel;
 import com.uet.jobfinder.service.CandidateService;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 @RestController

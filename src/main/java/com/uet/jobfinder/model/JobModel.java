@@ -26,6 +26,7 @@ public class JobModel {
     @NotEmpty(message = "SVERR3")
     private String jobDescription;
 
+    @NotNull(message = "SVERR4")
     private AddressModel jobAddress;
 
     @NotNull(message = "SVERR4")

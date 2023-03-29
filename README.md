@@ -1,3 +1,10 @@
+ý nghĩa của hệ thống này
+phân tích usecase, đặc tả từng actor
+Mô hình phân tích thiết kế, hệ thống (CHọn class diagram hoặc sequence diagram)
+Tuân thủ quy tắc IBM
+security, persistance như thế nào, mô hình
+demo, kiểm thử
+
 # Ứng dụng tìm kiếm việc làm
 
 ## Nội dung

@@ -1,18 +1,18 @@
 ### Create job application
 POST http://localhost:5000/api/job-application
 Content-Type: multipart/form-data; boundary=boundary234
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjc5MzYxMjcyLCJleHAiOjE2Nzk5NjYwNzJ9.EE_Y6H1fYqZ1t9nkI-wpFY-eiE25JmdzjW6hpoKTpQXew8uodJ4o3B2n81oMPYMpmCvBkWHKb6nQD5eRSNsx0w
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNjgwMDczODg1LCJleHAiOjE2ODA2Nzg2ODV9.sebTC9IVnDUg9H8MNk1EaPn5B7B79GU6usL9wNr5gvh3frF2zWocLXb_4Fug3fJl_glHE0GIp2CaT0OGEjQUhA
 
 --boundary234
 Content-Disposition: form-data; name="jobId"
 Content-Type: text/plain
 
-15
+8
 --boundary234
 Content-Disposition: form-data; name="candidateId"
 Content-Type: text/plain
 
-4
+6
 --boundary234--
 
 ### Accept job application

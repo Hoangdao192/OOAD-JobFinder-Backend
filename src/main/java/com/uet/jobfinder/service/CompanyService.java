@@ -21,15 +21,12 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 
 @Service
 public class CompanyService {
 
-    @Autowired
     private FileService fileService;
 
     private ModelMapper modelMapper;
@@ -37,7 +34,6 @@ public class CompanyService {
     private CompanyRepository companyRepository;
     private UserRepository userRepository;
     private JsonWebTokenProvider jsonWebTokenProvider;
-    @Autowired
     private JobApplicationRepository jobApplicationRepository;
 
     public Company getCompanyByUserId(Long userId) {
@@ -59,33 +55,7 @@ public class CompanyService {
         return companyRepository.save(company);
     }
 
-//    public Company createCompany(Long id, CompanyModel companyModel, AddressModel addressModel) {
-//        User user = userRepository.findById(id)
-//                .orElseThrow(() -> new UsernameNotFoundException("Tài khoản không tồn tại"));
-//
-//        Address address = Address.builder()
-//                .province(addressModel.getProvince())
-//                .district(addressModel.getDistrict())
-//                .ward(addressModel.getWard())
-//                .detailAddress(addressModel.getDetailAddress())
-//                .latitude(addressModel.getLatitude())
-//                .longitude(addressModel.getLongitude())
-//                .build();
-//
-//        Company company = Company.builder()
-//                .user(user)
-//                .companyName(companyModel.getCompanyName())
-//                .companyLogo(companyModel.getCompanyLogo())
-//                .companyDescription(companyModel.getCompanyDescription())
-//                .address(address)
-//                .numberOfEmployee(companyModel.getNumberOfEmployee())
-//                .build();
-//
-//        companyRepository.save(company);
-//        return company;
-//    }
-
-    public PageQueryModel<CompanyModel> listCompany(Integer page, Integer pageSize) {
+    public PageQueryModel<CompanyModel> getAllCompany(Integer page, Integer pageSize) {
         Page<Company> companyPage = companyRepository.findAll(
                 PageRequest.of(page, pageSize)
         );
@@ -133,7 +103,7 @@ public class CompanyService {
                     .longitude(addressModel.getLongitude())
                     .build();
             company.setAddress(address);
-        } else if (addressModel != null && address != null) {
+        } else if (addressModel != null) {
             address.setProvince(addressModel.getProvince());
             address.setDistrict(addressModel.getDistrict());
             address.setWard(addressModel.getWard());
@@ -168,23 +138,6 @@ public class CompanyService {
         return modelMapper.map(company, CompanyModel.class);
     }
 
-    public List<CompanyModel> getAllCompany() {
-        List<Company> companies = companyRepository.findAll();
-        List<CompanyModel> companyModels = new ArrayList<>();
-        for (Company company : companies) {
-            CompanyModel companyModel = CompanyModel.builder()
-                    .companyName(company.getCompanyName())
-                    .companyDescription(company.getCompanyDescription())
-                    .companyLogo(company.getCompanyLogo().getFilePath() )
-                    .numberOfEmployee(company.getNumberOfEmployee())
-                    .build();
-
-            companyModels.add(companyModel);
-        }
-
-        return companyModels;
-    }
-
     public CompanyModel getCompanyById(Long id) {
         Company company = companyRepository.findById(id)
                 .orElseThrow(() -> new CustomIllegalArgumentException(
@@ -203,35 +156,8 @@ public class CompanyService {
 
         Company company = getCompanyByUserId(companyId);
 
-        return jobApplicationRepository.countCompanyComingApplication(companyId);
+        return jobApplicationRepository.countCompanyComingApplication(company.getId());
     }
-
-//    public CompanyContext putCompanyById(Long id, CompanyContext companyContext) {
-//        Company company = companyRepository.findById(id)
-//                .orElseThrow(() -> new InvalidPathException("../api/company/id", "Công ty không tồn tại"));
-//        Address address = addressRepository.findById(company.getAddress().getId())
-//                .orElseThrow(() -> new InvalidPathException("../api/company/id", "Công ty không tồn tại"));
-//
-//        AddressModel addressModel = companyContext.getAddressModel();
-//        CompanyModel companyModel = companyContext.getCompanyModel();
-//
-//        address.setProvince(addressModel.getProvince());
-//        address.setDistrict(addressModel.getDistrict());
-//        address.setWard(addressModel.getWard());
-//        address.setDetailAddress(addressModel.getDetailAddress());
-//        address.setLongitude(addressModel.getLongitude());
-//        address.setLatitude(addressModel.getLatitude());
-//
-//        company.setCompanyName(companyModel.getCompanyName());
-//        company.setCompanyDescription(companyModel.getCompanyDescription());
-//        company.setCompanyLogo(companyModel.getCompanyLogo());
-//        company.setNumberOfEmployee(companyModel.getNumberOfEmployee());
-//        company.setAddress(address);
-//
-//        companyRepository.save(company);
-//
-//        return companyContext;
-//    }
 
     public boolean deleteCompanyById(Long id, HttpServletRequest request) {
         Long userId = jsonWebTokenProvider.getUserIdFromRequest(request);
@@ -277,5 +203,13 @@ public class CompanyService {
     @Autowired
     public void setJsonWebTokenProvider(JsonWebTokenProvider jsonWebTokenProvider) {
         this.jsonWebTokenProvider = jsonWebTokenProvider;
+    }
+    @Autowired
+    public void setFileService(FileService fileService) {
+        this.fileService = fileService;
+    }
+    @Autowired
+    public void setJobApplicationRepository(JobApplicationRepository jobApplicationRepository) {
+        this.jobApplicationRepository = jobApplicationRepository;
     }
 }

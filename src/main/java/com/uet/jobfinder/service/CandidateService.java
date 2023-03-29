@@ -1,13 +1,10 @@
 package com.uet.jobfinder.service;
 
-import com.uet.jobfinder.entity.Address;
 import com.uet.jobfinder.entity.AppFile;
 import com.uet.jobfinder.entity.Candidate;
 import com.uet.jobfinder.entity.User;
 import com.uet.jobfinder.error.ServerError;
 import com.uet.jobfinder.exception.CustomIllegalArgumentException;
-import com.uet.jobfinder.model.AddressModel;
-import com.uet.jobfinder.model.CandidateContext;
 import com.uet.jobfinder.model.CandidateModel;
 import com.uet.jobfinder.model.PageQueryModel;
 import com.uet.jobfinder.repository.AddressRepository;
@@ -18,7 +15,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,37 +37,6 @@ public class CandidateService {
     private UserService userService;
     @Autowired
     private FileService fileService;
-
-    public CandidateContext createCandidate(Long id, CandidateModel candidateModel, AddressModel addressModel) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new UsernameNotFoundException("Tài khoản không tồn tại"));
-
-        Address address = Address.builder()
-                .province(addressModel.getProvince())
-                .district(addressModel.getDistrict())
-                .ward(addressModel.getWard())
-                .detailAddress(addressModel.getDetailAddress())
-                .latitude(addressModel.getLatitude())
-                .longitude(addressModel.getLongitude())
-                .build();
-
-        Candidate candidate = Candidate.builder()
-                .user(user)
-                .fullName(candidateModel.getFullName())
-                .sex(candidateModel.getSex())
-                .dateOfBirth(candidateModel.getDateOfBirth())
-                .contactEmail(candidateModel.getContactEmail())
-                .phoneNumber(candidateModel.getPhoneNumber())
-                .selfDescription(candidateModel.getSelfDescription())
-                .build();
-
-        candidateRepository.save(candidate);
-
-        return CandidateContext.builder()
-                .candidateModel(candidateModel)
-                .addressModel(addressModel)
-                .build();
-    }
 
     public Candidate createEmptyCandidate(User user) {
         Candidate candidate = new Candidate();

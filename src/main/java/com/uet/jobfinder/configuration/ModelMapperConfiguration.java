@@ -87,9 +87,9 @@ public class ModelMapperConfiguration {
         TypeMap<JobApplication, JobApplicationModel> jobApplicationMapper =
                 modelMapper.createTypeMap(JobApplication.class, JobApplicationModel.class);
 
-        jobApplicationMapper.addMappings(mapper ->
-                mapper.using(candidateToLongConverter())
-                        .map(JobApplication::getCandidate, JobApplicationModel::setCandidateId));
+//        jobApplicationMapper.addMappings(mapper ->
+//                mapper.using(candidateToLongConverter())
+//                        .map(JobApplication::getCandidate, JobApplicationModel::setCandidateId));
 
         jobApplicationMapper.addMappings(mapper ->
                 mapper.using(jobToLongConverter())

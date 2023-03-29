@@ -46,7 +46,7 @@ public class CompanyController {
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer pageSize
     ) {
-        return ResponseEntity.ok(companyService.listCompany(page, pageSize));
+        return ResponseEntity.ok(companyService.getAllCompany(page, pageSize));
     }
 
     @GetMapping(path = "/{id}")
