@@ -5,13 +5,8 @@ import com.uet.jobfinder.error.ServerError;
 import com.uet.jobfinder.exception.CustomIllegalArgumentException;
 import com.uet.jobfinder.model.MajorService;
 import com.uet.jobfinder.model.RegisterRequestModel;
-import com.uet.jobfinder.repository.CompanyRepository;
-import com.uet.jobfinder.repository.MajorRepository;
-import com.uet.jobfinder.repository.RoleRepository;
-import com.uet.jobfinder.repository.UserRepository;
-import com.uet.jobfinder.service.CandidateService;
-import com.uet.jobfinder.service.CompanyService;
-import com.uet.jobfinder.service.UserService;
+import com.uet.jobfinder.repository.*;
+import com.uet.jobfinder.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -22,6 +17,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Component
 public class DatabaseInitializer implements ApplicationRunner {
@@ -40,13 +37,24 @@ public class DatabaseInitializer implements ApplicationRunner {
     private MajorRepository majorRepository;
     @Autowired
     private MajorService majorService;
+    @Autowired
+    private JobService jobService;
+    @Autowired
+    private JobRepository jobRepository;
+    @Autowired
+    private JobApplicationService jobApplicationService;
+    @Autowired
+    private JobApplicationRepository jobApplicationRepository;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
         createUserRole();
-        createTestCompany();
-        createTestCandidate();
         createMajor();
+
+        Company company = createTestCompany();
+        Candidate candidate = createTestCandidate();
+        List<Job> jobs = createJob(company);
+        createJobApplication(jobs, candidate);
     }
 
     @EventListener(ApplicationReadyEvent.class)
@@ -67,14 +75,14 @@ public class DatabaseInitializer implements ApplicationRunner {
         roleRepository.flush();
     }
 
-    private void createTestCandidate() {
+    private Candidate createTestCandidate() {
         User user = new User("20020376@vnu.edu.vn", passwordEncoder.encode("12345678"));
         user.addRole(roleRepository.findByName(UserType.CANDIDATE)
                 .orElseThrow(() ->
                         new CustomIllegalArgumentException(ServerError.INVALID_USER_ROLE)));
         user.setEnabled(true);
 
-        candidateService.createCandidate(
+        return candidateService.createCandidate(
                 Candidate.builder().user(user)
                         .fullName("Hoàng Đạo")
                         .sex("Male")
@@ -86,7 +94,7 @@ public class DatabaseInitializer implements ApplicationRunner {
         );
     }
 
-    private void createTestCompany() {
+    private Company createTestCompany() {
         User user = new User("20020390@vnu.edu.vn", passwordEncoder.encode("12345678"));
         user.addRole(roleRepository.findByName(UserType.COMPANY)
                 .orElseThrow(() ->
@@ -94,7 +102,7 @@ public class DatabaseInitializer implements ApplicationRunner {
         user.setEnabled(true);
 
         //  Create a company
-        companyService.createCompany(
+        return companyService.createCompany(
                 Company.builder().user(user)
                         .companyDescription("A good company")
                         .companyName("UET Software")
@@ -119,5 +127,68 @@ public class DatabaseInitializer implements ApplicationRunner {
         majorService.createMajor(new Major("Logistics và Quản lý chuỗi cung ứng"));
         majorService.createMajor(new Major("Kỹ thuật máy tính"));
         majorService.createMajor(new Major("Công nghệ truyền thông"));
+    }
+
+    private List<Job> createJob(Company company) {
+        Job firstJob = jobRepository.save(Job.builder()
+                .major("Công nghệ thông tin")
+                .sex("Male")
+                .jobTitle("Lập tình viên Android")
+                .jobDescription("Tuyển lập trình viên Android lương cao")
+                .workingForm("Fulltime")
+                .company(company)
+                .numberOfHiring(10)
+                .salary("5 triệu")
+                .openDate(LocalDate.now())
+                .status(JobStatus.OPEN)
+                .requireExperience("5")
+                .closeDate(LocalDate.of(2024,3,30))
+                .build());
+
+        Job secondJob = jobRepository.save(Job.builder()
+                .major("Công nghệ thông tin")
+                .sex("Male")
+                .jobTitle("Lập tình viên Java")
+                .jobDescription("Tuyển lập trình viên Java lương cao")
+                .workingForm("Fulltime")
+                .company(company)
+                .numberOfHiring(10)
+                .salary("15 triệu")
+                .openDate(LocalDate.now())
+                .status(JobStatus.OPEN)
+                .requireExperience("1")
+                .closeDate(LocalDate.of(2024,3,30))
+                .build());
+
+        Job thirdJob = jobRepository.save(Job.builder()
+                .major("Công nghệ thông tin")
+                .sex("Male")
+                .jobTitle("Lập tình viên PhP")
+                .jobDescription("Tuyển lập trình viên Java lương cao")
+                .workingForm("Fulltime")
+                .company(company)
+                .numberOfHiring(10)
+                .salary("105 triệu")
+                .openDate(LocalDate.now())
+                .status(JobStatus.OPEN)
+                .requireExperience("1")
+                .closeDate(LocalDate.of(2024,3,30))
+                .build());
+
+        return List.of(firstJob, secondJob, thirdJob);
+    }
+
+    private List<JobApplication> createJobApplication(List<Job> jobs, Candidate candidate) {
+        for (Job job : jobs) {
+            jobApplicationRepository.save(
+                    JobApplication.builder()
+                            .job(job)
+                            .candidate(candidate)
+                            .status(JobApplicationStatus.WAITING)
+                            .appliedDate(LocalDateTime.now())
+                            .build()
+            )   ;
+        }
+        return null;
     }
 }
