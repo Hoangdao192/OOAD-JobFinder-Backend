@@ -30,6 +30,7 @@ public class Company implements Serializable {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private AppFile companyLogo;
 
+    @Column(columnDefinition = "TEXT")
     private String companyDescription;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

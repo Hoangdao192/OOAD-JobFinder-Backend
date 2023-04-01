@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
@@ -18,6 +19,12 @@ public interface JobApplicationRepository extends JpaRepository<JobApplication, 
     Page<JobApplication> findAllByJob(Pageable pageable, Job job);
 
     Page<JobApplication> findAllByCandidate(Pageable pageable, Candidate candidate);
+
+    @Query("select ja from JobApplication ja " +
+            "inner join Job j on ja.job.id = j.id " +
+            "inner join Company c on c.id = j.company.id " +
+            "where c.id = :companyId")
+    Page<JobApplication> findAllByCompany(Pageable pageable, @Param("companyId") Long companyId);
 
     @Query("select count(ja) from JobApplication ja " +
             "inner join Job j on ja.job.id = j.id " +

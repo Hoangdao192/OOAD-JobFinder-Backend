@@ -59,6 +59,20 @@ public class JobApplicationController {
         ));
     }
 
+    @GetMapping("listByCompany")
+    public ResponseEntity<PageQueryModel<JobApplicationModel>> listJobApplicationByCompanyId(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam Long companyId, HttpServletRequest request
+    ) {
+        return ResponseEntity.ok(
+                jobApplicationService.listJobApplicationByCompanyId(
+                        page, pageSize,
+                        companyId, request
+                )
+        );
+    }
+
     @PreAuthorize("hasAnyAuthority('Admin', 'Candidate')")
     @DeleteMapping("{applicationId}")
     public ResponseEntity<Map<String, Object>> deleteJobApplication(

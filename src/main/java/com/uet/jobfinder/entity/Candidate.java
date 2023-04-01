@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -35,6 +36,9 @@ public class Candidate implements Serializable {
     private String contactEmail;
     private String phoneNumber;
     private String selfDescription;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<Major> interestedMajors = new ArrayList<>();
 
     @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL)
     private List<JobApplication> jobApplications;

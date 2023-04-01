@@ -191,6 +191,30 @@ public class JobApplicationService {
         );
     }
 
+    public PageQueryModel<JobApplicationModel> listJobApplicationByCompanyId(
+            Integer page, Integer pageSize, Long companyId, HttpServletRequest request
+    ) {
+        Long userId = jsonWebTokenProvider.getUserIdFromRequest(request);
+        Company company = companyService.getCompanyByUserId(companyId);
+
+        if (!company.getUser().getId().equals(userId)) {
+            throw new CustomIllegalArgumentException(ServerError.ACCESS_DENIED);
+        }
+
+        Page<JobApplication> jobApplications = jobApplicationRepository
+                .findAllByCompany(PageRequest.of(page, pageSize), company.getId());
+        return new PageQueryModel<>(
+                new PageQueryModel.PageModel(
+                        jobApplications.getPageable().getPageNumber(),
+                        jobApplications.getPageable().getPageSize(),
+                        jobApplications.getTotalPages()
+                ),
+                jobApplications.getContent()
+                        .stream().map(jobApplication ->
+                                modelMapper.map(jobApplication, JobApplicationModel.class))
+                        .collect(Collectors.toList()));
+    }
+
     /**
      *  This is call when company want to get all application that applied this job
       */

@@ -48,13 +48,13 @@ public class DatabaseInitializer implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        createUserRole();
-        createMajor();
-
-        Company company = createTestCompany();
-        Candidate candidate = createTestCandidate();
-        List<Job> jobs = createJob(company);
-        createJobApplication(jobs, candidate);
+//        createUserRole();
+//        createMajor();
+//
+//        Company company = createTestCompany();
+//        Candidate candidate = createTestCandidate();
+//        List<Job> jobs = createJob(company);
+//        createJobApplication(jobs, candidate);
     }
 
     @EventListener(ApplicationReadyEvent.class)

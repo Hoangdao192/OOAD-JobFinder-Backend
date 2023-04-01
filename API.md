@@ -1,5 +1,67 @@
 # Đặc tả API
 
+## Danh sách các tài khoản được tạo sẵn
+### 1. Tài khoản công ty
+```json
+[
+  {
+    "email": "20020390@vnu.edu.vn",
+    "password": "12345678",
+    "role": "Company"
+  },
+  {
+    "email": "20020391@vnu.edu.vn",
+    "password": "12345678",
+    "role": "Company"
+  },
+  {
+    "email": "20020392@vnu.edu.vn",
+    "password": "12345678",
+    "role": "Company"
+  },
+  {
+    "email": "20020393@vnu.edu.vn",
+    "password": "12345678",
+    "role": "Company"
+  },
+  {
+    "email": "20020394@vnu.edu.vn",
+    "password": "12345678",
+    "role": "Company"
+  }
+]
+```
+### 2. Tài khoản ứng viên
+```json
+[
+  {
+    "email": "nguyendanghoangdao2002@gmail.com",
+    "password": "12345678",
+    "role": "Candidate"
+  },
+  {
+    "email": "nguyenthithanhhuyen2002@gmail.com",
+    "password": "12345678",
+    "role" : "Candidate"
+  },
+  {
+    "email": "tranthikimbac2002@gmail.com",
+    "password": "12345678",
+    "role" : "Candidate"
+  },
+  {
+    "email": "trandinhcuong2002@gmail.com",
+    "password": "12345678",
+    "role" : "Candidate"
+  },
+  {
+    "email": "phanvantiendung2002@gmail.com",
+    "password": "12345678",
+    "role" : "Candidate"
+  }
+]
+```
+
 ## Lỗi Server
 Bất kì lỗi nào server trả về cho front-end đều có dạng `JSON` như sau
 
@@ -71,6 +133,7 @@ Content-Type: application/json
 <br>c. [Công ty từ chối đơn ứng tuyển](#application_reject)
 <br>d. [Ứng viên hủy ứng tuyển](#application_delete)
 <br>e. [Lấy danh sách đơn ứng tuyển](#application_list)
+<br>f. [Lấy danh sách đơn ứng tuyển theo công ty](#application_list_company)
 7. [API Tiện ích](#until_api)
 <br>a. [Lấy danh sách chuyên ngành](#major_api)
 
@@ -816,6 +879,38 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNjc5MzI0MDA4L
       "cv": null,
       "appliedDate": "2023-03-29T16:05:46.076455",
       "updatedDate": null
+    }
+  ]
+}
+```
+<a name="application_list_company"></a>
+### f. Lấy danh sách đơn ứng tuyển theo công ty
+```http request
+GET http://localhost:5000/api/job-application/listByCompany?companyId=1
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgwMzY2OTE0LCJleHAiOjE2ODA5NzE3MTR9.ivU7xZb-Q3u3lnh5HaybOKRpdRI0ME3avU4lRqs1vqxFdQqG3ljL19gO8vSi1Ej5WyIU3IoecSq_1QUxDPmy_w
+```
+```json
+{
+  "page": {
+    "currentPage": 0,
+    "pageSize": 10,
+    "totalPage": 1
+  },
+  "elements": [
+    {
+      "id": 1,
+      "candidateId": null,
+      "candidate": {
+        "userId": 6,
+        "fullName": "Nguyễn Đăng Hoàng Đạo",
+        "sex": "Male",
+        "dateOfBirth": "2002-02-19",
+        "contactEmail": "nguyendanghoangdao2002@gmail.com",
+        "phoneNumber": "0325135251",
+        "selfDescription": "Sinh viên Trường đại học Công nghệ - Đại học Quốc Gia Hà Nội",
+        "avatar": null,
+        "candidateAvatarFile": null
+      }
     }
   ]
 }
