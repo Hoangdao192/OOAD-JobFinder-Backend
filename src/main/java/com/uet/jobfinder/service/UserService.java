@@ -5,11 +5,19 @@ import com.uet.jobfinder.entity.UserType;
 import com.uet.jobfinder.error.ServerError;
 import com.uet.jobfinder.exception.CustomIllegalArgumentException;
 import com.uet.jobfinder.model.RegisterRequestModel;
+import com.uet.jobfinder.presentation.UserMonthStatisticPresentation;
+import com.uet.jobfinder.presentation.UserYearStatisticPresentation;
 import com.uet.jobfinder.repository.RoleRepository;
 import com.uet.jobfinder.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserService {
@@ -18,6 +26,107 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private RoleRepository roleRepository;
+
+    public Map<String, Object> getUserNumberStatistic() {
+        Long numberOfCandidate = userRepository.countAllByRole(UserType.CANDIDATE);
+        Long numberOfCompany = userRepository.countAllByRole(UserType.COMPANY);
+        return Map.of("candidate", numberOfCandidate, "company", numberOfCompany);
+    }
+
+    public Map<String, Object> getUserGrowthStatistic(Integer month, Integer year) {
+        //  Statistic by year
+        if (month == 0) {
+            return getUserGrowthYearStatistic(year);
+        }
+        return getUserGrowthMonthStatistic(month, year);
+    }
+
+    public Map<String, Object> getUserGrowthMonthStatistic(Integer month, Integer year) {
+        List<UserMonthStatisticPresentation> statistic = userRepository.getUserMonthGrowthStatistic(
+                month, year
+        );
+
+        List<Object> companyUserStatistic = new ArrayList<>();
+        List<Object> candidateUserStatistic = new ArrayList<>();
+        for (int i = 1; i <= 31; ++i) {
+            int mDay = i;
+            companyUserStatistic.add(
+                    new Object() {
+                        public Integer day = mDay;
+                        public Long numberOfUser = 0L;
+                    }
+            );
+            candidateUserStatistic.add(
+                    new Object() {
+                        public Integer day = mDay;
+                        public Long numberOfUser = 0L;
+                    }
+            );
+        }
+        for (UserMonthStatisticPresentation statisticPresentation : statistic) {
+            if (statisticPresentation.getRole().equals(UserType.COMPANY)) {
+                companyUserStatistic.set(
+                        statisticPresentation.getDay() - 1,
+                        new Object() {
+                            public Integer month = statisticPresentation.getDay();
+                            public Long numberOfUser = statisticPresentation.getNumberOfUser();
+                        }
+                );
+            } else if (statisticPresentation.getRole().equals(UserType.CANDIDATE)) {
+                candidateUserStatistic.set(
+                        statisticPresentation.getDay() - 1,
+                        new Object() {
+                            public Integer month = statisticPresentation.getDay();
+                            public Long numberOfUser = statisticPresentation.getNumberOfUser();
+                        }
+                );
+            }
+        }
+        return Map.of("company", companyUserStatistic, "candidate", candidateUserStatistic);
+    }
+
+    public Map<String, Object> getUserGrowthYearStatistic(Integer year) {
+        List<UserYearStatisticPresentation> statistic =
+                userRepository.getUserYearGrowthStatistic(year);
+
+        List<Object> companyUserStatistic = new ArrayList<>();
+        List<Object> candidateUserStatistic = new ArrayList<>();
+        for (int i = 1; i <= 12; ++i) {
+            int mMonth = i;
+            companyUserStatistic.add(
+                    new Object() {
+                        public Integer month = mMonth;
+                        public Long numberOfUser = 0L;
+                    }
+            );
+            candidateUserStatistic.add(
+                    new Object() {
+                        public Integer month = mMonth;
+                        public Long numberOfUser = 0L;
+                    }
+            );
+        }
+        for (UserYearStatisticPresentation statisticPresentation : statistic) {
+            if (statisticPresentation.getRole().equals(UserType.COMPANY)) {
+                companyUserStatistic.set(
+                        statisticPresentation.getMonth() - 1,
+                        new Object() {
+                            public Integer month = statisticPresentation.getMonth();
+                            public Long numberOfUser = statisticPresentation.getNumberOfUser();
+                        }
+                );
+            } else if (statisticPresentation.getRole().equals(UserType.CANDIDATE)) {
+                candidateUserStatistic.set(
+                        statisticPresentation.getMonth() - 1,
+                        new Object() {
+                            public Integer month = statisticPresentation.getMonth();
+                            public Long numberOfUser = statisticPresentation.getNumberOfUser();
+                        }
+                );
+            }
+        }
+        return Map.of("company", companyUserStatistic, "candidate", candidateUserStatistic);
+    }
 
     public User createUser(RegisterRequestModel registerRequestModel) {
         if (userRepository.findByEmail(registerRequestModel.getEmail())
@@ -35,6 +144,8 @@ public class UserService {
                         .orElseThrow(() ->
                                 new CustomIllegalArgumentException(ServerError.INVALID_USER_ROLE))
         );
+
+        user.setCreateDate(LocalDate.now());
 
         return userRepository.saveAndFlush(user);
     }

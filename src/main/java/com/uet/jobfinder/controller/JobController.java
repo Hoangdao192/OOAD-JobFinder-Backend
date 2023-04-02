@@ -18,6 +18,15 @@ public class JobController {
 
     private JobService jobService;
 
+    @PreAuthorize("hasAnyAuthority('Admin')")
+    @GetMapping(path = "statistic")
+    public ResponseEntity getUserGrowthStatistic(
+            @RequestParam(defaultValue = "0", required = false) Integer month,
+            @RequestParam Integer year
+    ) {
+        return ResponseEntity.ok(jobService.getStatistic(month, year));
+    }
+
     @GetMapping("count")
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('Company')")
     public ResponseEntity<Long> countJobByCompanyId(

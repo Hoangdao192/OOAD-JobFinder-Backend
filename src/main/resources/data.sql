@@ -8,14 +8,15 @@ INSERT INTO role (id, name) values
 /*Admin*/
 INSERT INTO user (id, email, enabled, locked, password) VALUES
     (99, 'admin@jobfinder.com', true, false, '$2a$10$sW0xlxPWnY6m993ofp.S8eu3KnNx6QoDw.sq3vItwIbbeYFemYB7y');
+INSERT INTO user_role (user_id, role_id) VALUES (99, 1);
 
 /*Company*/
-INSERT INTO user (id, email, enabled, locked, password) VALUES
-    (1, '20020390@vnu.edu.vn', true, false, '$2a$10$sW0xlxPWnY6m993ofp.S8eu3KnNx6QoDw.sq3vItwIbbeYFemYB7y'),
-    (2, '20020391@vnu.edu.vn', true, false, '$2a$10$sW0xlxPWnY6m993ofp.S8eu3KnNx6QoDw.sq3vItwIbbeYFemYB7y'),
-    (3, '20020392@vnu.edu.vn', true, false, '$2a$10$sW0xlxPWnY6m993ofp.S8eu3KnNx6QoDw.sq3vItwIbbeYFemYB7y'),
-    (4, '20020393@vnu.edu.vn', true, false, '$2a$10$sW0xlxPWnY6m993ofp.S8eu3KnNx6QoDw.sq3vItwIbbeYFemYB7y'),
-    (5, '20020394@vnu.edu.vn', true, false, '$2a$10$sW0xlxPWnY6m993ofp.S8eu3KnNx6QoDw.sq3vItwIbbeYFemYB7y');
+INSERT INTO user (id, email, enabled, locked, password, create_date) VALUES
+    (1, '20020390@vnu.edu.vn', true, false, '$2a$10$sW0xlxPWnY6m993ofp.S8eu3KnNx6QoDw.sq3vItwIbbeYFemYB7y', '2023-02-01'),
+    (2, '20020391@vnu.edu.vn', true, false, '$2a$10$sW0xlxPWnY6m993ofp.S8eu3KnNx6QoDw.sq3vItwIbbeYFemYB7y', '2023-02-10'),
+    (3, '20020392@vnu.edu.vn', true, false, '$2a$10$sW0xlxPWnY6m993ofp.S8eu3KnNx6QoDw.sq3vItwIbbeYFemYB7y', '2023-02-15'),
+    (4, '20020393@vnu.edu.vn', true, false, '$2a$10$sW0xlxPWnY6m993ofp.S8eu3KnNx6QoDw.sq3vItwIbbeYFemYB7y', '2023-02-20'),
+    (5, '20020394@vnu.edu.vn', true, false, '$2a$10$sW0xlxPWnY6m993ofp.S8eu3KnNx6QoDw.sq3vItwIbbeYFemYB7y', '2023-02-28');
 INSERT INTO user_role (user_id, role_id) VALUES
     (1, 2), (2, 2), (3, 2), (4, 2), (5, 2);
 
@@ -88,12 +89,12 @@ INSERT INTO company (user_id, company_description, company_name, number_of_emplo
 cùng các sản phẩm Game nổi bật: Kiếm Thế, Võ Lâm Truyền Kỳ....', 'Công ty Cổ phần VNG', '1000', 5);
 
 /*Candidate*/
-INSERT INTO user (id, email, enabled, locked, password) VALUES
-    (6, 'nguyendanghoangdao2002@gmail.com', true, false, '$2a$10$sW0xlxPWnY6m993ofp.S8eu3KnNx6QoDw.sq3vItwIbbeYFemYB7y'),
-    (7, 'nguyenthithanhhuyen2002@gmail.com', true, false, '$2a$10$sW0xlxPWnY6m993ofp.S8eu3KnNx6QoDw.sq3vItwIbbeYFemYB7y'),
-    (8, 'tranthikimbac2002@gmail.com', true, false, '$2a$10$sW0xlxPWnY6m993ofp.S8eu3KnNx6QoDw.sq3vItwIbbeYFemYB7y'),
-    (9, 'trandinhcuong2002@gmail.com', true, false, '$2a$10$sW0xlxPWnY6m993ofp.S8eu3KnNx6QoDw.sq3vItwIbbeYFemYB7y'),
-    (10, 'phanvantiendung2002@gmail.com', true, false, '$2a$10$sW0xlxPWnY6m993ofp.S8eu3KnNx6QoDw.sq3vItwIbbeYFemYB7y');
+INSERT INTO user (id, email, enabled, locked, password, create_date) VALUES
+    (6, 'nguyendanghoangdao2002@gmail.com', true, false, '$2a$10$sW0xlxPWnY6m993ofp.S8eu3KnNx6QoDw.sq3vItwIbbeYFemYB7y', '2023-03-28'),
+    (7, 'nguyenthithanhhuyen2002@gmail.com', true, false, '$2a$10$sW0xlxPWnY6m993ofp.S8eu3KnNx6QoDw.sq3vItwIbbeYFemYB7y', '2023-03-21'),
+    (8, 'tranthikimbac2002@gmail.com', true, false, '$2a$10$sW0xlxPWnY6m993ofp.S8eu3KnNx6QoDw.sq3vItwIbbeYFemYB7y', '2023-03-17'),
+    (9, 'trandinhcuong2002@gmail.com', true, false, '$2a$10$sW0xlxPWnY6m993ofp.S8eu3KnNx6QoDw.sq3vItwIbbeYFemYB7y', '2023-03-12'),
+    (10, 'phanvantiendung2002@gmail.com', true, false, '$2a$10$sW0xlxPWnY6m993ofp.S8eu3KnNx6QoDw.sq3vItwIbbeYFemYB7y', '2023-03-01');
 INSERT INTO user_role (user_id, role_id) VALUES
     (6, 3), (7, 3), (8, 3), (9, 3), (10, 3);
 

@@ -9,6 +9,8 @@ import com.uet.jobfinder.exception.CustomIllegalArgumentException;
 import com.uet.jobfinder.model.AddressModel;
 import com.uet.jobfinder.model.JobModel;
 import com.uet.jobfinder.model.PageQueryModel;
+import com.uet.jobfinder.presentation.JobMonthStatisticPresentation;
+import com.uet.jobfinder.presentation.JobYearStatisticPresentation;
 import com.uet.jobfinder.repository.AddressRepository;
 import com.uet.jobfinder.repository.CompanyRepository;
 import com.uet.jobfinder.repository.JobRepository;
@@ -23,7 +25,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,6 +48,59 @@ public class JobService {
                 PageRequest.of(0, 10),
                 9L, "Lập trình", null, null
         );
+    }
+
+    public List<Object> getStatistic(
+            Integer month, Integer year
+    ) {
+        if (month == 0) {
+            return getStatisticByYear(year);
+        }
+        return getStatisticByMonth(month, year);
+    }
+
+    public List<Object> getStatisticByYear(Integer year) {
+        List<JobYearStatisticPresentation> statistic = jobRepository.getYearStatistic(year);
+
+        List<Object> jobStatistic = new ArrayList<>();
+        for (int i = 1; i <= 12; ++i) {
+            int mMonth = i;
+            jobStatistic.add(new Object() {
+                public Integer month = mMonth;
+                public Long numberOfJob = 0L;
+            });
+        }
+
+        for (JobYearStatisticPresentation statisticPresentation: statistic) {
+            jobStatistic.set(statisticPresentation.getMonth() - 1, new Object() {
+                public Integer month = statisticPresentation.getMonth();
+                public Long numberOfJob = statisticPresentation.getNumberOfJob();
+            });
+        }
+
+        return jobStatistic;
+    }
+
+    public List<Object> getStatisticByMonth(Integer month, Integer year) {
+        List<JobMonthStatisticPresentation> statistic = jobRepository.getMonthStatistic(month, year);
+
+        List<Object> jobStatistic = new ArrayList<>();
+        for (int i = 1; i <= 31; ++i) {
+            int mMonth = i;
+            jobStatistic.add(new Object() {
+                public Integer day = mMonth;
+                public Long numberOfJob = 0L;
+            });
+        }
+
+        for (JobMonthStatisticPresentation statisticPresentation: statistic) {
+            jobStatistic.set(statisticPresentation.getDay() - 1, new Object() {
+                public Integer day = statisticPresentation.getDay();
+                public Long numberOfJob = statisticPresentation.getNumberOfJob();
+            });
+        }
+
+        return jobStatistic;
     }
 
     public Long countOpenJobByCompanyId(

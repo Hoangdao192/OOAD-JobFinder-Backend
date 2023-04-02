@@ -1,0 +1,3 @@
+### User statistic
+GET http://localhost:5000/api/user/statistic?year=2023&month=2
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5OSIsImlhdCI6MTY4MDQxNjAzMCwiZXhwIjoxNjgxMDIwODMwfQ.EObwy6zx5IElnwPA8DrFxYXUSDpj1CmO3VvMWjaVOKHqXW5Q0wBY7tMStX8BeRAIdtMBoa-TffvpdO_w9tofsA
