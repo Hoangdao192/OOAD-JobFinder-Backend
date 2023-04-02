@@ -1,5 +1,7 @@
 package com.uet.jobfinder.controller;
 
+import com.uet.jobfinder.model.PageQueryModel;
+import com.uet.jobfinder.model.UserModel;
 import com.uet.jobfinder.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,17 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @GetMapping
+    @PreAuthorize("hasAnyAuthority('Admin')")
+    public ResponseEntity<PageQueryModel<UserModel>> getAllUser(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer pageSize
+    ) {
+        return ResponseEntity.ok(
+                userService.getAllUser(page, pageSize)
+        );
+    }
 
     @PreAuthorize("hasAnyAuthority('Admin')")
     @GetMapping(path = "statistic")

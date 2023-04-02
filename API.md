@@ -675,6 +675,7 @@ API này cung cấp các param sau (đều không bắt buộc)<br>
 `jobTitle` : Lọc công việc theo tiêu đề<br>
 `major` : Lọc theo chuyên ngành<br>
 `workingForm` : Lọc theo hình thức làm việc<br>
+`workingForm` chỉ trong 3 giá trị `Full-time` `Part-time` và `Remote`
 ```http request
 GET http://localhost:5000/api/job?page=0&pageSize=10
 ### Default page = 0, pageSize = 10

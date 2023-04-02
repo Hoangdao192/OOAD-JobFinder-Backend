@@ -4,12 +4,18 @@ import com.uet.jobfinder.entity.User;
 import com.uet.jobfinder.entity.UserType;
 import com.uet.jobfinder.error.ServerError;
 import com.uet.jobfinder.exception.CustomIllegalArgumentException;
+import com.uet.jobfinder.model.PageQueryModel;
 import com.uet.jobfinder.model.RegisterRequestModel;
+import com.uet.jobfinder.model.UserModel;
 import com.uet.jobfinder.presentation.UserMonthStatisticPresentation;
 import com.uet.jobfinder.presentation.UserYearStatisticPresentation;
 import com.uet.jobfinder.repository.RoleRepository;
 import com.uet.jobfinder.repository.UserRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -26,6 +33,24 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private ModelMapper modelMapper;
+
+    public PageQueryModel<UserModel> getAllUser(Integer page, Integer pageSize) {
+        Page<User> users = userRepository.findAll(
+                PageRequest.of(page, pageSize)
+        );
+        return new PageQueryModel<>(
+                new PageQueryModel.PageModel(
+                    users.getPageable().getPageNumber(),
+                    users.getPageable().getPageSize(),
+                    users.getTotalPages()
+                ),
+                users.getContent().stream()
+                        .map(user -> modelMapper.map(user, UserModel.class))
+                        .collect(Collectors.toList())
+        );
+    }
 
     public Map<String, Object> getUserNumberStatistic() {
         Long numberOfCandidate = userRepository.countAllByRole(UserType.CANDIDATE);
