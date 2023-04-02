@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SearchCompanyModel {
-    private String nameCompany;
+    private String search;
     private Byte star;
 }

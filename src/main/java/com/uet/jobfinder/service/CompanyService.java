@@ -1,6 +1,9 @@
 package com.uet.jobfinder.service;
 
-import com.uet.jobfinder.entity.*;
+import com.uet.jobfinder.entity.Address;
+import com.uet.jobfinder.entity.AppFile;
+import com.uet.jobfinder.entity.Company;
+import com.uet.jobfinder.entity.User;
 import com.uet.jobfinder.error.ServerError;
 import com.uet.jobfinder.exception.CustomIllegalArgumentException;
 import com.uet.jobfinder.model.AddressModel;
@@ -15,7 +18,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -237,44 +239,31 @@ public class CompanyService {
         return true;
     }
 
-    public List<CompanyModel> findCompany(SearchCompanyModel searchCompanyModel) {
-        List<Company> companyList = companyRepository.findAll();
-        ArrayList<Company> companyArrayList = new ArrayList<>();
+    public PageQueryModel findCompany(SearchCompanyModel searchCompanyModel, Integer page, Integer pageSize) {
+        List<Company> companyList = companyRepository.searchAllCompany(searchCompanyModel.getSearch());
+        companyList.removeIf(company -> company.getEvaluateStar().getStar() < searchCompanyModel.getStar());
 
-        for (Company company: companyList) {
-            companyArrayList.add(company);
-        }
 
-        if (searchCompanyModel.getStar() != null) {
-            Byte star = searchCompanyModel.getStar();
-            int l = companyArrayList.size();
-            for (int i = 0; i < l; i++) {
-                Company company = companyArrayList.get(i);
-                if (company.getEvaluateStar().getStar() < star) {
-                    companyArrayList.remove(company);
-                    --l;
-                    --i;
-                }
-            }
-        }
-
-        if (searchCompanyModel.getNameCompany() != null && searchCompanyModel.getNameCompany().length() > 0) {
-            String name = searchCompanyModel.getNameCompany();
-
-            int l = companyArrayList.size();
-            for (int i = 0; i < l; i++) {
-                Company company = companyArrayList.get(i);
-                System.out.println(name + " -- " + company.getCompanyName() + ": " + company.getCompanyName().contains(name));
-                if (!company.getCompanyName().contains(name)) {
-                    companyArrayList.remove(company);
-                    --l;
-                    --i;
-                }
-            }
-        }
 
         List<CompanyModel> companyModels = new ArrayList<>();
-        for (Company company : companyArrayList) {
+
+        // Nếu limit > độ dài kết quả thì limit bằng độ dài của kết quả
+        // limit, start để giới hạn lại khi chuyển model
+        int limit = (page + 1) * pageSize > companyList.size() ? companyList.size() : (page + 1) * pageSize;
+
+
+        int start = page * pageSize;
+        int totalPage = companyList.size() / pageSize + 1;
+
+        // Nếu cố tình truy cập page không hợp lệ.
+        if (page > totalPage)
+            throw new CustomIllegalArgumentException(
+                    ServerError.INVALID_REQUEST
+            );
+
+        for (int i = start; i < limit; i++) {
+            Company company = companyList.get(i);
+
             CompanyModel companyModel = CompanyModel.builder()
                     .companyName(company.getCompanyName())
                     .companyDescription(company.getCompanyDescription())
@@ -284,7 +273,16 @@ public class CompanyService {
             companyModels.add(companyModel);
         }
 
-        return companyModels;
+
+        return new PageQueryModel<>(
+                new PageQueryModel.PageModel(
+                        page,
+                        pageSize,
+                        totalPage
+                ),
+                companyModels
+        );
+
     }
 
     @Autowired

@@ -12,8 +12,13 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
 
     Optional<Company> findByUser(User user);
 
-//    @Query("SELECT * FROM Company c WHERE c.companyName = :companyName and c. = :name")
+    //    @Query("SELECT * FROM Company c WHERE c.companyName = :companyName and c. = :name")
 //    List<Company> findByTitleAndStar(String title, Byte start);
+    @Query(
+            value = "SELECT * FROM company WHERE MATCH(company_name, company_description) AGAINST(?1)",
+            nativeQuery = true
+    )
+    List<Company> searchAllCompany(String search);
 
     void deleteById(Long id);
 }

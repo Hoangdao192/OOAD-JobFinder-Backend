@@ -75,7 +75,10 @@ public class CompanyController {
     }
 
     @GetMapping("/listCompany")
-    public ResponseEntity<List<CompanyModel>> findCompany(@RequestBody SearchCompanyModel searchCompanyModel){
-        return ResponseEntity.ok().body(companyService.findCompany(searchCompanyModel));
+    public ResponseEntity<PageQueryModel> findCompany(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestBody SearchCompanyModel searchCompanyModel){
+        return ResponseEntity.ok().body(companyService.findCompany(searchCompanyModel, page, pageSize));
     }
 }
