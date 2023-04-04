@@ -1,16 +1,17 @@
 ### Candidate save job
 POST http://localhost:5000/api/job/save
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNjgwMDczODg1LCJleHAiOjE2ODA2Nzg2ODV9.sebTC9IVnDUg9H8MNk1EaPn5B7B79GU6usL9wNr5gvh3frF2zWocLXb_4Fug3fJl_glHE0GIp2CaT0OGEjQUhA
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNjgwNjI2OTM4LCJleHAiOjE2ODEyMzE3Mzh9.lhraggy0HTXCqbDS4ZZ8vpmwyD5h6kWGMLE-_Nnyg3SqetEpRAAhxGiJpzU1MIUF2HdKH2xEWX9Au7LKmVzaYw
 Content-Type: application/json
 
 {
-  "jobId" : 8,
+  "jobId" : 1,
   "candidateId" : 6
 }
 
 ### Candidate list saved job
 GET http://localhost:5000/api/job/save?candidateId=6
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNjgwMDczODg1LCJleHAiOjE2ODA2Nzg2ODV9.sebTC9IVnDUg9H8MNk1EaPn5B7B79GU6usL9wNr5gvh3frF2zWocLXb_4Fug3fJl_glHE0GIp2CaT0OGEjQUhA
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNjgwNjI2OTM4LCJleHAiOjE2ODEyMzE3Mzh9.lhraggy0HTXCqbDS4ZZ8vpmwyD5h6kWGMLE-_Nnyg3SqetEpRAAhxGiJpzU1MIUF2HdKH2xEWX9Au7LKmVzaYw
 
 ### Candidate unsave job
-DELETE http://localhost:5000/api/job/save
+DELETE http://localhost:5000/api/job/save/1
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNjgwNjI2OTM4LCJleHAiOjE2ODEyMzE3Mzh9.lhraggy0HTXCqbDS4ZZ8vpmwyD5h6kWGMLE-_Nnyg3SqetEpRAAhxGiJpzU1MIUF2HdKH2xEWX9Au7LKmVzaYw

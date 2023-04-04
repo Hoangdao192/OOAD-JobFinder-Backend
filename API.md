@@ -127,7 +127,9 @@ Content-Type: application/json
 <br>c. [Lấy danh sách công việc](#job_list)
 <br>d. [Lấy thông tin một công việc](#job_get)
 <br>e. [Xóa công việc](#job_delete)
-<br>f. [Lưu công việc](#job_save)
+<br>f. [Ứng viên lưu công việc](#job_save)
+<br>g. [Ứng viên lấy danh sách công việc đã lưu](#job_save_list)
+<br>h. [Ứng viên bỏ lưu công việc](#job_save_delete)
 6. [API Ứng tuyển](#application_api)
 <br>a. [Ứng viên ứng tuyển](#application_create)
 <br>b. [Công ty chấp nhận đơn ứng tuyển](#application_accept)
@@ -751,8 +753,107 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNjc5MzI0MDA4L
   "success" : true
 }
 ```
-### f. Lưu công việc
+<a name="job_save"></a>
+### f. Ứng viên lưu công việc
+```http request
+POST http://localhost:5000/api/job/save
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNjgwMDczODg1LCJleHAiOjE2ODA2Nzg2ODV9.sebTC9IVnDUg9H8MNk1EaPn5B7B79GU6usL9wNr5gvh3frF2zWocLXb_4Fug3fJl_glHE0GIp2CaT0OGEjQUhA
+Content-Type: application/json
 
+{
+  "jobId" : 8,
+  "candidateId" : 6
+}
+```
+```json
+{
+  "id": 1,
+  "jobId": null,
+  "job": {
+    "id": 1,
+    "userId": 1,
+    "jobTitle": "Lập trình viên Java",
+    "jobDescription": "Tuyển lập trình viên Java",
+    "jobAddress": {
+      "id": 1,
+      "province": "Hà Nội",
+      "district": "Cầu Giấy",
+      "ward": "Phố Duy Tân",
+      "detailAddress": "Tầng 2, tòa nhà FPT",
+      "longitude": null,
+      "latitude": null
+    },
+    "major": "Công nghệ thông tin",
+    "salary": "Thỏa thuận",
+    "numberOfHiring": 20,
+    "requireExperience": "> 1 year",
+    "sex": "Male",
+    "workingForm": "Fulltime",
+    "status": "OPEN",
+    "openDate": "2023-02-01",
+    "closeDate": "2023-05-01"
+  },
+  "candidateId": 6
+}
+```
+<a name="job_save_list"></a>
+### g. Ứng viên lấy danh sách công việc đã lưu
+```http request
+GET http://localhost:5000/api/job/save?candidateId=6
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNjgwNjI2OTM4LCJleHAiOjE2ODEyMzE3Mzh9.lhraggy0HTXCqbDS4ZZ8vpmwyD5h6kWGMLE-_Nnyg3SqetEpRAAhxGiJpzU1MIUF2HdKH2xEWX9Au7LKmVzaYw
+```
+```json
+{
+  "page": {
+    "currentPage": 0,
+    "pageSize": 10,
+    "totalPage": 1,
+    "totalElement": 0
+  },
+  "elements": [
+    {
+      "id": 1,
+      "jobId": null,
+      "job": {
+        "id": 1,
+        "userId": 1,
+        "jobTitle": "Lập trình viên Java",
+        "jobDescription": "Tuyển lập trình viên Java",
+        "jobAddress": {
+          "id": 1,
+          "province": "Hà Nội",
+          "district": "Cầu Giấy",
+          "ward": "Phố Duy Tân",
+          "detailAddress": "Tầng 2, tòa nhà FPT",
+          "longitude": null,
+          "latitude": null
+        },
+        "major": "Công nghệ thông tin",
+        "salary": "Thỏa thuận",
+        "numberOfHiring": 20,
+        "requireExperience": "> 1 year",
+        "sex": "Male",
+        "workingForm": "Fulltime",
+        "status": "OPEN",
+        "openDate": "2023-02-01",
+        "closeDate": "2023-05-01"
+      },
+      "candidateId": 6
+    }
+  ]
+}
+```
+<a name="job_save_delete"></a>
+### h. Ứng viên bỏ lưu công việc
+```http request
+DELETE http://localhost:5000/api/job/save/1
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNjgwNjI2OTM4LCJleHAiOjE2ODEyMzE3Mzh9.lhraggy0HTXCqbDS4ZZ8vpmwyD5h6kWGMLE-_Nnyg3SqetEpRAAhxGiJpzU1MIUF2HdKH2xEWX9Au7LKmVzaYw
+```
+```json
+{
+  "success": true
+}
+```
 
 <a name="application_api"></a>
 ## 5. API Ứng tuyển

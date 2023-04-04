@@ -14,6 +14,7 @@ public class SavedJobModel {
     private Long id;
     @NotNull
     private Long jobId;
+
     private JobModel job;
 
     @NotNull
