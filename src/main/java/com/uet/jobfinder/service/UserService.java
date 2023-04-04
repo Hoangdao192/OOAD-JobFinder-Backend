@@ -44,7 +44,8 @@ public class UserService {
                 new PageQueryModel.PageModel(
                     users.getPageable().getPageNumber(),
                     users.getPageable().getPageSize(),
-                    users.getTotalPages()
+                    users.getTotalPages(),
+                    users.getTotalElements()
                 ),
                 users.getContent().stream()
                         .map(user -> modelMapper.map(user, UserModel.class))

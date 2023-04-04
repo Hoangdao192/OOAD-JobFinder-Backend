@@ -1,5 +1,5 @@
 USE jobfinder;
-# ALTER TABLE job ADD FULLTEXT (job_title);
+ALTER TABLE job ADD FULLTEXT (job_title);
 
 /*Roles*/
 INSERT INTO role (id, name) values
@@ -187,3 +187,14 @@ VALUES (1, '2023-02-03', 'Waiting', 6, 1),
        (23, '2023-02-03', 'Waiting', 8, 6),
        (24, '2023-02-03', 'Waiting', 9, 6),
        (25, '2023-02-03', 'Waiting', 10, 7);
+
+/*Major*/
+INSERT INTO major (id, name) VALUES
+     (1, 'Công nghệ thông tin'),
+     (2, 'Hệ thống thông tin'),
+     (3, 'An toàn thông tin'),
+     (4, 'Quản trị kinh doanh'),
+     (5, 'Mạng máy tính và truyền thông dữ liệu'),
+     (6, 'Logistic và quản lý chuỗi cung ứng'),
+     (7, 'Kỹ thuật máy tính'),
+     (8, 'Công nghệ truyền thông')

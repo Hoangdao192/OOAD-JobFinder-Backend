@@ -18,9 +18,17 @@ public class PageQueryModel<T> {
         private Integer currentPage;
         private Integer pageSize;
         private Integer totalPage;
+        private Long totalElement = 0L;
+
+        public PageModel(Integer currentPage, Integer pageSize, Integer totalPage) {
+            this.currentPage = currentPage;
+            this.pageSize = pageSize;
+            this.totalPage = totalPage;
+        }
     }
 
     private PageModel page;
     private List<T> elements;
+
 
 }
