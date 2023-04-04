@@ -125,8 +125,9 @@ Content-Type: application/json
 <br>a. [Tạo công việc](#job_create)
 <br>b. [Cập nhập công việc](#job_update)
 <br>c. [Lấy danh sách công việc](#job_list)
-<br>c. [Lấy thông tin một công việc](#job_get)
-<br>c. [Xóa công việc](#job_delete)
+<br>d. [Lấy thông tin một công việc](#job_get)
+<br>e. [Xóa công việc](#job_delete)
+<br>f. [Lưu công việc](#job_save)
 6. [API Ứng tuyển](#application_api)
 <br>a. [Ứng viên ứng tuyển](#application_create)
 <br>b. [Công ty chấp nhận đơn ứng tuyển](#application_accept)
@@ -750,6 +751,8 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNjc5MzI0MDA4L
   "success" : true
 }
 ```
+### f. Lưu công việc
+
 
 <a name="application_api"></a>
 ## 5. API Ứng tuyển

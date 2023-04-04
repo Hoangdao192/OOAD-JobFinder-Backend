@@ -1,4 +1,6 @@
 USE jobfinder;
+Set names utf8mb4;
+
 ALTER TABLE job ADD FULLTEXT (job_title);
 
 /*Roles*/
