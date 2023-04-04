@@ -3,6 +3,9 @@ package com.uet.jobfinder.controller;
 import com.uet.jobfinder.model.PageQueryModel;
 import com.uet.jobfinder.model.UserModel;
 import com.uet.jobfinder.service.UserService;
+
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,9 +33,28 @@ public class UserController {
         );
     }
 
+    @GetMapping(path = "search")
+    @PreAuthorize("hasAnyAuthority('Admin')")
+    public ResponseEntity<PageQueryModel<UserModel>> searchUser(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String accountType,
+            @RequestParam(required = false) Boolean isActive,
+            @RequestParam(required = false) Boolean isLocked
+    ) {
+        return ResponseEntity.ok(
+                userService.searchUser(
+                        page, pageSize,
+                        email,accountType,
+                        isActive, isLocked
+                )
+        );
+    }
+
     @PreAuthorize("hasAnyAuthority('Admin')")
     @GetMapping(path = "statistic")
-    public ResponseEntity getUserGrowthStatistic(
+    public ResponseEntity<Map<String, Object>> getUserGrowthStatistic(
             @RequestParam(defaultValue = "0", required = false) Integer month,
             @RequestParam Integer year
     ) {
@@ -41,7 +63,7 @@ public class UserController {
 
     @PreAuthorize("hasAnyAuthority('Admin')")
     @GetMapping(path = "count")
-    public ResponseEntity getUserNumberStatistic() {
+    public ResponseEntity<Map<String, Object>> getUserNumberStatistic() {
         return ResponseEntity.ok(userService.getUserNumberStatistic());
     }
 

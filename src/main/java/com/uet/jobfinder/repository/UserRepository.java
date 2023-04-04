@@ -3,6 +3,7 @@ package com.uet.jobfinder.repository;
 import com.uet.jobfinder.entity.User;
 import com.uet.jobfinder.presentation.UserMonthStatisticPresentation;
 import com.uet.jobfinder.presentation.UserYearStatisticPresentation;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -36,4 +37,16 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "inner join role on role.id = user_role.role_id " +
             "where role.name = :role")
     Long countAllByRole(String role);
+
+    @Query(value = "select user.* from user " +
+            "join user_role on user_role.user_id = user.id " +
+            "where (:email is null or email like %:email%) " +
+            "and (:roleId is null or role_id = :roleId) " +
+            "and (:isActive is null or enabled = :isActive) " +
+            "and (:isLocked is null or locked = :isLocked)",
+            nativeQuery = true)
+    Page<User> searchUser(
+            Pageable pageable,
+            @Param("email") String email, @Param("roleId") Long roleId,
+            @Param("isActive") Boolean isActive, @Param("isLocked") Boolean isLocked);
 }
