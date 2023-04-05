@@ -1,0 +1,87 @@
+### Create user company
+POST http://localhost:5000/api/register
+Content-Type: application/json
+
+{
+  "email" : "cuong2k5hanam@gmail.com",
+  "password" : "12345678",
+  "role" : "Company"
+}
+
+### Confirm user
+POST http://localhost:5000/api/register/confirm
+Content-Type: application/json
+
+{
+  "email" : "cuong2k5hanam@gmail.com",
+  "confirmationKey" : "474511"
+}
+
+### Create user company
+POST http://localhost:5000/api/register
+Content-Type: application/json
+
+{
+  "email" : "cuonghehe@gmail.com",
+  "password" : "12345678",
+  "role" : "Company"
+}
+
+### Confirm user
+POST http://localhost:5000/api/register/confirm
+Content-Type: application/json
+
+{
+  "email" : "cuonghehe@gmail.com",
+  "confirmationKey" : "474788"
+}
+
+
+
+### Create user candidate
+POST http://localhost:5000/api/register
+Content-Type: application/json
+
+{
+  "email" : "20020376@vnu.edu.vn",
+  "password" : "12345678",
+  "role" : "Candidate"
+}
+
+### Confirm user
+POST http://localhost:5000/api/register/confirm
+Content-Type: application/json
+
+{
+  "email" : "20020376@vnu.edu.vn",
+  "confirmationKey" : "812682"
+}
+
+
+### Create user candidate
+POST http://localhost:5000/api/register
+Content-Type: application/json
+
+{
+  "email" : "20020377@vnu.edu.vn",
+  "password" : "12345678",
+  "role" : "Candidate"
+}
+
+### Confirm user
+POST http://localhost:5000/api/register/confirm
+Content-Type: application/json
+
+{
+  "email" : "20020377@vnu.edu.vn",
+  "confirmationKey" : "285926"
+}
+
+### Login
+POST http://localhost:5000/api/login
+Content-Type: application/json
+
+{
+  "email" : "cuong2k2hanam@gmail.com",
+  "password" : "12345678"
+}

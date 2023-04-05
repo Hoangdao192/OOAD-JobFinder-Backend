@@ -65,6 +65,7 @@ public class SpringSecurityConfiguration {
                 .authorizeHttpRequests()
                 .antMatchers("/api/login").permitAll()
                 .antMatchers("api/register").permitAll();
+
         http.addFilterBefore(jwtAuthenticationFilter(), CustomUsernamePasswordFilter.class);
         return http.build();
     }

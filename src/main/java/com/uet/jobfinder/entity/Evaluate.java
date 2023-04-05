@@ -7,19 +7,25 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Entity
+@Table(name = "evaluate")
 @Builder
+@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Address {
+public class Evaluate {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
-    private String province;
-    private String district;
-    private String ward;
-    private String detailAddress;
-    private Float longitude;
-    private Float latitude;
+    @Column(name = "id")
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @OneToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
+
+    private Byte star;
 }

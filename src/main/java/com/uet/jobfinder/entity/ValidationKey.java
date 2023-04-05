@@ -22,7 +22,8 @@ public class ValidationKey {
     private LocalDateTime createDate;
     private LocalDateTime expirationDate;
     private boolean activated = false;
-    @ManyToOne(cascade = CascadeType.REFRESH)
+//    @ManyToOne(cascade = CascadeType.REFRESH)
+    @ManyToOne
     @JoinColumn(nullable = false)
     private User user;
 
