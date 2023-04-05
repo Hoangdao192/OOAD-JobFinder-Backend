@@ -17,14 +17,8 @@ import java.util.Map;
 @RequestMapping("/candidate")
 @PreAuthorize("isAuthenticated()")
 public class CandidateController {
-    @Autowired
-    CandidateService candidateService;
 
-//    @PostMapping(path = "/{id}")
-//    public ResponseEntity<CandidateContext> createCandidate(@PathVariable Long id,
-//                                                           @RequestBody @Valid CandidateContext candidateContext) {
-//        return ResponseEntity.ok().body(candidateService.createCandidate(id, candidateContext.getCandidateModel(), candidateContext.getAddressModel()));
-//    }
+    CandidateService candidateService;
 
     @GetMapping
     public ResponseEntity<PageQueryModel<CandidateModel>> getAllCandidate(
@@ -44,7 +38,6 @@ public class CandidateController {
     public ResponseEntity<CandidateModel> putCandidateById(
             @ModelAttribute @Valid CandidateModel candidateModel,
             HttpServletRequest request) throws IOException {
-//        System.out.println(candidateModel.getCandidateAvatarFile().getOriginalFilename());
         return ResponseEntity.ok(
                 candidateService.updateCandidate(candidateModel, request)
         );
@@ -57,5 +50,10 @@ public class CandidateController {
             HttpServletRequest request) {
         return ResponseEntity.ok(
                 Map.of("success", candidateService.deleteCandidateById(id, request)));
+    }
+
+    @Autowired
+    public void setCandidateService(CandidateService candidateService) {
+        this.candidateService = candidateService;
     }
 }

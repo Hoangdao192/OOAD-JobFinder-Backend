@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "api/address")
 public class AddressController {
-    @Autowired
+
     private AddressService addressService;
 
     @PostMapping
@@ -43,5 +43,10 @@ public class AddressController {
         return ResponseEntity
                 .accepted()
                 .body(address);
+    }
+
+    @Autowired
+    public void setAddressService(AddressService addressService) {
+        this.addressService = addressService;
     }
 }

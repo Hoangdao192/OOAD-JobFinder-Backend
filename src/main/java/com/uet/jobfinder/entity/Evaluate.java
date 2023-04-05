@@ -15,13 +15,13 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class Evaluate {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "candidate_id")
+    private Candidate candidate;
 
     @OneToOne
     @JoinColumn(name = "company_id")

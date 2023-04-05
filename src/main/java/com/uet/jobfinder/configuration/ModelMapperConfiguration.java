@@ -87,10 +87,6 @@ public class ModelMapperConfiguration {
         TypeMap<JobApplication, JobApplicationModel> jobApplicationMapper =
                 modelMapper.createTypeMap(JobApplication.class, JobApplicationModel.class);
 
-//        jobApplicationMapper.addMappings(mapper ->
-//                mapper.using(candidateToLongConverter())
-//                        .map(JobApplication::getCandidate, JobApplicationModel::setCandidateId));
-
         jobApplicationMapper.addMappings(mapper ->
                 mapper.using(jobToLongConverter())
                         .map(JobApplication::getJob, JobApplicationModel::setJobId));
@@ -107,9 +103,6 @@ public class ModelMapperConfiguration {
         savedJobMapper.addMappings(mapper ->
                 mapper.using(candidateToLongConverter())
                         .map(SavedJob::getCandidate, SavedJobModel::setCandidateId));
-//        savedJobMapper.addMappings(mapper ->
-//                mapper.using(jobToLongConverter())
-//                        .map(SavedJob::getJob, SavedJobModel::setJobId));
     }
 
     private Converter<User, Long> userToLongConverter() {

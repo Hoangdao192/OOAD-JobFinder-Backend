@@ -3,6 +3,8 @@ package com.uet.jobfinder.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -24,6 +26,13 @@ public class PageQueryModel<T> {
             this.currentPage = currentPage;
             this.pageSize = pageSize;
             this.totalPage = totalPage;
+        }
+
+        public PageModel(Page page) {
+            this.currentPage = page.getPageable().getPageNumber();
+            this.pageSize = page.getPageable().getPageSize();
+            this.totalPage = page.getTotalPages();
+            this.totalElement = page.getTotalElements();
         }
     }
 

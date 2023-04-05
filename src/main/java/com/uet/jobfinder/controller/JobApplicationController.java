@@ -20,10 +20,6 @@ public class JobApplicationController {
 
     private JobApplicationService jobApplicationService;
 
-//    @GetMapping("/count")
-//    public ResponseEntity<Long> companyCountComingApplication() {
-//
-//    }
 
     @PostMapping
     @PreAuthorize("hasAnyAuthority('Admin', 'Candidate')")

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -20,7 +21,7 @@ public class JobController {
 
     @PreAuthorize("hasAnyAuthority('Admin')")
     @GetMapping(path = "statistic")
-    public ResponseEntity getUserGrowthStatistic(
+    public ResponseEntity<List<Object>> getUserGrowthStatistic(
             @RequestParam(defaultValue = "0", required = false) Integer month,
             @RequestParam Integer year
     ) {
@@ -60,7 +61,7 @@ public class JobController {
     ) {
         return ResponseEntity.ok(
                 jobService.getAllJob(page, perPage, companyId, jobTitle,
-                        major, workingForm)
+                        major, workingForm, isJobOpen)
         );
     }
 

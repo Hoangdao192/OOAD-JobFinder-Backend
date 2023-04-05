@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(path = "file")
 public class FileController {
 
-    @Autowired
     private FileService fileService;
 
     @GetMapping(
@@ -25,4 +24,8 @@ public class FileController {
         return fileService.getPdfFile(id);
     }
 
+    @Autowired
+    public void setFileService(FileService fileService) {
+        this.fileService = fileService;
+    }
 }

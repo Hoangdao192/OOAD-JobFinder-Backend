@@ -37,12 +37,6 @@ public class Company implements Serializable {
 
     private String numberOfEmployee;
 
-    @ToString.Exclude
-    @JsonIgnore
-    @OneToOne(mappedBy = "company", cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
-    private EvaluateStar evaluateStar;
-
-    @OneToMany(mappedBy = "company", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
     private List<Job> jobList;
 }

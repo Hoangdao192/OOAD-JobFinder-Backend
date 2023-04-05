@@ -14,12 +14,14 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EvaluateModel {
-    private Long userId;
 
+    private Long candidateId;
     private Long companyId;
-
     @NotNull(message = "SVERR4")
     @Min(0)
     @Max(5)
     private Byte star;
+
+    private CandidateModel candidate;
+    private CompanyModel company;
 }

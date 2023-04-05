@@ -1,5 +1,6 @@
 package com.uet.jobfinder.service;
 
+import com.uet.jobfinder.entity.Candidate;
 import com.uet.jobfinder.entity.Company;
 import com.uet.jobfinder.entity.Evaluate;
 import com.uet.jobfinder.entity.User;
@@ -7,16 +8,19 @@ import com.uet.jobfinder.error.ServerError;
 import com.uet.jobfinder.exception.CustomIllegalArgumentException;
 import com.uet.jobfinder.model.CompanyModel;
 import com.uet.jobfinder.model.EvaluateModel;
+import com.uet.jobfinder.model.EvaluateStarModel;
 import com.uet.jobfinder.repository.CompanyRepository;
 import com.uet.jobfinder.repository.EvaluateRepository;
 import com.uet.jobfinder.repository.UserRepository;
 import com.uet.jobfinder.security.JsonWebTokenProvider;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class EvaluateService {
@@ -25,124 +29,125 @@ public class EvaluateService {
     private UserRepository userRepository;
     private CompanyRepository companyRepository;
     private EvaluateRepository evaluateRepository;
+    @Autowired
+    private CandidateService candidateService;
+    @Autowired
+    private CompanyService companyService;
+    @Autowired
+    private ModelMapper modelMapper;
 
     public EvaluateService(JsonWebTokenProvider jsonWebTokenProvider) {
         this.jsonWebTokenProvider = jsonWebTokenProvider;
     }
 
-    public EvaluateModel createEvaluate(EvaluateModel evaluateModel) {
-        Long userId = evaluateModel.getUserId();
+    public EvaluateModel createEvaluate(EvaluateModel evaluateModel, HttpServletRequest request) {
+        Long userId = jsonWebTokenProvider.getUserIdFromRequest(request);
+        Candidate candidate = candidateService.getCandidateById(evaluateModel.getCandidateId());
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomIllegalArgumentException(
-                        ServerError.USER_ID_NOT_EXISTS
-                ));
+        if (!(candidate.getUser().getId().equals(userId))) {
+            throw new CustomIllegalArgumentException(
+                    ServerError.ACCESS_DENIED
+            );
+        }
 
-        Company company = companyRepository.findById(evaluateModel.getCompanyId())
-                .orElseThrow(() -> new CustomIllegalArgumentException(
-                        ServerError.COMPANY_NOT_EXISTS
-                ));
+        Company company = companyService.getCompanyByUserId(evaluateModel.getCompanyId());
 
-        if (evaluateRepository.existsByCompanyAndUser(company, user)) {
+        if (evaluateRepository.existsByCandidateAndCompany(candidate, company)) {
             throw new CustomIllegalArgumentException(
                     ServerError.EVALUATE_EXITS
             );
         }
 
         Evaluate evaluate = Evaluate.builder()
-                .user(user)
+                .candidate(candidate)
                 .company(company)
                 .star(evaluateModel.getStar())
                 .build();
 
-        evaluateRepository.save(evaluate);
+        evaluate = evaluateRepository.save(evaluate);
 
-        return evaluateModel;
+        return modelMapper.map(evaluate, EvaluateModel.class);
     }
 
-    public EvaluateModel updateEvaluate(EvaluateModel evaluateModel, HttpServletRequest httpServletRequest) {
-        Company company = companyRepository.findById(evaluateModel.getCompanyId())
-                .orElseThrow(() -> new CustomIllegalArgumentException(
-                        ServerError.COMPANY_NOT_EXISTS
-                ));
-        User user = userRepository.findById(evaluateModel.getUserId())
-                .orElseThrow(() -> new CustomIllegalArgumentException(
-                        ServerError.COMPANY_NOT_EXISTS
-                ));
-
-
-        if (evaluateRepository.existsByCompanyAndUser(company, user)) {
-            // If evaluate exits then update
-            Evaluate evaluate = evaluateRepository.findByCompanyAndUser(company, user)
-                    .orElseThrow(() -> new CustomIllegalArgumentException(
-                            ServerError.EVALUATE_NOT_EXITS
-                    ));
-
-            evaluate.setStar(evaluateModel.getStar());
-            evaluateRepository.save(evaluate);
-
-            return evaluateModel;
-        } else {
+    public EvaluateModel updateEvaluate(EvaluateModel evaluateModel, HttpServletRequest request) {
+        Long userId = jsonWebTokenProvider.getUserIdFromRequest(request);
+        Candidate candidate = candidateService.getCandidateById(evaluateModel.getCandidateId());
+        if (!(candidate.getUser().getId().equals(userId))) {
             throw new CustomIllegalArgumentException(
-                    ServerError.EVALUATE_NOT_EXITS
+                    ServerError.ACCESS_DENIED
             );
         }
 
-    }
+        Company company = companyService.getCompanyByUserId(evaluateModel.getCompanyId());
 
-    public EvaluateModel deleteEvaluate(EvaluateModel evaluateModel, HttpServletRequest httpServletRequest) {
-        Company company = companyRepository.findById(evaluateModel.getCompanyId())
-                .orElseThrow(() -> new CustomIllegalArgumentException(
-                        ServerError.COMPANY_NOT_EXISTS
-                ));
-        User user = userRepository.findById(evaluateModel.getUserId())
-                .orElseThrow(() -> new CustomIllegalArgumentException(
-                        ServerError.COMPANY_NOT_EXISTS
-                ));
-        Evaluate evaluate = evaluateRepository.findByCompanyAndUser(company, user)
+        Evaluate evaluate = evaluateRepository.findByCandidateAndCompany(candidate, company)
                 .orElseThrow(() -> new CustomIllegalArgumentException(
                         ServerError.EVALUATE_NOT_EXITS
                 ));
-        evaluateRepository.delete(evaluate);
+        evaluate.setStar(evaluateModel.getStar());
+        evaluate = evaluateRepository.save(evaluate);
+        return modelMapper.map(evaluate, EvaluateModel.class);
+    }
 
-        return evaluateModel;
+    public Boolean deleteEvaluate(EvaluateModel evaluateModel, HttpServletRequest request) {
+        Long userId = jsonWebTokenProvider.getUserIdFromRequest(request);
+        Candidate candidate = candidateService.getCandidateById(evaluateModel.getCandidateId());
+        Company company = companyService.getCompanyByUserId(evaluateModel.getCompanyId());
+
+        if (!(candidate.getUser().getId().equals(userId))) {
+            throw new CustomIllegalArgumentException(
+                    ServerError.ACCESS_DENIED
+            );
+        }
+
+        Evaluate evaluate = evaluateRepository.findByCandidateAndCompany(candidate, company)
+                .orElseThrow(() -> new CustomIllegalArgumentException(
+                        ServerError.EVALUATE_NOT_EXITS
+                ));
+
+        evaluateRepository.delete(evaluate);
+        return true;
     }
 
     public List<EvaluateModel> getAllEvaluate() {
         List<Evaluate> evaluateList = evaluateRepository.findAll();
-        List<EvaluateModel> evaluateModels = new LinkedList<>();
-
-        for (Evaluate evaluate: evaluateList) {
-            EvaluateModel evaluateModel = EvaluateModel.builder()
-                    .companyId(evaluate.getCompany().getId())
-                    .userId(evaluate.getUser().getId())
-                    .star(evaluate.getStar())
-                    .build();
-            evaluateModels.add(evaluateModel);
-        }
-
-        return evaluateModels;
+        return evaluateList.stream().map(evaluate ->
+                modelMapper.map(evaluate, EvaluateModel.class)).collect(Collectors.toList());
     }
 
-    public List<EvaluateModel> getAllEvaluateByCompany(Long companyId) {
-        Company company = companyRepository.findById(companyId)
-                .orElseThrow(() -> new CustomIllegalArgumentException(
-                        ServerError.COMPANY_NOT_EXISTS
-                ));
+    public List<EvaluateModel> getAllEvaluateByCompany(
+            Long companyId, HttpServletRequest request) {
+        Long userId = jsonWebTokenProvider.getUserIdFromRequest(request);
+        Company company = companyService.getCompanyByUserId(companyId);
 
-        List<Evaluate> evaluateList = evaluateRepository.findAllByCompany(company);
-        List<EvaluateModel> evaluateModels = new LinkedList<>();
-
-        for (Evaluate evaluate: evaluateList) {
-            EvaluateModel evaluateModel = EvaluateModel.builder()
-                    .companyId(evaluate.getCompany().getId())
-                    .userId(evaluate.getUser().getId())
-                    .star(evaluate.getStar())
-                    .build();
-            evaluateModels.add(evaluateModel);
+        if (!(company.getUser().getId().equals(userId))) {
+            throw new CustomIllegalArgumentException(
+                    ServerError.ACCESS_DENIED
+            );
         }
 
-        return evaluateModels;
+        List<Evaluate> evaluateList = evaluateRepository.findAllByCompany(company);
+
+        return evaluateList.stream().map(evaluate ->
+                modelMapper.map(evaluate, EvaluateModel.class)).collect(Collectors.toList());
+    }
+
+    public EvaluateStarModel getCompanyTotalEvaluate(Long companyId, HttpServletRequest request) {
+        Long userId = jsonWebTokenProvider.getUserIdFromRequest(request);
+        Company company = companyService.getCompanyByUserId(companyId);
+
+        if (!(company.getUser().getId().equals(userId))) {
+            throw new CustomIllegalArgumentException(
+                    ServerError.ACCESS_DENIED
+            );
+        }
+
+        Double averageEvaluate = evaluateRepository.getAverageEvaluateByCompanyId(company.getId());
+        return EvaluateStarModel.builder()
+                .companyId(companyId)
+                .company(modelMapper.map(company, CompanyModel.class))
+                .star(averageEvaluate)
+                .build();
     }
 
     @Autowired

@@ -16,7 +16,6 @@ import java.util.Map;
 @RestController
 public class AuthenticationController {
 
-    @Autowired
     private AuthenticationService authenticationService;
 
     @PostMapping(path = "login")
@@ -44,5 +43,10 @@ public class AuthenticationController {
         return ResponseEntity.ok(
                 Map.of("success", isSuccess)
         );
+    }
+
+    @Autowired
+    public void setAuthenticationService(AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
     }
 }

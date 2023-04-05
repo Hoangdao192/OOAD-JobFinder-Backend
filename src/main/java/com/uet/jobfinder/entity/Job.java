@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @Builder
 public class Job {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne(cascade = CascadeType.REFRESH)
     private Company company;

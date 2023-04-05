@@ -1,7 +1,7 @@
 ### Create job
 POST http://localhost:5000/api/job
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjc5OTk0NzI0LCJleHAiOjE2ODA1OTk1MjR9.IAA1OucUm32m4F9EmlM99RoONcZwpVJaApGx1PidHU274uapiBwg-WcWHdm_gCNpGD6PYpsBOnv8AJFiwY8emg
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgwNzExNTEwLCJleHAiOjE2ODEzMTYzMTB9.bKasrEyS8DQm2h1dXXrjtKEAZY-n6N_kfw4VWD7utm6-en7uhieqtvaet-jCpbv_X4qQWUi2bXMbTORgxalC-w
 
 {
   "jobTitle" : "Lập trình viên Android",

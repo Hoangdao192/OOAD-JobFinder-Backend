@@ -15,7 +15,6 @@ import javax.validation.constraints.NotNull;
 public class EvaluateStarModel {
     Long companyId;
 
-    @NotNull(message = "SVERR4")
-    @NotEmpty(message = "SVERR3")
+    private CompanyModel company;
     private Double star;
 }

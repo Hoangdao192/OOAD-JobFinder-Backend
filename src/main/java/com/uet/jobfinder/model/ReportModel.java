@@ -16,7 +16,10 @@ import java.util.Date;
 public class ReportModel {
     private Long companyId;
 
-    private Long userId;
+    private Long candidateId;
+
+    private CompanyModel company;
+    private CandidateModel candidate;
 
     @NotNull(message = "REPORTEER2")
     @NotEmpty(message = "REPORTEER1")

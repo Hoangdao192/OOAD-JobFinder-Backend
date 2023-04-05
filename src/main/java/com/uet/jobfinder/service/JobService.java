@@ -20,14 +20,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,13 +39,6 @@ public class JobService {
     private CompanyRepository companyRepository;
     @Autowired
     private AddressRepository addressRepository;
-
-    public Page<Job> findJob() {
-        return jobRepository.findAllWithJobTitle(
-                PageRequest.of(0, 10),
-                9L, "Lập trình", null, null
-        );
-    }
 
     public List<Object> getStatistic(
             Integer month, Integer year
@@ -144,6 +134,7 @@ public class JobService {
                 .build();
 
         if (jobModel.getJobAddress() != null) {
+            System.out.println("CREATE ADDRESS");
             AddressModel addressModel = jobModel.getJobAddress();
             Address address = Address.builder()
                     .province(addressModel.getProvince())
@@ -154,6 +145,7 @@ public class JobService {
             address = addressRepository.save(address);
             job.setJobAddress(address);
         } else if (company.getAddress() != null) {
+            System.out.println("COMPANY ADDRESS");
             job.setJobAddress(company.getAddress());
         }
 
@@ -166,11 +158,8 @@ public class JobService {
     public PageQueryModel<JobModel> getAllJob(
             Integer page, Integer perPage,
             Long companyId, String jobTitle,
-            String major, String workingForm
+            String major, String workingForm, Boolean isJobOpen
     ) {
-//        Page<Job> jobPage = jobRepository.findAll(
-//                PageRequest.of(page.intValue(), perPage.intValue())
-//        );
         Page<Job> jobPage = null;
         if (jobTitle == null || jobTitle.length() == 0) {
             jobPage = jobRepository.findAllWithOutTitle(
@@ -191,6 +180,12 @@ public class JobService {
                         jobPage.getTotalPages()
                 ),
                 jobPage.getContent().stream()
+                        .filter((job) -> {
+                            if (isJobOpen != null) {
+                                return job.getCloseDate().isAfter(LocalDate.now()) == isJobOpen;
+                            }
+                            return true;
+                        })
                         .map(job -> {
                             JobModel jobModel = new JobModel();
                             modelMapper.map(job, jobModel);
@@ -257,8 +252,6 @@ public class JobService {
         jobRepository.delete(job);
         return true;
     }
-
-
 
     public Job getJobById(Long id) {
         return jobRepository.findById(id)

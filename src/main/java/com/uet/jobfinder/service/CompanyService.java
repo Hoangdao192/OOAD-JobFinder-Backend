@@ -10,10 +10,7 @@ import com.uet.jobfinder.model.AddressModel;
 import com.uet.jobfinder.model.CompanyModel;
 import com.uet.jobfinder.model.PageQueryModel;
 import com.uet.jobfinder.model.SearchCompanyModel;
-import com.uet.jobfinder.repository.CompanyRepository;
-import com.uet.jobfinder.repository.EvaluateStarRepository;
-import com.uet.jobfinder.repository.JobApplicationRepository;
-import com.uet.jobfinder.repository.UserRepository;
+import com.uet.jobfinder.repository.*;
 import com.uet.jobfinder.security.JsonWebTokenProvider;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +36,8 @@ public class CompanyService {
     private UserRepository userRepository;
     private JsonWebTokenProvider jsonWebTokenProvider;
     private JobApplicationRepository jobApplicationRepository;
-    private EvaluateStarRepository evaluateStarRepository;
+    @Autowired
+    private EvaluateRepository evaluateRepository;
 
     public Company getCompanyByUserId(Long userId) {
         User user = userService.getUserById(userId);
@@ -188,9 +186,13 @@ public class CompanyService {
         return true;
     }
 
-    public PageQueryModel findCompany(SearchCompanyModel searchCompanyModel, Integer page, Integer pageSize) {
+    public PageQueryModel<CompanyModel> findCompany(SearchCompanyModel searchCompanyModel, Integer page, Integer pageSize) {
         List<Company> companyList = companyRepository.searchAllCompany(searchCompanyModel.getSearch());
-        companyList.removeIf(company -> company.getEvaluateStar().getStar() < searchCompanyModel.getStar());
+        companyList.removeIf(
+                company ->
+                        evaluateRepository
+                                .getAverageEvaluateByCompanyId(company.getId()) < searchCompanyModel.getStar()
+        );
 
         List<CompanyModel> companyModels = new ArrayList<>();
 
@@ -230,10 +232,6 @@ public class CompanyService {
         );
     }
 
-    @Autowired
-    public void setEvaluateStarRepository(EvaluateStarRepository evaluateStarRepository) {
-        this.evaluateStarRepository = evaluateStarRepository;
-    }
     @Autowired
     public void setModelMapper(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;

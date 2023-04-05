@@ -16,7 +16,7 @@ import java.util.Date;
 @AllArgsConstructor
 public class Report {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
@@ -25,8 +25,8 @@ public class Report {
     private Company company;
 
     @OneToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "candidate_id")
+    private Candidate candidate;
 
     private String message;
 

@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Table(name = "file")
 public class AppFile {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String fileName;
     private String fileType;
