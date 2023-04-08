@@ -47,6 +47,9 @@ public enum ServerError {
     EXPIRED_VALIDATION_KEY("RGERR4", "Expired validation key."),
     INVALID_ROLE("RGERR5", "Invalid role"),
 
+    //  Change password error
+    WRONG_OLD_PASSWORD("CPERR1", "Old password is wrong."),
+
     //  Job error
     JOB_NOT_EXISTS("JBERR1", "Job is not exists."),
     COMPANY_NOT_OWN_JOB("JBERR1", "This company not have authority to edit this job."),

@@ -1,14 +1,13 @@
 package com.uet.jobfinder.controller;
 
-import com.uet.jobfinder.model.ConfirmValidationKeyModel;
-import com.uet.jobfinder.model.LoginRequestModel;
-import com.uet.jobfinder.model.RegisterRequestModel;
-import com.uet.jobfinder.model.UserModel;
+import com.uet.jobfinder.model.*;
 import com.uet.jobfinder.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 import java.util.Map;
@@ -26,6 +25,17 @@ public class AuthenticationController {
     @PostMapping(path = "register")
     public ResponseEntity<UserModel> register(@RequestBody @Valid RegisterRequestModel registerRequestModel) {
         return ResponseEntity.ok(authenticationService.register(registerRequestModel));
+    }
+
+    @PutMapping(path = "password/change")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity changePassword(
+            @RequestBody ChangePasswordRequestDto changePasswordRequestDto,
+            HttpServletRequest request) {
+        authenticationService.changePassword(changePasswordRequestDto, request);
+        return ResponseEntity.ok(
+                Map.of("success", true)
+        );
     }
 
     @PostMapping(path = "register/confirm")

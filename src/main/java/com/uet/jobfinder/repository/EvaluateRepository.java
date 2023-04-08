@@ -16,7 +16,7 @@ public interface EvaluateRepository extends JpaRepository<Evaluate, Long> {
     boolean existsByCandidateAndCompany(Candidate candidate, Company company);
     Optional<Evaluate> findByCandidateAndCompany(Candidate candidate, Company company);
 
-    @Query(value = "SELECT AVG(start) FROM evaluate where company_id = :companyId",
+    @Query(value = "SELECT AVG(star) FROM evaluate where company_id = :companyId",
             nativeQuery = true)
     Double getAverageEvaluateByCompanyId(@Param("companyId") Long companyId);
 }

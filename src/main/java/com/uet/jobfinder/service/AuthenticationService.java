@@ -5,6 +5,7 @@ import com.uet.jobfinder.entity.ValidationKey;
 import com.uet.jobfinder.error.ServerError;
 import com.uet.jobfinder.exception.CustomIllegalArgumentException;
 import com.uet.jobfinder.model.*;
+import com.uet.jobfinder.repository.UserRepository;
 import com.uet.jobfinder.security.JsonWebTokenProvider;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +13,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -30,6 +33,10 @@ public class AuthenticationService {
     private CompanyService companyService;
     @Autowired
     private CandidateService candidateService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private UserRepository userRepository;
 
     public UserModel register(RegisterRequestModel registerRequestModel) {
         User user = userService.createUser(registerRequestModel);
@@ -118,6 +125,24 @@ public class AuthenticationService {
                 "user", modelMapper.map(user, UserModel.class)
         );
 //        return new JsonWebTokenModel("Bearer", jwt);
+    }
+
+    public boolean changePassword(
+            ChangePasswordRequestDto changePasswordRequestDto, HttpServletRequest request) {
+        Long userId = jwtProvider.getUserIdFromRequest(request);
+        User user = userService.getUserById(userId);
+
+        if (!passwordEncoder.matches(changePasswordRequestDto.oldPassword, user.getPassword())) {
+            throw new CustomIllegalArgumentException(
+                    ServerError.WRONG_OLD_PASSWORD
+            );
+        }
+
+        user.setPassword(
+                passwordEncoder.encode(changePasswordRequestDto.newPassword)
+        );
+        userRepository.save(user);
+        return true;
     }
 
     @Autowired

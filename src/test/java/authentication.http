@@ -4,7 +4,7 @@ Content-Type: application/json
 
 {
   "email" : "20020390@vnu.edu.vn",
-  "password" : "12345678"
+  "password" : "abcdefgh"
 }
 
 ### Login as Admin
@@ -36,3 +36,13 @@ Content-Type: application/json
 
 ### Send email confirmation
 GET http://localhost:5000/api/register/confirm/resend?email=nguyendanghoangdao11a@gmail.com
+
+### Change password
+PUT http://localhost:5000/api/password/change
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgwOTY2NTE1LCJleHAiOjE2ODE1NzEzMTV9.2giO8oFYHFOPHqV8HdVAVu_ljAyfUrCKa5vNh32OQv8FHiZOVqOxznkOS481eDfZ9rzz5Cthz9gpJxDXWWaHwQ
+Content-Type: application/json
+
+{
+  "oldPassword": "12345678",
+  "newPassword": "abcdefgh"
+}

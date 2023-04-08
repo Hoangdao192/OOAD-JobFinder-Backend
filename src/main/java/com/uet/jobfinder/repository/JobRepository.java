@@ -15,7 +15,14 @@ import java.util.List;
 
 public interface JobRepository extends JpaRepository<Job, Long> {
 
+    Long countAllByCompany(Company company);
+
     Long countJobByCompanyAndStatus(Company company, JobStatus status);
+
+    @Query(nativeQuery = true,
+            value = "select count(*) from job where company_user_id = :companyId and " +
+                    "((:isOpen = true and close_date >= NOW()) or (:isOpen = false and close_date < NOW()))")
+    Long countJobByCompanyIdAndOpenStatus(@Param("companyId") Long companyId, @Param("isOpen") boolean isOpen);
 
     @Query(nativeQuery = true, value =
             "select * from job where job.id in " +

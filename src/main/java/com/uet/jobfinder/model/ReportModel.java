@@ -14,8 +14,9 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReportModel {
-    private Long companyId;
+    private Long id;
 
+    private Long companyId;
     private Long candidateId;
 
     private CompanyModel company;

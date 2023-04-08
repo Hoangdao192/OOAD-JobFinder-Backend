@@ -143,6 +143,10 @@ public class EvaluateService {
         }
 
         Double averageEvaluate = evaluateRepository.getAverageEvaluateByCompanyId(company.getId());
+        //  Not have any review yet
+        if (averageEvaluate == null) {
+            averageEvaluate = 0d;
+        }
         return EvaluateStarModel.builder()
                 .companyId(companyId)
                 .company(modelMapper.map(company, CompanyModel.class))

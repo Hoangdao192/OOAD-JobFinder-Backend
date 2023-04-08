@@ -31,8 +31,8 @@ public class ReportController {
     @GetMapping(params = {"page", "pageSize", "companyId"})
     @PreAuthorize("hasAnyAuthority('Admin', 'Company')")
     public ResponseEntity<PageQueryModel<ReportModel>> companyGetAllReport(
-            @RequestParam(defaultValue = "0", required = false) Integer page,
-            @RequestParam(defaultValue = "10", required = false) Integer pageSize,
+            @RequestParam(name = "page", defaultValue = "0", required = false) Integer page,
+            @RequestParam(name = "pageSize", defaultValue = "10", required = false) Integer pageSize,
             @RequestParam Long companyId, HttpServletRequest request
     )    {
         return ResponseEntity.ok(reportService.getAllReportByCompany(

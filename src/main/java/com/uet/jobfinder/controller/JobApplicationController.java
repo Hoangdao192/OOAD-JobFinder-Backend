@@ -21,6 +21,27 @@ public class JobApplicationController {
     private JobApplicationService jobApplicationService;
 
 
+    @GetMapping("statistic")
+    @PreAuthorize("hasAnyAuthority('Admin', 'Company')")
+    public ResponseEntity getApplicationStatistic(HttpServletRequest request) {
+        return ResponseEntity.ok(
+                jobApplicationService.getApplicationStatistic(request)
+        );
+    }
+
+    @GetMapping("statistic/chart")
+    @PreAuthorize("hasAnyAuthority('Admin', 'Company')")
+    public ResponseEntity getApplicationStatisticChart(
+            @RequestParam(defaultValue = "0") Integer month,
+            @RequestParam(defaultValue = "2023") Integer year,
+            HttpServletRequest request) {
+        return ResponseEntity.ok(
+                jobApplicationService.getApplicationStatisticChart(
+                        month, year, request
+                )
+        );
+    }
+
     @PostMapping
     @PreAuthorize("hasAnyAuthority('Admin', 'Candidate')")
     public ResponseEntity<JobApplicationModel> createApplication(
