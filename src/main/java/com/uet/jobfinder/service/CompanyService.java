@@ -18,6 +18,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -240,7 +241,9 @@ public class CompanyService {
     }
 
     public PageQueryModel findCompany(SearchCompanyModel searchCompanyModel, Integer page, Integer pageSize) {
-        List<Company> companyList = companyRepository.searchAllCompany(searchCompanyModel.getSearch());
+
+
+        List<Company> companyList = companyRepository.searchAllCompany(searchCompanyModel.getSearch(), Pageable pageable);
         companyList.removeIf(company -> company.getEvaluateStar().getStar() < searchCompanyModel.getStar());
 
 
