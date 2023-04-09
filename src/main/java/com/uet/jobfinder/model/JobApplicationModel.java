@@ -27,6 +27,8 @@ public class JobApplicationModel {
     @NotNull(message = "SVERR4")
     private Long jobId;
 
+    private JobModel job;
+
     private String status;
     private String description;
     

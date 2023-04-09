@@ -18,6 +18,8 @@ public class JobModel {
     private Long id;
     private Long userId;
 
+    private CompanyModel company;
+
     @NotNull(message = "SVERR4")
     @NotEmpty(message = "SVERR3")
     private String jobTitle;

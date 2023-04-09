@@ -177,7 +177,9 @@ public class GlobalExceptionHandler {
         }
 
         if (e instanceof BadCredentialsException) {
-            return new ResponseEntity<>(LoginError.WRONG_PASSWORD_OR_USERNAME, HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(
+                Map.of("errors", List.of(
+                    LoginError.WRONG_PASSWORD_OR_USERNAME)), HttpStatus.UNAUTHORIZED);
         }
 
         return new ResponseEntity<>(
