@@ -54,6 +54,8 @@ public interface JobApplicationRepository extends JpaRepository<JobApplication, 
             "where company.user_id = :companyId and job_application.status = 'Rejected'")
     Long countRejectedApplicationByCompanyId(Long companyId);
 
+    Long countAllByJob(Job job);
+
     @Query(nativeQuery = true,
             value = "SELECT MONTH(applied_date) as month, count(*) as numberOfApplication FROM jobfinder.job_application " +
             "inner join job on job.id = job_application.job_id " +

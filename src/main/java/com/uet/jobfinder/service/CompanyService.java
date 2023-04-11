@@ -186,49 +186,18 @@ public class CompanyService {
         return true;
     }
 
-    public PageQueryModel<CompanyModel> findCompany(SearchCompanyModel searchCompanyModel, Integer page, Integer pageSize) {
-        List<Company> companyList = companyRepository.searchAllCompany(searchCompanyModel.getSearch());
-        companyList.removeIf(
-                company ->
-                        evaluateRepository
-                                .getAverageEvaluateByCompanyId(company.getId()) < searchCompanyModel.getStar()
-        );
-
-        List<CompanyModel> companyModels = new ArrayList<>();
-
-        // Nếu limit > độ dài kết quả thì limit bằng độ dài của kết quả
-        // limit, start để giới hạn lại khi chuyển model
-        int limit = (page + 1) * pageSize > companyList.size() ? companyList.size() : (page + 1) * pageSize;
-
-
-        int start = page * pageSize;
-        int totalPage = companyList.size() / pageSize + 1;
-
-        // Nếu cố tình truy cập page không hợp lệ.
-        if (page > totalPage)
-            throw new CustomIllegalArgumentException(
-                    ServerError.INVALID_REQUEST
-            );
-
-        for (int i = start; i < limit; i++) {
-            Company company = companyList.get(i);
-
-            CompanyModel companyModel = CompanyModel.builder()
-                    .companyName(company.getCompanyName())
-                    .companyDescription(company.getCompanyDescription())
-                    .numberOfEmployee(company.getNumberOfEmployee())
-                    .build();
-
-            companyModels.add(companyModel);
-        }
+    public PageQueryModel<CompanyModel> findCompany(String searchKey, Integer page, Integer pageSize) {
+        Page<Company> companies = companyRepository.searchAllCompany(
+                PageRequest.of(page, pageSize), searchKey);
 
         return new PageQueryModel<>(
                 new PageQueryModel.PageModel(
-                        page,
-                        pageSize,
-                        totalPage
+                        companies.getPageable().getPageNumber(),
+                        companies.getPageable().getPageSize(),
+                        companies.getTotalPages()
                 ),
-                companyModels
+                companies.getContent().stream().map(company -> modelMapper.map(company, CompanyModel.class))
+                        .collect(Collectors.toList())
         );
     }
 

@@ -409,6 +409,18 @@ public class JobApplicationService {
         );
     }
 
+    public Object countApplicationByJobId(Long jobId, HttpServletRequest request) {
+        Job job = jobService.getJobById(jobId);
+        Long userid = jsonWebTokenProvider.getUserIdFromRequest(request);
+        if (!(userid.equals(job.getCompany().getId()))) {
+            throw new CustomIllegalArgumentException(
+                    ServerError.ACCESS_DENIED
+            );
+        }
+
+        return jobApplicationRepository.countAllByJob(job);
+    }
+
     @Autowired
     public void setJsonWebTokenProvider(JsonWebTokenProvider jsonWebTokenProvider) {
         this.jsonWebTokenProvider = jsonWebTokenProvider;
@@ -448,4 +460,5 @@ public class JobApplicationService {
     public void setUserService(UserService userService) {
         this.userService = userService;
     }
+
 }

@@ -90,6 +90,21 @@ public class JobApplicationController {
         );
     }
 
+    @GetMapping("count")
+    @PreAuthorize("hasAnyAuthority('Company')")
+    public ResponseEntity countApplicationByJobId(
+            @RequestParam Long jobId, HttpServletRequest request
+    ) {
+        return ResponseEntity.ok(
+                jobApplicationService.countApplicationByJobId(
+                        jobId, request
+                )
+        );
+    }
+
+    // @GetMapping("count")
+    // public ResponseEntity count
+
     @PreAuthorize("hasAnyAuthority('Admin', 'Candidate')")
     @DeleteMapping("{applicationId}")
     public ResponseEntity<Map<String, Object>> deleteJobApplication(
