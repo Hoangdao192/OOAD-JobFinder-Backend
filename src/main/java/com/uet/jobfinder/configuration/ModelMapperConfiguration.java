@@ -48,6 +48,16 @@ public class ModelMapperConfiguration {
                 expression.map(Job::getId, JobModel::setId));
         jobMapper.addMappings(expression ->
                 expression.map(job -> job.getCompany().getUser().getId(), JobModel::setUserId));
+        Converter<Company, CompanyModel> converter = mappingContext -> {
+            if (mappingContext.getSource() != null) {
+                return modelMapper.map(mappingContext.getSource(), CompanyModel.class);
+            }
+            return null;
+        };
+        jobMapper.addMappings(expression ->
+                expression
+                    .using(converter)
+                    .map(Job::getCompany, JobModel::setCompany));
     }
 
     private void configMapCompanyToCompanyModel(ModelMapper modelMapper) {

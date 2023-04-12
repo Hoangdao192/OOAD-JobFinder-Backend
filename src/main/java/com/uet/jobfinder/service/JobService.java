@@ -289,4 +289,8 @@ public class JobService {
     public void setJsonWebTokenProvider(JsonWebTokenProvider jsonWebTokenProvider) {
         this.jsonWebTokenProvider = jsonWebTokenProvider;
     }
+
+    public Long countAllJob() {
+        return jobRepository.count();
+    }
 }

@@ -53,9 +53,7 @@ public class EvaluateService {
         Company company = companyService.getCompanyByUserId(evaluateModel.getCompanyId());
 
         if (evaluateRepository.existsByCandidateAndCompany(candidate, company)) {
-            throw new CustomIllegalArgumentException(
-                    ServerError.EVALUATE_EXITS
-            );
+            updateEvaluate(evaluateModel, request);
         }
 
         Evaluate evaluate = Evaluate.builder()

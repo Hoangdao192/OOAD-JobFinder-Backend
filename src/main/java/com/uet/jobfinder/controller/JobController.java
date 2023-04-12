@@ -28,6 +28,14 @@ public class JobController {
         return ResponseEntity.ok(jobService.getStatistic(month, year));
     }
 
+    @GetMapping("countAll")
+    @PreAuthorize("isAuthenticated() and hasAnyAuthority('Admin')")
+    public ResponseEntity<Long> countAllJob() {
+        return ResponseEntity.ok(
+                jobService.countAllJob()
+        );
+    }
+
     @GetMapping("count")
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('Company')")
     public ResponseEntity<Long> countJobByCompanyId(
@@ -48,6 +56,8 @@ public class JobController {
     public ResponseEntity<JobModel> getJob(@PathVariable Long id) {
         return ResponseEntity.ok(jobService.getJobModelById(id));
     }
+
+
 
     @GetMapping
     public ResponseEntity<PageQueryModel<JobModel>> getJobList(

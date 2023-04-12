@@ -17,8 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 public class ReportController {
     private ReportService reportService;
 
-    @GetMapping(params = {"page", "pageSize"})
-    @PreAuthorize("hasAnyAuthority('Admin', 'Company')")
+    @GetMapping
+    @PreAuthorize("hasAnyAuthority('Admin')")
     public ResponseEntity<PageQueryModel<ReportModel>> getAllReport(
             @RequestParam(defaultValue = "0", required = false) Integer page,
             @RequestParam(defaultValue = "10", required = false) Integer pageSize
@@ -28,29 +28,29 @@ public class ReportController {
         ));
     }
 
-    @GetMapping(params = {"page", "pageSize", "companyId"})
-    @PreAuthorize("hasAnyAuthority('Admin', 'Company')")
-    public ResponseEntity<PageQueryModel<ReportModel>> companyGetAllReport(
-            @RequestParam(name = "page", defaultValue = "0", required = false) Integer page,
-            @RequestParam(name = "pageSize", defaultValue = "10", required = false) Integer pageSize,
-            @RequestParam Long companyId, HttpServletRequest request
-    )    {
-        return ResponseEntity.ok(reportService.getAllReportByCompany(
-                page, pageSize, companyId, request
-        ));
-    }
+//    @GetMapping(params = {"page", "pageSize", "companyId"})
+//    @PreAuthorize("hasAnyAuthority('Admin', 'Company')")
+//    public ResponseEntity<PageQueryModel<ReportModel>> companyGetAllReport(
+//            @RequestParam(name = "page", defaultValue = "0", required = false) Integer page,
+//            @RequestParam(name = "pageSize", defaultValue = "10", required = false) Integer pageSize,
+//            @RequestParam Long companyId, HttpServletRequest request
+//    )    {
+//        return ResponseEntity.ok(reportService.getAllReportByCompany(
+//                page, pageSize, companyId, request
+//        ));
+//    }
 
-    @GetMapping(params = {"page", "pageSize", "candidateId"})
-    @PreAuthorize("hasAnyAuthority('Admin', 'Candidate')")
-    public ResponseEntity<PageQueryModel<ReportModel>> candidateGetAllReport(
-            @RequestParam(defaultValue = "0", required = false) Integer page,
-            @RequestParam(defaultValue = "10", required = false) Integer pageSize,
-            @RequestParam Long candidateId, HttpServletRequest request
-    )    {
-        return ResponseEntity.ok(reportService.getAllReportByCandidate(
-                page, pageSize, candidateId, request
-        ));
-    }
+//    @GetMapping(params = {"page", "pageSize", "candidateId"})
+//    @PreAuthorize("hasAnyAuthority('Admin', 'Candidate')")
+//    public ResponseEntity<PageQueryModel<ReportModel>> candidateGetAllReport(
+//            @RequestParam(defaultValue = "0", required = false) Integer page,
+//            @RequestParam(defaultValue = "10", required = false) Integer pageSize,
+//            @RequestParam Long candidateId, HttpServletRequest request
+//    )    {
+//        return ResponseEntity.ok(reportService.getAllReportByCandidate(
+//                page, pageSize, candidateId, request
+//        ));
+//    }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('Admin', 'Company')")

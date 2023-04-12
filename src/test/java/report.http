@@ -1,0 +1,2 @@
+GET http://localhost:5000/api/report
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5OSIsImlhdCI6MTY4MTI3Njg4NCwiZXhwIjoxNjgxODgxNjg0fQ.USLy-Hdnqw6I-lHBGO2J6EDE6svo5z8YoqZr77vPxZ6N__gME7XnjVfps3Z9thD0ku91WA6_gnw9H8pq5un8Ng
