@@ -5,6 +5,10 @@ Tuân thủ quy tắc IBM
 security, persistance như thế nào, mô hình
 demo, kiểm thử
 
+Giới thiệu ứng dụng
+Cơ sở dữ liệu
+Cách ứng dụng ...
+
 # Ứng dụng tìm kiếm việc làm
 
 ## Nội dung

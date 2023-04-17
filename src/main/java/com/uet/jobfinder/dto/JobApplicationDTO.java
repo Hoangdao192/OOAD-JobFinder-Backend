@@ -1,4 +1,4 @@
-package com.uet.jobfinder.model;
+package com.uet.jobfinder.dto;
 
 import java.time.LocalDateTime;
 
@@ -15,19 +15,19 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class JobApplicationModel {
+public class JobApplicationDTO {
 
     private Long id;
     
     @NotNull(message = "SVERR4")
     private Long candidateId;
 
-    private CandidateModel candidate;
+    private CandidateDTO candidate;
 
     @NotNull(message = "SVERR4")
     private Long jobId;
 
-    private JobModel job;
+    private JobDTO job;
 
     private String status;
     private String description;

@@ -1,4 +1,4 @@
-package com.uet.jobfinder.model;
+package com.uet.jobfinder.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,14 +13,14 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReportModel {
+public class ReportDTO {
     private Long id;
 
     private Long companyId;
     private Long candidateId;
 
-    private CompanyModel company;
-    private CandidateModel candidate;
+    private CompanyDTO company;
+    private CandidateDTO candidate;
 
     @NotNull(message = "REPORTEER2")
     @NotEmpty(message = "REPORTEER1")

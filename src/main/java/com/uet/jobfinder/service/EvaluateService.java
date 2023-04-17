@@ -3,12 +3,11 @@ package com.uet.jobfinder.service;
 import com.uet.jobfinder.entity.Candidate;
 import com.uet.jobfinder.entity.Company;
 import com.uet.jobfinder.entity.Evaluate;
-import com.uet.jobfinder.entity.User;
 import com.uet.jobfinder.error.ServerError;
 import com.uet.jobfinder.exception.CustomIllegalArgumentException;
-import com.uet.jobfinder.model.CompanyModel;
-import com.uet.jobfinder.model.EvaluateModel;
-import com.uet.jobfinder.model.EvaluateStarModel;
+import com.uet.jobfinder.dto.CompanyDTO;
+import com.uet.jobfinder.dto.EvaluateModel;
+import com.uet.jobfinder.dto.EvaluateStarModel;
 import com.uet.jobfinder.repository.CompanyRepository;
 import com.uet.jobfinder.repository.EvaluateRepository;
 import com.uet.jobfinder.repository.UserRepository;
@@ -18,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -147,7 +145,7 @@ public class EvaluateService {
         }
         return EvaluateStarModel.builder()
                 .companyId(companyId)
-                .company(modelMapper.map(company, CompanyModel.class))
+                .company(modelMapper.map(company, CompanyDTO.class))
                 .star(averageEvaluate)
                 .build();
     }

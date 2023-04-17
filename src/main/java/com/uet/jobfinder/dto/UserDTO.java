@@ -1,4 +1,4 @@
-package com.uet.jobfinder.model;
+package com.uet.jobfinder.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,16 +11,15 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserModel{
+public class UserDTO {
 
     private Long id;
     private String email;
     private Boolean enabled = false;
     private Boolean locked = false;
     private List<String> roles = new ArrayList<>();
-    private LocalDate createDate;
 
-    public UserModel(String email, Boolean enabled, Boolean locked) {
+    public UserDTO(String email, Boolean enabled, Boolean locked) {
         this.email = email;
         this.enabled = enabled;
         this.locked = locked;

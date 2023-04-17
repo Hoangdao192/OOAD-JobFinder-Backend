@@ -1,6 +1,6 @@
 package com.uet.jobfinder.controller;
 
-import com.uet.jobfinder.model.*;
+import com.uet.jobfinder.dto.*;
 import com.uet.jobfinder.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,26 +13,27 @@ import javax.validation.constraints.Pattern;
 import java.util.Map;
 
 @RestController
+@RequestMapping("auth")
 public class AuthenticationController {
 
     private AuthenticationService authenticationService;
 
     @PostMapping(path = "login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody @Valid LoginRequestModel loginRequestModel) {
-        return ResponseEntity.ok(authenticationService.login(loginRequestModel));
+    public ResponseEntity<UserLoginResponse> login(@RequestBody @Valid LoginRequest loginRequest) {
+        return ResponseEntity.ok(authenticationService.login(loginRequest));
     }
 
     @PostMapping(path = "register")
-    public ResponseEntity<UserModel> register(@RequestBody @Valid RegisterRequestModel registerRequestModel) {
-        return ResponseEntity.ok(authenticationService.register(registerRequestModel));
+    public ResponseEntity<UserDTO> register(@RequestBody @Valid RegisterRequest registerRequest) {
+        return ResponseEntity.ok(authenticationService.register(registerRequest));
     }
 
     @PutMapping(path = "password/change")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity changePassword(
-            @RequestBody ChangePasswordRequestDto changePasswordRequestDto,
+            @RequestBody ChangePasswordRequest changePasswordRequest,
             HttpServletRequest request) {
-        authenticationService.changePassword(changePasswordRequestDto, request);
+        authenticationService.changePassword(changePasswordRequest, request);
         return ResponseEntity.ok(
                 Map.of("success", true)
         );

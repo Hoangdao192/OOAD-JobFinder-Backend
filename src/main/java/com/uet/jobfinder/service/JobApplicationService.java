@@ -3,12 +3,10 @@ package com.uet.jobfinder.service;
 import com.uet.jobfinder.entity.*;
 import com.uet.jobfinder.error.ServerError;
 import com.uet.jobfinder.exception.CustomIllegalArgumentException;
-import com.uet.jobfinder.model.JobApplicationModel;
-import com.uet.jobfinder.model.PageQueryModel;
+import com.uet.jobfinder.dto.JobApplicationDTO;
+import com.uet.jobfinder.dto.PageQueryModel;
 import com.uet.jobfinder.presentation.JobApplicationMonthStatisticPresentation;
 import com.uet.jobfinder.presentation.JobApplicationYearStatisticPresentation;
-import com.uet.jobfinder.presentation.UserMonthStatisticPresentation;
-import com.uet.jobfinder.presentation.UserYearStatisticPresentation;
 import com.uet.jobfinder.repository.JobApplicationRepository;
 import com.uet.jobfinder.repository.JobRepository;
 import com.uet.jobfinder.security.JsonWebTokenProvider;
@@ -17,8 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -145,14 +141,14 @@ public class JobApplicationService {
         );
     }
 
-    public JobApplicationModel createJobApplication(
-            JobApplicationModel jobApplicationModel, HttpServletRequest request) throws IOException {
+    public JobApplicationDTO createJobApplication(
+            JobApplicationDTO jobApplicationDTO, HttpServletRequest request) throws IOException {
 
         Long userId = jsonWebTokenProvider.getUserIdFromRequest(request);
 
         Candidate candidate = candidateService
-                .getCandidateById(jobApplicationModel.getCandidateId());
-        Job job = jobService.getJobById(jobApplicationModel.getJobId());
+                .getCandidateById(jobApplicationDTO.getCandidateId());
+        Job job = jobService.getJobById(jobApplicationDTO.getJobId());
 
         if (job.getCloseDate().isBefore(LocalDate.now())) {
             throw new CustomIllegalArgumentException(
@@ -183,8 +179,8 @@ public class JobApplicationService {
                 .appliedDate(LocalDateTime.now())
                 .build();
 
-        if (jobApplicationModel.getCvFile() != null) {
-            MultipartFile cvFile = jobApplicationModel.getCvFile();
+        if (jobApplicationDTO.getCvFile() != null) {
+            MultipartFile cvFile = jobApplicationDTO.getCvFile();
             jobApplication.setCvFile(
                     fileService.saveFile(
                             cvFile.getOriginalFilename(),
@@ -196,7 +192,7 @@ public class JobApplicationService {
 
         return modelMapper.map(
                 jobApplicationRepository.save(jobApplication),
-                JobApplicationModel.class);
+                JobApplicationDTO.class);
     }
 
     public boolean acceptJobApplication(
@@ -241,7 +237,7 @@ public class JobApplicationService {
         return true;
     }
 
-    public JobApplicationModel getJobApplicationModelById(
+    public JobApplicationDTO getJobApplicationModelById(
             Long jobApplicationId, HttpServletRequest request
     ) {
         Long userId = jsonWebTokenProvider.getUserIdFromRequest(request);
@@ -254,7 +250,7 @@ public class JobApplicationService {
             );
         }
 
-        return modelMapper.map(jobApplication, JobApplicationModel.class);
+        return modelMapper.map(jobApplication, JobApplicationDTO.class);
     }
 
     public JobApplication getJobApplicationByCandidateAndJob(Candidate candidate, Job job) {
@@ -270,7 +266,7 @@ public class JobApplicationService {
                 ));
     }
 
-    public PageQueryModel<JobApplicationModel> listJobApplication(
+    public PageQueryModel<JobApplicationDTO> listJobApplication(
             Integer page, Integer pageSize, Long candidateId, Long jobId,
             HttpServletRequest request
     ) {
@@ -303,7 +299,7 @@ public class JobApplicationService {
         );
     }
 
-    public PageQueryModel<JobApplicationModel> listJobApplicationByCompanyId(
+    public PageQueryModel<JobApplicationDTO> listJobApplicationByCompanyId(
             Integer page, Integer pageSize, Long companyId, HttpServletRequest request
     ) {
         Long userId = jsonWebTokenProvider.getUserIdFromRequest(request);
@@ -323,14 +319,14 @@ public class JobApplicationService {
                 ),
                 jobApplications.getContent()
                         .stream().map(jobApplication ->
-                                modelMapper.map(jobApplication, JobApplicationModel.class))
+                                modelMapper.map(jobApplication, JobApplicationDTO.class))
                         .collect(Collectors.toList()));
     }
 
     /**
      *  This is call when company want to get all application that applied this job
       */
-    public PageQueryModel<JobApplicationModel> getAllJobApplicationByJobId(
+    public PageQueryModel<JobApplicationDTO> getAllJobApplicationByJobId(
             Integer page, Integer pageSize, Long jobId, HttpServletRequest request
     ) {
         Long userId = jsonWebTokenProvider.getUserIdFromRequest(request);
@@ -356,7 +352,7 @@ public class JobApplicationService {
                         jobApplications.getTotalPages()
                 ),
                 jobApplications.getContent().stream().map(model ->
-                        modelMapper.map(model, JobApplicationModel.class))
+                        modelMapper.map(model, JobApplicationDTO.class))
                         .collect(Collectors.toList())
         );
     }
@@ -379,7 +375,7 @@ public class JobApplicationService {
         return true;
     }
 
-    public PageQueryModel<JobApplicationModel> getAllJobApplicationByCandidateId(
+    public PageQueryModel<JobApplicationDTO> getAllJobApplicationByCandidateId(
             Integer page, Integer pageSize, Long candidateId, HttpServletRequest request
     ) {
         Long userId = jsonWebTokenProvider.getUserIdFromRequest(request);
@@ -404,7 +400,7 @@ public class JobApplicationService {
                         jobApplications.getTotalPages()
                 ),
                 jobApplications.getContent().stream().map(model ->
-                                modelMapper.map(model, JobApplicationModel.class))
+                                modelMapper.map(model, JobApplicationDTO.class))
                         .collect(Collectors.toList())
         );
     }

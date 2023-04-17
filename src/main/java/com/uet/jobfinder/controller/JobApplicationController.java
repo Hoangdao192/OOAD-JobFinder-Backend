@@ -1,7 +1,7 @@
 package com.uet.jobfinder.controller;
 
-import com.uet.jobfinder.model.JobApplicationModel;
-import com.uet.jobfinder.model.PageQueryModel;
+import com.uet.jobfinder.dto.JobApplicationDTO;
+import com.uet.jobfinder.dto.PageQueryModel;
 import com.uet.jobfinder.service.JobApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -44,16 +44,16 @@ public class JobApplicationController {
 
     @PostMapping
     @PreAuthorize("hasAnyAuthority('Admin', 'Candidate')")
-    public ResponseEntity<JobApplicationModel> createApplication(
-            @ModelAttribute @Valid JobApplicationModel jobApplicationModel,
+    public ResponseEntity<JobApplicationDTO> createApplication(
+            @ModelAttribute @Valid JobApplicationDTO jobApplicationDTO,
             HttpServletRequest request
             ) throws IOException {
         return ResponseEntity.ok(jobApplicationService.createJobApplication(
-                jobApplicationModel, request));
+                jobApplicationDTO, request));
     }
 
     @GetMapping("{applicationId}")
-    public ResponseEntity<JobApplicationModel> getJobApplication(
+    public ResponseEntity<JobApplicationDTO> getJobApplication(
             @PathVariable Long applicationId, HttpServletRequest request
     ) {
         return ResponseEntity.ok(
@@ -64,7 +64,7 @@ public class JobApplicationController {
     }
 
     @GetMapping
-    public ResponseEntity<PageQueryModel<JobApplicationModel>> listJobApplication(
+    public ResponseEntity<PageQueryModel<JobApplicationDTO>> listJobApplication(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer pageSize,
             @RequestParam(required = false, defaultValue = "-1") Long candidateId,
@@ -77,7 +77,7 @@ public class JobApplicationController {
     }
 
     @GetMapping("listByCompany")
-    public ResponseEntity<PageQueryModel<JobApplicationModel>> listJobApplicationByCompanyId(
+    public ResponseEntity<PageQueryModel<JobApplicationDTO>> listJobApplicationByCompanyId(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer pageSize,
             @RequestParam Long companyId, HttpServletRequest request

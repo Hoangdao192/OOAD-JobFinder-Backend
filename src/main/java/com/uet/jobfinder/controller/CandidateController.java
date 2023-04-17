@@ -1,7 +1,7 @@
 package com.uet.jobfinder.controller;
 
-import com.uet.jobfinder.model.CandidateModel;
-import com.uet.jobfinder.model.PageQueryModel;
+import com.uet.jobfinder.dto.CandidateDTO;
+import com.uet.jobfinder.dto.PageQueryModel;
 import com.uet.jobfinder.service.CandidateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +21,7 @@ public class CandidateController {
     CandidateService candidateService;
 
     @GetMapping
-    public ResponseEntity<PageQueryModel<CandidateModel>> getAllCandidate(
+    public ResponseEntity<PageQueryModel<CandidateDTO>> getAllCandidate(
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer pageSize
     ) {
@@ -29,17 +29,17 @@ public class CandidateController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<CandidateModel> getCandidateById(@PathVariable Long id) {
+    public ResponseEntity<CandidateDTO> getCandidateById(@PathVariable Long id) {
         return ResponseEntity.ok().body(candidateService.getCandidateModelById(id));
     }
 
     @PutMapping
     @PreAuthorize("hasAnyAuthority('Admin', 'Candidate')")
-    public ResponseEntity<CandidateModel> putCandidateById(
-            @ModelAttribute @Valid CandidateModel candidateModel,
+    public ResponseEntity<CandidateDTO> putCandidateById(
+            @ModelAttribute @Valid CandidateDTO candidateDTO,
             HttpServletRequest request) throws IOException {
         return ResponseEntity.ok(
-                candidateService.updateCandidate(candidateModel, request)
+                candidateService.updateCandidate(candidateDTO, request)
         );
     }
 

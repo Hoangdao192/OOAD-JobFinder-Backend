@@ -1,4 +1,4 @@
-package com.uet.jobfinder.model;
+package com.uet.jobfinder.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,7 +15,7 @@ public class SavedJobModel {
     @NotNull
     private Long jobId;
 
-    private JobModel job;
+    private JobDTO job;
 
     @NotNull
     private Long candidateId;

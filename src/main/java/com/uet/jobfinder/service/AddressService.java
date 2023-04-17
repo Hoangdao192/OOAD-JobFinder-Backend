@@ -1,7 +1,7 @@
 package com.uet.jobfinder.service;
 
 import com.uet.jobfinder.entity.Address;
-import com.uet.jobfinder.model.AddressModel;
+import com.uet.jobfinder.dto.AddressDTO;
 import com.uet.jobfinder.repository.AddressRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,14 +14,14 @@ public class AddressService {
     @Autowired
     AddressRepository addressRepository;
 
-    public String createAddress(AddressModel addressModel) {
+    public String createAddress(AddressDTO addressDTO) {
         Address address = Address.builder()
-                .province(addressModel.getProvince())
-                .district(addressModel.getDistrict())
-                .ward(addressModel.getWard())
-                .detailAddress(addressModel.getDetailAddress())
-                .latitude(addressModel.getLatitude())
-                .longitude(addressModel.getLongitude())
+                .province(addressDTO.getProvince())
+                .district(addressDTO.getDistrict())
+                .ward(addressDTO.getWard())
+                .detailAddress(addressDTO.getDetailAddress())
+                .latitude(addressDTO.getLatitude())
+                .longitude(addressDTO.getLongitude())
                 .build();
 
         addressRepository.save(address);
@@ -40,15 +40,15 @@ public class AddressService {
         return address;
     }
 
-    public Address updateAddressById(int id, AddressModel addressModel) {
+    public Address updateAddressById(int id, AddressDTO addressDTO) {
         Address address = addressRepository.findById(id)
                 .orElseThrow(() -> new InvalidPathException("api/id", "Không thể update địa chỉ không tồn tại"));
-        address.setProvince(addressModel.getProvince());
-        address.setDistrict(addressModel.getDistrict());
-        address.setWard(addressModel.getWard());
-        address.setDetailAddress(addressModel.getDetailAddress());
-        address.setLongitude(addressModel.getLongitude());
-        address.setLatitude(addressModel.getLatitude());
+        address.setProvince(addressDTO.getProvince());
+        address.setDistrict(addressDTO.getDistrict());
+        address.setWard(addressDTO.getWard());
+        address.setDetailAddress(addressDTO.getDetailAddress());
+        address.setLongitude(addressDTO.getLongitude());
+        address.setLatitude(addressDTO.getLatitude());
 
         addressRepository.save(address);
 

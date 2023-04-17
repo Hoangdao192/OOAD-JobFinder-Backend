@@ -1,7 +1,7 @@
 package com.uet.jobfinder.controller;
 
-import com.uet.jobfinder.model.PageQueryModel;
-import com.uet.jobfinder.model.SavedJobModel;
+import com.uet.jobfinder.dto.PageQueryModel;
+import com.uet.jobfinder.dto.SavedJobModel;
 import com.uet.jobfinder.service.SavedJobService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

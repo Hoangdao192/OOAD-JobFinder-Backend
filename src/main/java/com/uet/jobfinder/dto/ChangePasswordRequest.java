@@ -1,4 +1,4 @@
-package com.uet.jobfinder.model;
+package com.uet.jobfinder.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ChangePasswordRequestDto {
+public class ChangePasswordRequest {
     @NotNull(message = "Old password is required")
     @NotEmpty(message = "Old password is required")
     public String oldPassword;

@@ -6,10 +6,9 @@ import com.uet.jobfinder.entity.Company;
 import com.uet.jobfinder.entity.User;
 import com.uet.jobfinder.error.ServerError;
 import com.uet.jobfinder.exception.CustomIllegalArgumentException;
-import com.uet.jobfinder.model.AddressModel;
-import com.uet.jobfinder.model.CompanyModel;
-import com.uet.jobfinder.model.PageQueryModel;
-import com.uet.jobfinder.model.SearchCompanyModel;
+import com.uet.jobfinder.dto.AddressDTO;
+import com.uet.jobfinder.dto.CompanyDTO;
+import com.uet.jobfinder.dto.PageQueryModel;
 import com.uet.jobfinder.repository.*;
 import com.uet.jobfinder.security.JsonWebTokenProvider;
 import org.modelmapper.ModelMapper;
@@ -20,8 +19,6 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -58,7 +55,7 @@ public class CompanyService {
         return companyRepository.save(company);
     }
 
-    public PageQueryModel<CompanyModel> getAllCompany(Integer page, Integer pageSize) {
+    public PageQueryModel<CompanyDTO> getAllCompany(Integer page, Integer pageSize) {
         Page<Company> companyPage = companyRepository.findAll(
                 PageRequest.of(page, pageSize)
         );
@@ -70,12 +67,12 @@ public class CompanyService {
                 ),
                 companyPage.getContent()
                         .stream()
-                        .map(company -> modelMapper.map(company, CompanyModel.class))
+                        .map(company -> modelMapper.map(company, CompanyDTO.class))
                         .collect(Collectors.toList())
         );
     }
 
-    public CompanyModel updateCompany(CompanyModel companyModel, HttpServletRequest request) throws IOException {
+    public CompanyDTO updateCompany(CompanyDTO companyDTO, HttpServletRequest request) throws IOException {
         Long userId = jsonWebTokenProvider.getUserIdFromRequest(request);
 
         User user = userRepository.findById(userId)
@@ -88,65 +85,72 @@ public class CompanyService {
                         ServerError.USER_ID_NOT_EXISTS
                 ));
 
-        if (companyModel.getCompanyLogoFile() == null && company.getCompanyLogo() == null) {
+        if (companyDTO.getCompanyLogoFile() == null && company.getCompanyLogo() == null) {
             throw new CustomIllegalArgumentException(
                     ServerError.NULL_COMPANY_LOGO
             );
         }
 
         Address address = company.getAddress();
-        AddressModel addressModel = companyModel.getAddress();
-        if (address == null && addressModel != null) {
+        AddressDTO addressDTO = companyDTO.getAddress();
+        if (address == null && addressDTO != null) {
             address = Address.builder()
-                    .province(addressModel.getProvince())
-                    .district(addressModel.getDistrict())
-                    .ward(addressModel.getWard())
-                    .detailAddress(addressModel.getDetailAddress())
-                    .latitude(addressModel.getLatitude())
-                    .longitude(addressModel.getLongitude())
+                    .province(addressDTO.getProvince())
+                    .district(addressDTO.getDistrict())
+                    .ward(addressDTO.getWard())
+                    .detailAddress(addressDTO.getDetailAddress())
+                    .latitude(addressDTO.getLatitude())
+                    .longitude(addressDTO.getLongitude())
                     .build();
             company.setAddress(address);
-        } else if (addressModel != null) {
-            address.setProvince(addressModel.getProvince());
-            address.setDistrict(addressModel.getDistrict());
-            address.setWard(addressModel.getWard());
-            address.setDetailAddress(addressModel.getDetailAddress());
-            address.setLatitude(addressModel.getLatitude());
-            address.setLongitude(addressModel.getLongitude());
+        } else if (addressDTO != null) {
+            address.setProvince(addressDTO.getProvince());
+            address.setDistrict(addressDTO.getDistrict());
+            address.setWard(addressDTO.getWard());
+            address.setDetailAddress(addressDTO.getDetailAddress());
+            address.setLatitude(addressDTO.getLatitude());
+            address.setLongitude(addressDTO.getLongitude());
         }
 
-        if (companyModel.getCompanyName() != null) {
-            company.setCompanyName(companyModel.getCompanyName());
+        if (companyDTO.getCompanyName() != null) {
+            company.setCompanyName(companyDTO.getCompanyName());
         }
-        if (companyModel.getCompanyLogoFile() != null) {
+        if (companyDTO.getCompanyLogoFile() != null) {
             AppFile appFile = fileService.saveFile(
-                    companyModel.getCompanyLogoFile().getOriginalFilename(),
-                    companyModel.getCompanyLogoFile().getContentType(),
-                    companyModel.getCompanyLogoFile().getBytes()
+                    companyDTO.getCompanyLogoFile().getOriginalFilename(),
+                    companyDTO.getCompanyLogoFile().getContentType(),
+                    companyDTO.getCompanyLogoFile().getBytes()
             );
             company.setCompanyLogo(appFile);
         }
-        if (companyModel.getCompanyDescription() != null) {
-            company.setCompanyDescription(companyModel.getCompanyDescription());
+        if (companyDTO.getCompanyDescription() != null) {
+            company.setCompanyDescription(companyDTO.getCompanyDescription());
         }
         if (address != null) {
             company.setAddress(address);
         }
-        if (companyModel.getNumberOfEmployee() != null) {
-            company.setNumberOfEmployee(companyModel.getNumberOfEmployee());
+        if (companyDTO.getNumberOfEmployee() != null) {
+            company.setNumberOfEmployee(companyDTO.getNumberOfEmployee());
         }
 
         company = companyRepository.save(company);
 
-        return modelMapper.map(company, CompanyModel.class);
+        return modelMapper.map(company, CompanyDTO.class);
     }
 
-    public CompanyModel getCompanyById(Long id) {
+    public CompanyDTO getCompanyById(Long id) {
         Company company = companyRepository.findById(id)
                 .orElseThrow(() -> new CustomIllegalArgumentException(
                         ServerError.COMPANY_NOT_EXISTS
                 ));
-        return modelMapper.map(company, CompanyModel.class);
+        return modelMapper.map(company, CompanyDTO.class);
+    }
+
+    public Company getCompanyByUser(User user) {
+       return companyRepository.findByUser(user)
+                .orElseThrow(() -> new CustomIllegalArgumentException(
+                        ServerError.COMPANY_NOT_EXISTS
+                ));
     }
 
     public Long countComingApplication(Long companyId, HttpServletRequest request) {
@@ -186,7 +190,7 @@ public class CompanyService {
         return true;
     }
 
-    public PageQueryModel<CompanyModel> findCompany(String searchKey, Integer page, Integer pageSize) {
+    public PageQueryModel<CompanyDTO> findCompany(String searchKey, Integer page, Integer pageSize) {
         Page<Company> companies = companyRepository.searchAllCompany(
                 PageRequest.of(page, pageSize), searchKey);
 
@@ -196,7 +200,7 @@ public class CompanyService {
                         companies.getPageable().getPageSize(),
                         companies.getTotalPages()
                 ),
-                companies.getContent().stream().map(company -> modelMapper.map(company, CompanyModel.class))
+                companies.getContent().stream().map(company -> modelMapper.map(company, CompanyDTO.class))
                         .collect(Collectors.toList())
         );
     }

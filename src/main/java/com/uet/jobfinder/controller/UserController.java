@@ -1,7 +1,7 @@
 package com.uet.jobfinder.controller;
 
-import com.uet.jobfinder.model.PageQueryModel;
-import com.uet.jobfinder.model.UserModel;
+import com.uet.jobfinder.dto.PageQueryModel;
+import com.uet.jobfinder.dto.UserDTO;
 import com.uet.jobfinder.service.UserService;
 
 import java.util.Map;
@@ -24,7 +24,7 @@ public class UserController {
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('Admin')")
-    public ResponseEntity<PageQueryModel<UserModel>> getAllUser(
+    public ResponseEntity<PageQueryModel<UserDTO>> getAllUser(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer pageSize
     ) {
@@ -35,7 +35,7 @@ public class UserController {
 
     @GetMapping(path = "search")
     @PreAuthorize("hasAnyAuthority('Admin')")
-    public ResponseEntity<PageQueryModel<UserModel>> searchUser(
+    public ResponseEntity<PageQueryModel<UserDTO>> searchUser(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer pageSize,
             @RequestParam(required = false) String email,

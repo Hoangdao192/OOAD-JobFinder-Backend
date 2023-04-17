@@ -1,4 +1,4 @@
-package com.uet.jobfinder.model;
+package com.uet.jobfinder.dto;
 
 import com.uet.jobfinder.entity.JobStatus;
 import lombok.AllArgsConstructor;
@@ -9,16 +9,15 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class JobModel {
+public class JobDTO {
     private Long id;
     private Long userId;
 
-    private CompanyModel company;
+    private CompanyDTO company;
 
     @NotNull(message = "SVERR4")
     @NotEmpty(message = "SVERR3")
@@ -29,7 +28,7 @@ public class JobModel {
     private String jobDescription;
 
     @NotNull(message = "SVERR4")
-    private AddressModel jobAddress;
+    private AddressDTO jobAddress;
 
     @NotNull(message = "SVERR4")
     @NotEmpty(message = "SVERR3")

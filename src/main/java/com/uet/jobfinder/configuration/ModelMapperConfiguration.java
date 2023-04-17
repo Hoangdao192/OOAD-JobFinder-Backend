@@ -1,7 +1,7 @@
 package com.uet.jobfinder.configuration;
 
 import com.uet.jobfinder.entity.*;
-import com.uet.jobfinder.model.*;
+import com.uet.jobfinder.dto.*;
 import com.uet.jobfinder.service.FileService;
 import org.modelmapper.*;
 import org.modelmapper.convention.MatchingStrategies;
@@ -30,7 +30,7 @@ public class ModelMapperConfiguration {
         configMapJobApplicationToJobApplicationModel(modelMapper);
         configMapSavedJobToSaveJobModel(modelMapper);
 
-        TypeMap<User, UserModel> userMapper = modelMapper.createTypeMap(User.class, UserModel.class);
+        TypeMap<User, UserDTO> userMapper = modelMapper.createTypeMap(User.class, UserDTO.class);
         Converter<Set<Role>, List<String>> roleConverter = mappingContext -> mappingContext
                 .getSource()
                 .stream()
@@ -38,35 +38,35 @@ public class ModelMapperConfiguration {
         userMapper.addMappings(mapper ->
                 mapper
                         .using(roleConverter)
-                        .map(User::getRoles, UserModel::setRoles));
+                        .map(User::getRoles, UserDTO::setRoles));
         return modelMapper;
     }
 
     private void configMapJobToJobModel(ModelMapper modelMapper) {
-        TypeMap<Job, JobModel> jobMapper = modelMapper.createTypeMap(Job.class, JobModel.class);
+        TypeMap<Job, JobDTO> jobMapper = modelMapper.createTypeMap(Job.class, JobDTO.class);
         jobMapper.addMappings(expression ->
-                expression.map(Job::getId, JobModel::setId));
+                expression.map(Job::getId, JobDTO::setId));
         jobMapper.addMappings(expression ->
-                expression.map(job -> job.getCompany().getUser().getId(), JobModel::setUserId));
-        Converter<Company, CompanyModel> converter = mappingContext -> {
+                expression.map(job -> job.getCompany().getUser().getId(), JobDTO::setUserId));
+        Converter<Company, CompanyDTO> converter = mappingContext -> {
             if (mappingContext.getSource() != null) {
-                return modelMapper.map(mappingContext.getSource(), CompanyModel.class);
+                return modelMapper.map(mappingContext.getSource(), CompanyDTO.class);
             }
             return null;
         };
         jobMapper.addMappings(expression ->
                 expression
                     .using(converter)
-                    .map(Job::getCompany, JobModel::setCompany));
+                    .map(Job::getCompany, JobDTO::setCompany));
     }
 
     private void configMapCompanyToCompanyModel(ModelMapper modelMapper) {
-        TypeMap<Company, CompanyModel> companyMapper = modelMapper.createTypeMap(
-                Company.class, CompanyModel.class
+        TypeMap<Company, CompanyDTO> companyMapper = modelMapper.createTypeMap(
+                Company.class, CompanyDTO.class
         );
         companyMapper.addMappings(mapper ->
                 mapper.using(userToLongConverter())
-                        .map(Company::getUser, CompanyModel::setUserId));
+                        .map(Company::getUser, CompanyDTO::setUserId));
 
         Converter<AppFile, String> fileConverter = mappingContext -> {
             if (mappingContext.getSource() != null) {
@@ -76,34 +76,34 @@ public class ModelMapperConfiguration {
         };
         companyMapper.addMappings(mapper ->
                 mapper.using(fileConverter)
-                        .map(Company::getCompanyLogo, CompanyModel::setCompanyLogo));
+                        .map(Company::getCompanyLogo, CompanyDTO::setCompanyLogo));
     }
 
     private void configMapCandidateToCandidateModel(ModelMapper modelMapper) {
-        TypeMap<Candidate, CandidateModel> candidateMapper = modelMapper.createTypeMap(
-                Candidate.class, CandidateModel.class
+        TypeMap<Candidate, CandidateDTO> candidateMapper = modelMapper.createTypeMap(
+                Candidate.class, CandidateDTO.class
         );
 
         candidateMapper.addMappings(mapper ->
                 mapper.using(userToLongConverter())
-                        .map(Candidate::getUser, CandidateModel::setUserId));
+                        .map(Candidate::getUser, CandidateDTO::setUserId));
 
         candidateMapper.addMappings(mapper -> 
                 mapper.using(appFileToUrlConverter())
-                    .map(Candidate::getAvatar, CandidateModel::setAvatar));
+                    .map(Candidate::getAvatar, CandidateDTO::setAvatar));
     }
 
     private void configMapJobApplicationToJobApplicationModel(ModelMapper modelMapper) {
-        TypeMap<JobApplication, JobApplicationModel> jobApplicationMapper =
-                modelMapper.createTypeMap(JobApplication.class, JobApplicationModel.class);
+        TypeMap<JobApplication, JobApplicationDTO> jobApplicationMapper =
+                modelMapper.createTypeMap(JobApplication.class, JobApplicationDTO.class);
 
         jobApplicationMapper.addMappings(mapper ->
                 mapper.using(jobToLongConverter())
-                        .map(JobApplication::getJob, JobApplicationModel::setJobId));
+                        .map(JobApplication::getJob, JobApplicationDTO::setJobId));
 
         jobApplicationMapper.addMappings(mapper ->
                 mapper.using(appFileToUrlConverter())
-                        .map(JobApplication::getCvFile, JobApplicationModel::setCv));
+                        .map(JobApplication::getCvFile, JobApplicationDTO::setCv));
     }
 
     private void configMapSavedJobToSaveJobModel(ModelMapper modelMapper) {

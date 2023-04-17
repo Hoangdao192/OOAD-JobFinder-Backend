@@ -1,4 +1,4 @@
-package com.uet.jobfinder.model;
+package com.uet.jobfinder.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,6 +22,6 @@ public class EvaluateModel {
     @Max(5)
     private Byte star;
 
-    private CandidateModel candidate;
-    private CompanyModel company;
+    private CandidateDTO candidate;
+    private CompanyDTO company;
 }

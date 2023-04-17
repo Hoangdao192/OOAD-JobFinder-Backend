@@ -2,7 +2,7 @@ package com.uet.jobfinder.exception;
 
 import com.uet.jobfinder.error.LoginError;
 import com.uet.jobfinder.error.ServerError;
-import com.uet.jobfinder.model.ErrorMessageModel;
+import com.uet.jobfinder.dto.ErrorMessageModel;
 import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

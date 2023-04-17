@@ -1,10 +1,12 @@
 package com.uet.jobfinder.service;
 
+import com.uet.jobfinder.entity.Candidate;
+import com.uet.jobfinder.entity.Company;
 import com.uet.jobfinder.entity.User;
 import com.uet.jobfinder.entity.ValidationKey;
 import com.uet.jobfinder.error.ServerError;
 import com.uet.jobfinder.exception.CustomIllegalArgumentException;
-import com.uet.jobfinder.model.*;
+import com.uet.jobfinder.dto.*;
 import com.uet.jobfinder.repository.UserRepository;
 import com.uet.jobfinder.security.JsonWebTokenProvider;
 import org.modelmapper.ModelMapper;
@@ -38,8 +40,8 @@ public class AuthenticationService {
     @Autowired
     private UserRepository userRepository;
 
-    public UserModel register(RegisterRequestModel registerRequestModel) {
-        User user = userService.createUser(registerRequestModel);
+    public UserDTO register(RegisterRequest registerRequest) {
+        User user = userService.createUser(registerRequest);
 
         //  Create a company
         if (userService.isCompany(user)) {
@@ -52,9 +54,9 @@ public class AuthenticationService {
 
         sendEmailVerification(user.getEmail());
 
-        UserModel userModel = new UserModel();
-        modelMapper.map(user, userModel);
-        return userModel;
+        UserDTO userDTO = new UserDTO();
+        modelMapper.map(user, userDTO);
+        return userDTO;
     }
 
     public Map<String, Object> confirmRegister(ConfirmValidationKeyModel confirmValidationKeyModel) {
@@ -80,7 +82,7 @@ public class AuthenticationService {
         return Map.of(
                 "tokenType", "Bearer",
                 "accessToken", jwt,
-                "user", modelMapper.map(user, UserModel.class)
+                "user", modelMapper.map(user, UserDTO.class)
         );
     }
 
@@ -107,39 +109,58 @@ public class AuthenticationService {
         return true;
     }
 
-    public Map<String, Object> login(LoginRequestModel loginRequestModel) {
-        User user = userService.getUserByEmail(loginRequestModel.getEmail());
+    public UserLoginResponse login(LoginRequest loginRequest) {
+        User user = userService.getUserByEmail(loginRequest.getEmail());
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         user.getEmail(),
-                        loginRequestModel.getPassword()));
+                        loginRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         //  Return JWT
         String jwt = jwtProvider.generateToken((User) authentication.getPrincipal());
-        return Map.of(
-                "tokenType", "Bearer",
-                "accessToken", jwt,
-                "user", modelMapper.map(user, UserModel.class)
+
+        if (userService.isCandidate(user)) {
+            Candidate candidate = candidateService.getCandidateByUser(user);
+            return new CandidateLoginResponse(
+                    modelMapper.map(user, UserDTO.class),
+                    new JsonWebTokenDTO("Bearer", jwt),
+                    modelMapper.map(candidate, CandidateDTO.class)
+            );
+        } else if (userService.isCompany(user)) {
+            Company company = companyService.getCompanyByUser(user);
+            return new CompanyLoginResponse(
+                    modelMapper.map(user, UserDTO.class),
+                    new JsonWebTokenDTO("Bearer", jwt),
+                    modelMapper.map(company, CompanyDTO.class)
+            );
+        } else if (userService.isAdmin(user)) {
+            return new UserLoginResponse(
+                modelMapper.map(user, UserDTO.class),
+                new JsonWebTokenDTO("Bearer", jwt)
+            );
+        }
+
+        throw new CustomIllegalArgumentException(
+                ServerError.INVALID_ROLE
         );
-//        return new JsonWebTokenModel("Bearer", jwt);
     }
 
     public boolean changePassword(
-            ChangePasswordRequestDto changePasswordRequestDto, HttpServletRequest request) {
+            ChangePasswordRequest changePasswordRequest, HttpServletRequest request) {
         Long userId = jwtProvider.getUserIdFromRequest(request);
         User user = userService.getUserById(userId);
 
-        if (!passwordEncoder.matches(changePasswordRequestDto.oldPassword, user.getPassword())) {
+        if (!passwordEncoder.matches(changePasswordRequest.oldPassword, user.getPassword())) {
             throw new CustomIllegalArgumentException(
                     ServerError.WRONG_OLD_PASSWORD
             );
         }
 
         user.setPassword(
-                passwordEncoder.encode(changePasswordRequestDto.newPassword)
+                passwordEncoder.encode(changePasswordRequest.newPassword)
         );
         userRepository.save(user);
         return true;

@@ -1,13 +1,12 @@
 package com.uet.jobfinder.service;
 
-import com.uet.jobfinder.entity.Role;
 import com.uet.jobfinder.entity.User;
 import com.uet.jobfinder.entity.UserType;
 import com.uet.jobfinder.error.ServerError;
 import com.uet.jobfinder.exception.CustomIllegalArgumentException;
-import com.uet.jobfinder.model.PageQueryModel;
-import com.uet.jobfinder.model.RegisterRequestModel;
-import com.uet.jobfinder.model.UserModel;
+import com.uet.jobfinder.dto.PageQueryModel;
+import com.uet.jobfinder.dto.RegisterRequest;
+import com.uet.jobfinder.dto.UserDTO;
 import com.uet.jobfinder.presentation.UserMonthStatisticPresentation;
 import com.uet.jobfinder.presentation.UserYearStatisticPresentation;
 import com.uet.jobfinder.repository.RoleRepository;
@@ -35,7 +34,7 @@ public class UserService {
     @Autowired
     private ModelMapper modelMapper;
 
-    public PageQueryModel<UserModel> searchUser(
+    public PageQueryModel<UserDTO> searchUser(
         Integer page, Integer pageSize,
         String email, String accountType,
         Boolean isActive, Boolean isLocked
@@ -59,12 +58,12 @@ public class UserService {
                         users.getTotalElements()
                 ),
                 users.getContent().stream()
-                        .map(user -> modelMapper.map(user, UserModel.class))
+                        .map(user -> modelMapper.map(user, UserDTO.class))
                         .collect(Collectors.toList())
         );
     }
 
-    public PageQueryModel<UserModel> getAllUser(Integer page, Integer pageSize) {
+    public PageQueryModel<UserDTO> getAllUser(Integer page, Integer pageSize) {
         Page<User> users = userRepository.findAll(
                 PageRequest.of(page, pageSize)
         );
@@ -76,7 +75,7 @@ public class UserService {
                     users.getTotalElements()
                 ),
                 users.getContent().stream()
-                        .map(user -> modelMapper.map(user, UserModel.class))
+                        .map(user -> modelMapper.map(user, UserDTO.class))
                         .collect(Collectors.toList())
         );
     }
@@ -182,19 +181,19 @@ public class UserService {
         return Map.of("company", companyUserStatistic, "candidate", candidateUserStatistic);
     }
 
-    public User createUser(RegisterRequestModel registerRequestModel) {
-        if (userRepository.findByEmail(registerRequestModel.getEmail())
+    public User createUser(RegisterRequest registerRequest) {
+        if (userRepository.findByEmail(registerRequest.getEmail())
                 .isPresent()) {
             throw new CustomIllegalArgumentException(ServerError.EMAIL_HAS_BEEN_USED);
         }
 
         User user = new User(
-                registerRequestModel.getEmail(),
-                passwordEncoder.encode(registerRequestModel.getPassword())
+                registerRequest.getEmail(),
+                passwordEncoder.encode(registerRequest.getPassword())
         );
 
         user.addRole(
-                roleRepository.findByName(registerRequestModel.getRole())
+                roleRepository.findByName(registerRequest.getRole())
                         .orElseThrow(() ->
                                 new CustomIllegalArgumentException(ServerError.INVALID_USER_ROLE))
         );
@@ -230,11 +229,15 @@ public class UserService {
     }
 
     public boolean isCandidate(User user) {
-        return user.getRoles().stream().anyMatch(role -> role.getName().equals(UserType.COMPANY));
+        return user.getRoles().stream().anyMatch(role -> role.getName().equals(UserType.CANDIDATE));
     }
 
     public boolean isCompany(User user) {
         return user.getRoles().stream().anyMatch(role -> role.getName().equals(UserType.COMPANY));
+    }
+
+    public boolean isAdmin(User user) {
+        return user.getRoles().stream().anyMatch(role -> role.getName().equals(UserType.ADMIN));
     }
 
     @Autowired

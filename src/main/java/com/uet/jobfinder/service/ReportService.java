@@ -5,8 +5,8 @@ import com.uet.jobfinder.entity.Company;
 import com.uet.jobfinder.entity.Report;
 import com.uet.jobfinder.error.ServerError;
 import com.uet.jobfinder.exception.CustomIllegalArgumentException;
-import com.uet.jobfinder.model.PageQueryModel;
-import com.uet.jobfinder.model.ReportModel;
+import com.uet.jobfinder.dto.PageQueryModel;
+import com.uet.jobfinder.dto.ReportDTO;
 import com.uet.jobfinder.repository.CompanyRepository;
 import com.uet.jobfinder.repository.ReportRepository;
 import com.uet.jobfinder.repository.UserRepository;
@@ -37,48 +37,48 @@ public class ReportService {
     @Autowired
     private ModelMapper modelMapper;
 
-    public ReportModel createReport(ReportModel reportModel, HttpServletRequest request) {
+    public ReportDTO createReport(ReportDTO reportDTO, HttpServletRequest request) {
         Long userId = jsonWebTokenProvider.getUserIdFromRequest(request);
-        Candidate candidate = candidateService.getCandidateById(reportModel.getCandidateId());
+        Candidate candidate = candidateService.getCandidateById(reportDTO.getCandidateId());
         if (!(candidate.getUser().getId().equals(userId))) {
             throw new CustomIllegalArgumentException(ServerError.ACCESS_DENIED);
         }
 
-        Company company = companyService.getCompanyByUserId(reportModel.getCompanyId());
+        Company company = companyService.getCompanyByUserId(reportDTO.getCompanyId());
 
         Report report = Report.builder()
                 .company(company)
                 .candidate(candidate)
                 .date(new Date())
-                .message(reportModel.getMessage())
+                .message(reportDTO.getMessage())
                 .build();
         report = reportRepository.save(report);
 
-        return modelMapper.map(report, ReportModel.class);
+        return modelMapper.map(report, ReportDTO.class);
     }
 
-    public PageQueryModel<ReportModel> getAllReport(Integer page, Integer pageSize) {
+    public PageQueryModel<ReportDTO> getAllReport(Integer page, Integer pageSize) {
         Page<Report> reports = reportRepository.findAll(
                 PageRequest.of(page, pageSize)
         );
         return new PageQueryModel<>(
                 new PageQueryModel.PageModel(reports),
                 reports.getContent().stream()
-                        .map(report -> modelMapper.map(report, ReportModel.class))
+                        .map(report -> modelMapper.map(report, ReportDTO.class))
                         .collect(Collectors.toList())
         );
     }
 
-    public PageQueryModel<ReportModel> reportPageToPageQueryModel(Page<Report> page) {
+    public PageQueryModel<ReportDTO> reportPageToPageQueryModel(Page<Report> page) {
         return new PageQueryModel<>(
                 new PageQueryModel.PageModel(page),
                 page.getContent().stream()
-                        .map(report -> modelMapper.map(report, ReportModel.class))
+                        .map(report -> modelMapper.map(report, ReportDTO.class))
                         .collect(Collectors.toList())
         );
     }
 
-    public PageQueryModel<ReportModel> getAllReportByCompany(
+    public PageQueryModel<ReportDTO> getAllReportByCompany(
             Integer page, Integer pageSize, Long companyId, HttpServletRequest request) {
         Long userId = jsonWebTokenProvider.getUserIdFromRequest(request);
         Company company = companyRepository.findById(userId)
@@ -99,7 +99,7 @@ public class ReportService {
         );
     }
 
-    public PageQueryModel<ReportModel> getAllReportByCandidate(
+    public PageQueryModel<ReportDTO> getAllReportByCandidate(
             Integer page, Integer pageSize, Long candidateId, HttpServletRequest request) {
         Long userId = jsonWebTokenProvider.getUserIdFromRequest(request);
         Candidate candidate = candidateService.getCandidateById(userId);
@@ -117,7 +117,7 @@ public class ReportService {
         );
     }
 
-    public ReportModel getReportById(Long id, HttpServletRequest request) {
+    public ReportDTO getReportById(Long id, HttpServletRequest request) {
         Long userId = jsonWebTokenProvider.getUserIdFromRequest(request);
 
         Report report = reportRepository.findById(id)
@@ -135,7 +135,7 @@ public class ReportService {
             );
         }
 
-        return modelMapper.map(report, ReportModel.class);
+        return modelMapper.map(report, ReportDTO.class);
     }
 
     public Pair<String, Boolean> deleteReportById(

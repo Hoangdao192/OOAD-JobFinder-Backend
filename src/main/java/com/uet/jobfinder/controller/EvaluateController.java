@@ -1,7 +1,7 @@
 package com.uet.jobfinder.controller;
 
-import com.uet.jobfinder.model.EvaluateModel;
-import com.uet.jobfinder.model.EvaluateStarModel;
+import com.uet.jobfinder.dto.EvaluateModel;
+import com.uet.jobfinder.dto.EvaluateStarModel;
 import com.uet.jobfinder.service.EvaluateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

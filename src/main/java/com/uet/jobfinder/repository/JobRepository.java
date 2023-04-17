@@ -9,8 +9,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
+import org.springframework.lang.Nullable;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 public interface JobRepository extends JpaRepository<Job, Long> {
@@ -24,25 +27,22 @@ public interface JobRepository extends JpaRepository<Job, Long> {
                     "((:isOpen = true and close_date >= NOW()) or (:isOpen = false and close_date < NOW()))")
     Long countJobByCompanyIdAndOpenStatus(@Param("companyId") Long companyId, @Param("isOpen") boolean isOpen);
 
-    @Query(nativeQuery = true, value =
-            "select * from job where job.id in " +
-            "   (select job.id from job where match (job.job_title) against (:jobTitle)) " +
-            "   and (:companyId is null or job.company_user_id = :companyId) " +
-            "   and (:major is null or job.major = :major) " +
-            "   and (:workingForm is null or job.working_form = :workingForm)")
-    Page<Job> findAllWithJobTitle(Pageable pageable, @Param("companyId") Long companyId,
-                      @Param("jobTitle") String jobTitle, @Param("major") String major,
-                      @Param("workingForm") String workingForm
+    @Transactional
+    @Procedure(procedureName = "find_job")
+    List<Job> searchJob(@Param("job_title") @Nullable String jobTitle,
+                        @Param("company_id") @Nullable Long companyId,
+                        @Param("major") @Nullable String major,
+                        @Param("working_form") @Nullable  String workingForm,
+                        @Param("page_number")  Integer page,
+                        @Param("page_size") Integer pageSize
     );
 
-    @Query(nativeQuery = true, value =
-            "select * from job where " +
-                    "   (:companyId is null or job.company_user_id = :companyId) " +
-                    "   and (:major is null or job.major = :major) " +
-                    "   and (:workingForm is null or job.working_form = :workingForm)")
-    Page<Job> findAllWithOutTitle(Pageable pageable, @Param("companyId") Long companyId,
-                                  @Param("major") String major,
-                                  @Param("workingForm") String workingForm
+    @Query(nativeQuery = true, value = "select find_job_count(:jobTitle, :companyId, :major, :workingForm)")
+    Long countJobSearchResult(
+            @Param("jobTitle") @Nullable String jobTitle,
+            @Param("companyId") @Nullable Long companyId,
+            @Param("major") @Nullable String major,
+            @Param("workingForm") @Nullable  String workingForm
     );
 
     @Query(nativeQuery = true, value =

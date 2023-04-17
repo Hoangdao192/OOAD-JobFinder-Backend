@@ -5,8 +5,8 @@ import com.uet.jobfinder.entity.Candidate;
 import com.uet.jobfinder.entity.User;
 import com.uet.jobfinder.error.ServerError;
 import com.uet.jobfinder.exception.CustomIllegalArgumentException;
-import com.uet.jobfinder.model.CandidateModel;
-import com.uet.jobfinder.model.PageQueryModel;
+import com.uet.jobfinder.dto.CandidateDTO;
+import com.uet.jobfinder.dto.PageQueryModel;
 import com.uet.jobfinder.repository.AddressRepository;
 import com.uet.jobfinder.repository.CandidateRepository;
 import com.uet.jobfinder.repository.UserRepository;
@@ -49,7 +49,7 @@ public class CandidateService {
         return candidateRepository.save(candidate);
     }
 
-    public PageQueryModel<CandidateModel> getAllCandidate(
+    public PageQueryModel<CandidateDTO> getAllCandidate(
             Integer page, Integer pageSize
     ) {
         Page<Candidate> candidates = candidateRepository.findAll(
@@ -63,7 +63,7 @@ public class CandidateService {
                         candidates.getTotalPages()
                 ),
                 candidates.getContent().stream().map(
-                        candidate -> modelMapper.map(candidate, CandidateModel.class)
+                        candidate -> modelMapper.map(candidate, CandidateDTO.class)
                 ).collect(Collectors.toList())
         );
     }
@@ -75,12 +75,12 @@ public class CandidateService {
                 ));
     }
 
-    public CandidateModel getCandidateModelById(Long id) {
+    public CandidateDTO getCandidateModelById(Long id) {
         Candidate candidate = getCandidateById(id);
-        return modelMapper.map(candidate, CandidateModel.class);
+        return modelMapper.map(candidate, CandidateDTO.class);
     }
 
-    public CandidateModel updateCandidate(CandidateModel candidateModel, HttpServletRequest request) throws IOException {
+    public CandidateDTO updateCandidate(CandidateDTO candidateDTO, HttpServletRequest request) throws IOException {
         Long userId = jsonWebTokenProvider.getUserIdFromRequest(request);
 
         User user = userRepository.findById(userId)
@@ -89,24 +89,24 @@ public class CandidateService {
                 ));
         Candidate candidate = getCandidateByUser(user);
 
-        if (candidateModel.getCandidateAvatarFile() != null) {
+        if (candidateDTO.getCandidateAvatarFile() != null) {
             AppFile appFile = fileService.saveFile(
-                    candidateModel.getCandidateAvatarFile().getOriginalFilename(),
-                    candidateModel.getCandidateAvatarFile().getContentType(),
-                    candidateModel.getCandidateAvatarFile().getBytes()
+                    candidateDTO.getCandidateAvatarFile().getOriginalFilename(),
+                    candidateDTO.getCandidateAvatarFile().getContentType(),
+                    candidateDTO.getCandidateAvatarFile().getBytes()
             );
             candidate.setAvatar(appFile);
         }
 
-        candidate.setFullName(candidateModel.getFullName());
-        candidate.setSex(candidateModel.getSex());
-        candidate.setDateOfBirth(candidateModel.getDateOfBirth());
-        candidate.setContactEmail(candidateModel.getContactEmail());
-        candidate.setPhoneNumber(candidateModel.getPhoneNumber());
-        candidate.setSelfDescription(candidateModel.getSelfDescription());
+        candidate.setFullName(candidateDTO.getFullName());
+        candidate.setSex(candidateDTO.getSex());
+        candidate.setDateOfBirth(candidateDTO.getDateOfBirth());
+        candidate.setContactEmail(candidateDTO.getContactEmail());
+        candidate.setPhoneNumber(candidateDTO.getPhoneNumber());
+        candidate.setSelfDescription(candidateDTO.getSelfDescription());
 
         candidate = candidateRepository.save(candidate);
-        return modelMapper.map(candidate, CandidateModel.class);
+        return modelMapper.map(candidate, CandidateDTO.class);
     }
 
     public Candidate getCandidateByUser(User user) {

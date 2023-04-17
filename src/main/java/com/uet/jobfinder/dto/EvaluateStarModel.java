@@ -1,4 +1,4 @@
-package com.uet.jobfinder.model;
+package com.uet.jobfinder.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SearchCompanyModel {
-    private String search;
-    private Byte star;
+public class EvaluateStarModel {
+    Long companyId;
+
+    private CompanyDTO company;
+    private Double star;
 }

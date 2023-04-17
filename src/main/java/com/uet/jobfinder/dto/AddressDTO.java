@@ -1,4 +1,4 @@
-package com.uet.jobfinder.model;
+package com.uet.jobfinder.dto;
 
 import lombok.*;
 
@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AddressModel {
+public class AddressDTO {
     private Long id;
 
     @NotNull(message = "SVERR4")

@@ -1,7 +1,7 @@
 package com.uet.jobfinder.controller;
 
 import com.uet.jobfinder.entity.Major;
-import com.uet.jobfinder.model.MajorService;
+import com.uet.jobfinder.service.MajorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

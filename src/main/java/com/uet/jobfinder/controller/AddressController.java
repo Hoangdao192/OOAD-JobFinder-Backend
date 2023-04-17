@@ -1,7 +1,7 @@
 package com.uet.jobfinder.controller;
 
 import com.uet.jobfinder.entity.Address;
-import com.uet.jobfinder.model.AddressModel;
+import com.uet.jobfinder.dto.AddressDTO;
 import com.uet.jobfinder.service.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +18,9 @@ public class AddressController {
 
     @PostMapping
     public ResponseEntity<String> createAddress(
-            @RequestBody @Valid AddressModel addressModel
+            @RequestBody @Valid AddressDTO addressDTO
     ) {
-        String str = addressService.createAddress(addressModel);
+        String str = addressService.createAddress(addressDTO);
         return ResponseEntity
                 .accepted()
                 .body(str);
@@ -38,8 +38,8 @@ public class AddressController {
 
     @PutMapping(path = "/{id}")
     public ResponseEntity<Address> updateAddressById(@PathVariable int id,
-                                                 @RequestBody @Valid AddressModel addressModel) {
-        Address address = addressService.updateAddressById(id, addressModel);
+                                                 @RequestBody @Valid AddressDTO addressDTO) {
+        Address address = addressService.updateAddressById(id, addressDTO);
         return ResponseEntity
                 .accepted()
                 .body(address);

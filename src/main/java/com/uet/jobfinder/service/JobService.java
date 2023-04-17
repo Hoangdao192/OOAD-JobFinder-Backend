@@ -6,22 +6,22 @@ import com.uet.jobfinder.entity.Job;
 import com.uet.jobfinder.entity.JobStatus;
 import com.uet.jobfinder.error.ServerError;
 import com.uet.jobfinder.exception.CustomIllegalArgumentException;
-import com.uet.jobfinder.model.AddressModel;
-import com.uet.jobfinder.model.JobModel;
-import com.uet.jobfinder.model.PageQueryModel;
+import com.uet.jobfinder.dto.AddressDTO;
+import com.uet.jobfinder.dto.JobDTO;
+import com.uet.jobfinder.dto.PageQueryModel;
 import com.uet.jobfinder.presentation.JobMonthStatisticPresentation;
 import com.uet.jobfinder.presentation.JobYearStatisticPresentation;
 import com.uet.jobfinder.repository.AddressRepository;
 import com.uet.jobfinder.repository.CompanyRepository;
 import com.uet.jobfinder.repository.JobRepository;
+import com.uet.jobfinder.repository.SavedJobRepository;
 import com.uet.jobfinder.security.JsonWebTokenProvider;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +39,8 @@ public class JobService {
     private CompanyRepository companyRepository;
     @Autowired
     private AddressRepository addressRepository;
+    @Autowired
+    private SavedJobRepository savedJobRepository;
 
     public List<Object> getStatistic(
             Integer month, Integer year
@@ -108,11 +110,11 @@ public class JobService {
         return jobRepository.countJobByCompanyAndStatus(company, JobStatus.OPEN);
     }
 
-    public JobModel createJob(JobModel jobModel, HttpServletRequest request) {
+    public JobDTO createJob(JobDTO jobDTO, HttpServletRequest request) {
         Long userId = jsonWebTokenProvider.getUserIdFromRequest(request);
         Company company = companyService.getCompanyByUserId(userId);
 
-        if (jobModel.getCloseDate().isBefore(LocalDate.now())) {
+        if (jobDTO.getCloseDate().isBefore(LocalDate.now())) {
             throw new CustomIllegalArgumentException(
                     ServerError.INVALID_JOB_CLOSE_DATE
             );
@@ -120,27 +122,27 @@ public class JobService {
 
         Job job = Job.builder()
                 .company(company)
-                .jobTitle(jobModel.getJobTitle())
-                .jobDescription(jobModel.getJobDescription())
-                .major(jobModel.getMajor())
-                .salary(jobModel.getSalary())
-                .numberOfHiring(jobModel.getNumberOfHiring())
-                .requireExperience(jobModel.getRequireExperience())
-                .sex(jobModel.getSex())
-                .workingForm(jobModel.getWorkingForm())
+                .jobTitle(jobDTO.getJobTitle())
+                .jobDescription(jobDTO.getJobDescription())
+                .major(jobDTO.getMajor())
+                .salary(jobDTO.getSalary())
+                .numberOfHiring(jobDTO.getNumberOfHiring())
+                .requireExperience(jobDTO.getRequireExperience())
+                .sex(jobDTO.getSex())
+                .workingForm(jobDTO.getWorkingForm())
                 .status(JobStatus.OPEN)
                 .openDate(LocalDate.now())
-                .closeDate(jobModel.getCloseDate())
+                .closeDate(jobDTO.getCloseDate())
                 .build();
 
-        if (jobModel.getJobAddress() != null) {
+        if (jobDTO.getJobAddress() != null) {
             System.out.println("CREATE ADDRESS");
-            AddressModel addressModel = jobModel.getJobAddress();
+            AddressDTO addressDTO = jobDTO.getJobAddress();
             Address address = Address.builder()
-                    .province(addressModel.getProvince())
-                    .district(addressModel.getDistrict())
-                    .ward(addressModel.getWard())
-                    .detailAddress(addressModel.getDetailAddress())
+                    .province(addressDTO.getProvince())
+                    .district(addressDTO.getDistrict())
+                    .ward(addressDTO.getWard())
+                    .detailAddress(addressDTO.getDetailAddress())
                     .build();
             address = addressRepository.save(address);
             job.setJobAddress(address);
@@ -151,35 +153,29 @@ public class JobService {
 
         Job newJob = jobRepository.save(job);
 
-        modelMapper.map(newJob, jobModel);
-        return jobModel;
+        modelMapper.map(newJob, jobDTO);
+        return jobDTO;
     }
 
-    public PageQueryModel<JobModel> getAllJob(
+    @Transactional
+    public PageQueryModel<JobDTO> getAllJob(
             Integer page, Integer perPage,
             Long companyId, String jobTitle,
             String major, String workingForm, Boolean isJobOpen
     ) {
-        Page<Job> jobPage = null;
-        if (jobTitle == null || jobTitle.length() == 0) {
-            jobPage = jobRepository.findAllWithOutTitle(
-                    PageRequest.of(page, perPage),
-                    companyId, major, workingForm
-            );
-        } else {
-            jobPage = jobRepository.findAllWithJobTitle(
-                    PageRequest.of(page, perPage),
-                    companyId, jobTitle, major, workingForm
-            );
-        }
-
+        List<Job> jobs = jobRepository.searchJob(
+                jobTitle, companyId, major, workingForm, page, perPage
+        );
+        Long totalElement = jobRepository.countJobSearchResult(
+                jobTitle, companyId, major, workingForm
+        );
         return new PageQueryModel<>(
                 new PageQueryModel.PageModel(
-                        jobPage.getPageable() != null ? jobPage.getPageable().getPageNumber() : 0,
-                        jobPage.getPageable() != null ? jobPage.getPageable().getPageSize() : 0,
-                        jobPage.getTotalPages()
+                        page,
+                        perPage,
+                        (int) (totalElement / perPage + (totalElement % perPage == 0 ? 0 : 1))
                 ),
-                jobPage.getContent().stream()
+                jobs.stream()
                         .filter((job) -> {
                             if (isJobOpen != null) {
                                 return job.getCloseDate().isAfter(LocalDate.now()) == isJobOpen;
@@ -187,17 +183,17 @@ public class JobService {
                             return true;
                         })
                         .map(job -> {
-                            JobModel jobModel = new JobModel();
-                            modelMapper.map(job, jobModel);
-                            return jobModel;
+                            JobDTO jobDTO = new JobDTO();
+                            modelMapper.map(job, jobDTO);
+                            return jobDTO;
                         }).collect(Collectors.toList())
         );
     }
 
-    public JobModel updateJob(JobModel jobModel, HttpServletRequest request) {
+    public JobDTO updateJob(JobDTO jobDTO, HttpServletRequest request) {
         Long userId = jsonWebTokenProvider.getUserIdFromRequest(request);
 
-        Job job = getJobById(jobModel.getId());
+        Job job = getJobById(jobDTO.getId());
         Company company = companyService.getCompanyByUserId(userId);
 
         //  Check if this company own this job, so they can update it information
@@ -209,28 +205,28 @@ public class JobService {
         }
 
         //  Update job information
-        job.setJobTitle(jobModel.getJobTitle());
-        job.setJobDescription(jobModel.getJobDescription());
-        if (jobModel.getJobAddress() != null) {
-            AddressModel addressModel = jobModel.getJobAddress();
+        job.setJobTitle(jobDTO.getJobTitle());
+        job.setJobDescription(jobDTO.getJobDescription());
+        if (jobDTO.getJobAddress() != null) {
+            AddressDTO addressDTO = jobDTO.getJobAddress();
             job.setJobAddress(Address.builder()
-                    .province(addressModel.getProvince())
-                    .district(addressModel.getDistrict())
-                    .ward(addressModel.getWard())
-                    .detailAddress(addressModel.getDetailAddress())
+                    .province(addressDTO.getProvince())
+                    .district(addressDTO.getDistrict())
+                    .ward(addressDTO.getWard())
+                    .detailAddress(addressDTO.getDetailAddress())
                     .build());
         }
-        job.setMajor(jobModel.getMajor());
-        job.setSalary(jobModel.getSalary());
-        job.setNumberOfHiring(jobModel.getNumberOfHiring());
-        job.setRequireExperience(jobModel.getRequireExperience());
-        job.setSex(jobModel.getSex());
-        job.setWorkingForm(jobModel.getWorkingForm());
+        job.setMajor(jobDTO.getMajor());
+        job.setSalary(jobDTO.getSalary());
+        job.setNumberOfHiring(jobDTO.getNumberOfHiring());
+        job.setRequireExperience(jobDTO.getRequireExperience());
+        job.setSex(jobDTO.getSex());
+        job.setWorkingForm(jobDTO.getWorkingForm());
 
         job = jobRepository.save(job);
 
-        modelMapper.map(job, jobModel);
-        return jobModel;
+        modelMapper.map(job, jobDTO);
+        return jobDTO;
     }
 
     public boolean deleteJob(Long jobId, HttpServletRequest request) {
@@ -258,11 +254,11 @@ public class JobService {
                 .orElseThrow(() -> new CustomIllegalArgumentException(ServerError.JOB_NOT_EXISTS));
     }
 
-    public JobModel getJobModelById(Long id) {
+    public JobDTO getJobModelById(Long id) {
         Job job = getJobById(id);
-        JobModel jobModel = new JobModel();
-        modelMapper.map(job, jobModel);
-        return jobModel;
+        JobDTO jobDTO = new JobDTO();
+        modelMapper.map(job, jobDTO);
+        return jobDTO;
     }
 
     @Autowired

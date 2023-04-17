@@ -1,8 +1,7 @@
 package com.uet.jobfinder.controller;
 
-import com.uet.jobfinder.model.CompanyModel;
-import com.uet.jobfinder.model.PageQueryModel;
-import com.uet.jobfinder.model.SearchCompanyModel;
+import com.uet.jobfinder.dto.CompanyDTO;
+import com.uet.jobfinder.dto.PageQueryModel;
 import com.uet.jobfinder.service.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +31,7 @@ public class CompanyController {
 
 
     @GetMapping
-    public ResponseEntity<PageQueryModel<CompanyModel>> getAllCompany(
+    public ResponseEntity<PageQueryModel<CompanyDTO>> getAllCompany(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer pageSize
     ) {
@@ -40,15 +39,15 @@ public class CompanyController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<CompanyModel> getCompanyById(@PathVariable Long id) {
+    public ResponseEntity<CompanyDTO> getCompanyById(@PathVariable Long id) {
         return ResponseEntity.ok().body(companyService.getCompanyById(id));
     }
 
     @PutMapping
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('Admin', 'Company')")
-    public ResponseEntity<CompanyModel> updateCompany(
-            @ModelAttribute @Valid CompanyModel companyModel, HttpServletRequest request) throws IOException {
-        return ResponseEntity.ok(companyService.updateCompany(companyModel, request));
+    public ResponseEntity<CompanyDTO> updateCompany(
+            @ModelAttribute @Valid CompanyDTO companyDTO, HttpServletRequest request) throws IOException {
+        return ResponseEntity.ok(companyService.updateCompany(companyDTO, request));
     }
 
     @DeleteMapping(path = "/{id}")
@@ -60,7 +59,7 @@ public class CompanyController {
     }
 
     @GetMapping("/find")
-    public ResponseEntity<PageQueryModel<CompanyModel>> findCompany(
+    public ResponseEntity<PageQueryModel<CompanyDTO>> findCompany(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer pageSize,
             @RequestParam String searchKey){

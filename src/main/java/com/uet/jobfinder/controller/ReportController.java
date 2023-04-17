@@ -1,7 +1,7 @@
 package com.uet.jobfinder.controller;
 
-import com.uet.jobfinder.model.PageQueryModel;
-import com.uet.jobfinder.model.ReportModel;
+import com.uet.jobfinder.dto.PageQueryModel;
+import com.uet.jobfinder.dto.ReportDTO;
 import com.uet.jobfinder.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
@@ -19,7 +19,7 @@ public class ReportController {
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('Admin')")
-    public ResponseEntity<PageQueryModel<ReportModel>> getAllReport(
+    public ResponseEntity<PageQueryModel<ReportDTO>> getAllReport(
             @RequestParam(defaultValue = "0", required = false) Integer page,
             @RequestParam(defaultValue = "10", required = false) Integer pageSize
     ) {
@@ -54,23 +54,23 @@ public class ReportController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('Admin', 'Company')")
-    public ResponseEntity<ReportModel> getReportById(
+    public ResponseEntity<ReportDTO> getReportById(
             @PathVariable Long id, HttpServletRequest request) {
         return ResponseEntity.ok().body(reportService.getReportById(id, request));
     }
 
     @PostMapping
     @PreAuthorize("hasAnyAuthority('Candidate')")
-    public ResponseEntity<ReportModel> createReport(
-            @RequestBody ReportModel reportModel, HttpServletRequest request) {
-        return ResponseEntity.ok().body(reportService.createReport(reportModel, request));
+    public ResponseEntity<ReportDTO> createReport(
+            @RequestBody ReportDTO reportDTO, HttpServletRequest request) {
+        return ResponseEntity.ok().body(reportService.createReport(reportDTO, request));
     }
 
     @PutMapping
     @PreAuthorize("hasAnyAuthority('Candidate')")
-    public ResponseEntity<ReportModel> updateReport(
-            @RequestBody ReportModel reportModel, HttpServletRequest request) {
-        return ResponseEntity.ok().body(reportService.createReport(reportModel, request));
+    public ResponseEntity<ReportDTO> updateReport(
+            @RequestBody ReportDTO reportDTO, HttpServletRequest request) {
+        return ResponseEntity.ok().body(reportService.createReport(reportDTO, request));
     }
 
     @DeleteMapping("/{id}")

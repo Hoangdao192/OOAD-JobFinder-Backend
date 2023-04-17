@@ -1,4 +1,4 @@
-package com.uet.jobfinder.model;
+package com.uet.jobfinder.service;
 
 import com.uet.jobfinder.entity.Major;
 import com.uet.jobfinder.repository.MajorRepository;

@@ -1,7 +1,7 @@
 package com.uet.jobfinder.controller;
 
-import com.uet.jobfinder.model.JobModel;
-import com.uet.jobfinder.model.PageQueryModel;
+import com.uet.jobfinder.dto.JobDTO;
+import com.uet.jobfinder.dto.PageQueryModel;
 import com.uet.jobfinder.service.JobService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -48,25 +48,23 @@ public class JobController {
 
     @PostMapping
     @PreAuthorize("hasAnyAuthority('Company') and isAuthenticated()")
-    public ResponseEntity<JobModel> createJob(@RequestBody @Valid JobModel jobModel, HttpServletRequest request) {
-        return ResponseEntity.ok(jobService.createJob(jobModel, request));
+    public ResponseEntity<JobDTO> createJob(@RequestBody @Valid JobDTO jobDTO, HttpServletRequest request) {
+        return ResponseEntity.ok(jobService.createJob(jobDTO, request));
     }
 
     @GetMapping(path = "{id}")
-    public ResponseEntity<JobModel> getJob(@PathVariable Long id) {
+    public ResponseEntity<JobDTO> getJob(@PathVariable Long id) {
         return ResponseEntity.ok(jobService.getJobModelById(id));
     }
 
-
-
     @GetMapping
-    public ResponseEntity<PageQueryModel<JobModel>> getJobList(
+    public ResponseEntity<PageQueryModel<JobDTO>> getJobList(
             @RequestParam(defaultValue = "0", required = false) Integer page,
             @RequestParam(defaultValue = "10", required = false) Integer perPage,
-            @RequestParam(required = false) Long companyId,
-            @RequestParam(required = false) String jobTitle,
-            @RequestParam(required = false) String major,
-            @RequestParam(required = false) String workingForm,
+            @RequestParam(required = false, defaultValue = "-1") Long companyId,
+            @RequestParam(required = false, defaultValue = "") String jobTitle,
+            @RequestParam(required = false, defaultValue = "") String major,
+            @RequestParam(required = false, defaultValue = "") String workingForm,
             @RequestParam(required = false) Boolean isJobOpen
     ) {
         return ResponseEntity.ok(
@@ -77,8 +75,8 @@ public class JobController {
 
     @PutMapping
     @PreAuthorize("hasAnyAuthority('Company', 'Admin') and isAuthenticated()")
-    public ResponseEntity<JobModel> updateJob(@RequestBody @Valid JobModel jobModel, HttpServletRequest request) {
-        return ResponseEntity.ok(jobService.updateJob(jobModel, request));
+    public ResponseEntity<JobDTO> updateJob(@RequestBody @Valid JobDTO jobDTO, HttpServletRequest request) {
+        return ResponseEntity.ok(jobService.updateJob(jobDTO, request));
     }
 
     @DeleteMapping(path = "{id}")
