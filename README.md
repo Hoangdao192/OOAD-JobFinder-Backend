@@ -28,13 +28,13 @@ demo, kiểm thử
 <a name="run"></a>
 ## Hướng dẫn chạy ứng dụng
 ### Backend
-1. Tạo một cơ sở dữ liệu mới (đặt tên jobfinder)
-2. Tạo file `application-local.properties` trong đường dẫn `src/main/resources` với nội dung. Trong đó copy tất cả logo trong ProjectInput/Server/ServerSaveFile vào upload.path
+1. Tạo một cơ sở dữ liệu mới (đặt tên tùy ý)
+2. Tạo file `application-local.properties` trong đường dẫn `src/main/resources` với nội dung. Trong đó `server_upload_path` là đường dẫn đến thư mục để lưu file của server (Tạo một thư mục trống ở đâu đó và ghi đường dẫn vào)
 ```
-spring.datasource.url=jdbc:mysql://localhost:3306/jobfinder
+spring.datasource.url=jdbc:mysql://localhost:3306/<database_name>
 spring.datasource.username=<mysql_username>
 spring.datasource.password=<mysql_password>
-upload.path=C:/Users/Administrator/.jobfinder-server
+upload.path=<server_upload_path>
 ```
 Ví dụ
 ````
