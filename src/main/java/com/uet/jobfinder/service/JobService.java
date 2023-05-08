@@ -213,33 +213,6 @@ public class JobService {
         );
     }
 
-    public SearchHits<JobElastic> searchJobByTitle(
-            Integer page, Integer perPage,String jobTitle,
-            String major, String workingForm, Boolean isJobOpen
-    ) {
-        NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();
-
-        queryBuilder.withQuery(
-                QueryBuilders.matchQuery("jobTitle", jobTitle)
-        );
-
-        if (major != null && major != "") {
-            queryBuilder.withQuery(QueryBuilders
-                    .matchQuery("major", major));
-        }
-
-        if (workingForm != null && workingForm != "") {
-            queryBuilder.withQuery(QueryBuilders
-                    .matchQuery("workingForm", workingForm));
-        }
-
-        queryBuilder.withPageable(PageRequest.of(page, perPage));
-        SearchHits<JobElastic> jobElasticSearchHits =
-                elasticsearchOperations.search(queryBuilder.build(), JobElastic.class,
-                        IndexCoordinates.of("job"));
-        return jobElasticSearchHits;
-    }
-
     public JobModel updateJob(JobModel jobModel, HttpServletRequest request) {
         Long userId = jsonWebTokenProvider.getUserIdFromRequest(request);
 

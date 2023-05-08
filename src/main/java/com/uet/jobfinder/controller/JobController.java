@@ -19,22 +19,6 @@ import java.util.Map;
 public class JobController {
 
     private JobService jobService;
-    @Autowired
-    private JobElasticService jobElasticService;
-
-    @GetMapping(path = "init")
-    public String init() {
-        jobElasticService.createJobIndexBulk();
-        return "Ok";
-    }
-
-    @GetMapping(path = "elastic/search")
-    public ResponseEntity search(@RequestParam String keyword) {
-        return ResponseEntity.ok(
-                jobService.searchJobByTitle(0, 10, keyword,
-                        null, null, true)
-        );
-    }
 
     @PreAuthorize("hasAnyAuthority('Admin')")
     @GetMapping(path = "statistic")
