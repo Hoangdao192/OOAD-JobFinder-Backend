@@ -1,5 +1,5 @@
-### Candidate save job
-POST http://localhost:5000/api/job/save
+### Candidate save jobElastic
+POST http://localhost:5000/api/jobElastic/save
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNjgwNjI2OTM4LCJleHAiOjE2ODEyMzE3Mzh9.lhraggy0HTXCqbDS4ZZ8vpmwyD5h6kWGMLE-_Nnyg3SqetEpRAAhxGiJpzU1MIUF2HdKH2xEWX9Au7LKmVzaYw
 Content-Type: application/json
 
@@ -8,10 +8,10 @@ Content-Type: application/json
   "candidateId" : 6
 }
 
-### Candidate list saved job
-GET http://localhost:5000/api/job/save?candidateId=6
+### Candidate list saved jobElastic
+GET http://localhost:5000/api/jobElastic/save?candidateId=6
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNjgwNjI2OTM4LCJleHAiOjE2ODEyMzE3Mzh9.lhraggy0HTXCqbDS4ZZ8vpmwyD5h6kWGMLE-_Nnyg3SqetEpRAAhxGiJpzU1MIUF2HdKH2xEWX9Au7LKmVzaYw
 
-### Candidate unsave job
-DELETE http://localhost:5000/api/job/save/1
+### Candidate unsave jobElastic
+DELETE http://localhost:5000/api/jobElastic/save/1
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNjgwNjI2OTM4LCJleHAiOjE2ODEyMzE3Mzh9.lhraggy0HTXCqbDS4ZZ8vpmwyD5h6kWGMLE-_Nnyg3SqetEpRAAhxGiJpzU1MIUF2HdKH2xEWX9Au7LKmVzaYw

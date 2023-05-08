@@ -3,6 +3,9 @@ package com.uet.jobfinder.security;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.uet.jobfinder.entity.User;
+import com.uet.jobfinder.entity.UserRequestLog;
+import com.uet.jobfinder.repository.UserRequestLogRepository;
+import com.uet.jobfinder.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,6 +18,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
@@ -23,6 +27,10 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     private JsonWebTokenProvider jwtProvider;
     @Autowired
     private CustomUserDetailsService userDetailsService;
+    @Autowired
+    private UserRequestLogRepository requestLogRepository;
+    @Autowired
+    private UserService userService;
 
     @Override
     protected void doFilterInternal(
@@ -53,6 +61,28 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             ));
         }
     }
+
+    private void logUserRequest(HttpServletRequest request) {
+        Long userId = jwtProvider.getUserIdFromRequest(request);
+        User user = userService.getUserById(userId);
+        if (user != null) {
+            UserRequestLog userRequestLog =
+                    UserRequestLog
+                            .builder()
+                            .method(request.getMethod())
+                            .url(request.getRequestURI())
+                            .requestDetail(request.toString())
+                            .user(user)
+                            .localDateTime(LocalDateTime.now())
+                            .build();
+            if ("POST".equalsIgnoreCase(request.getMethod())
+                    || "PUT".equalsIgnoreCase(request.getMethod())) {
+
+            }
+            requestLogRepository.save(userRequestLog);
+        }
+    }
+
 
     public String convertObjectToJson(Object object) throws JsonProcessingException {
         if (object == null) {

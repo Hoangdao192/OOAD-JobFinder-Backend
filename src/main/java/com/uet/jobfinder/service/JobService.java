@@ -1,5 +1,8 @@
 package com.uet.jobfinder.service;
 
+import com.uet.jobfinder.elasticsearch.JobElastic;
+import com.uet.jobfinder.elasticsearch.JobElasticRepository;
+import com.uet.jobfinder.elasticsearch.JobElasticService;
 import com.uet.jobfinder.entity.Address;
 import com.uet.jobfinder.entity.Company;
 import com.uet.jobfinder.entity.Job;
@@ -15,10 +18,19 @@ import com.uet.jobfinder.repository.AddressRepository;
 import com.uet.jobfinder.repository.CompanyRepository;
 import com.uet.jobfinder.repository.JobRepository;
 import com.uet.jobfinder.security.JsonWebTokenProvider;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.springframework.data.elasticsearch.core.SearchHit;
+import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,6 +51,12 @@ public class JobService {
     private CompanyRepository companyRepository;
     @Autowired
     private AddressRepository addressRepository;
+    @Autowired
+    private JobElasticService jobElasticService;
+    @Autowired
+    private JobElasticRepository jobElasticRepository;
+    @Autowired
+    private ElasticsearchOperations elasticsearchOperations;
 
     public List<Object> getStatistic(
             Integer month, Integer year
@@ -150,7 +168,8 @@ public class JobService {
         }
 
         Job newJob = jobRepository.save(job);
-
+        //  TODO: May be we should use another way to sync between ElasticSeach and MySQL
+        jobElasticRepository.save(modelMapper.map(newJob, JobElastic.class));
         modelMapper.map(newJob, jobModel);
         return jobModel;
     }
@@ -194,6 +213,33 @@ public class JobService {
         );
     }
 
+    public SearchHits<JobElastic> searchJobByTitle(
+            Integer page, Integer perPage,String jobTitle,
+            String major, String workingForm, Boolean isJobOpen
+    ) {
+        NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();
+
+        queryBuilder.withQuery(
+                QueryBuilders.matchQuery("jobTitle", jobTitle)
+        );
+
+        if (major != null && major != "") {
+            queryBuilder.withQuery(QueryBuilders
+                    .matchQuery("major", major));
+        }
+
+        if (workingForm != null && workingForm != "") {
+            queryBuilder.withQuery(QueryBuilders
+                    .matchQuery("workingForm", workingForm));
+        }
+
+        queryBuilder.withPageable(PageRequest.of(page, perPage));
+        SearchHits<JobElastic> jobElasticSearchHits =
+                elasticsearchOperations.search(queryBuilder.build(), JobElastic.class,
+                        IndexCoordinates.of("job"));
+        return jobElasticSearchHits;
+    }
+
     public JobModel updateJob(JobModel jobModel, HttpServletRequest request) {
         Long userId = jsonWebTokenProvider.getUserIdFromRequest(request);
 
@@ -228,7 +274,8 @@ public class JobService {
         job.setWorkingForm(jobModel.getWorkingForm());
 
         job = jobRepository.save(job);
-
+        //  TODO: May be we should use another way to sync between ElasticSeach and MySQL
+        jobElasticRepository.save(modelMapper.map(job, JobElastic.class));
         modelMapper.map(job, jobModel);
         return jobModel;
     }
@@ -250,6 +297,8 @@ public class JobService {
         company.getJobList().remove(job);
         companyRepository.save(company);
         jobRepository.delete(job);
+        //  TODO: May be we should use another way to sync between ElasticSearch and MySQL
+        jobElasticRepository.delete(modelMapper.map(job, JobElastic.class));
         return true;
     }
 

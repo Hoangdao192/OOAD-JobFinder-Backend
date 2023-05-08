@@ -64,7 +64,10 @@ public class JsonWebTokenProvider {
                     ServerError.INVALID_AUTHORIZATION
             );
         }
+        return token.substring(7);
+    }
 
+    public String getJWTFromString(String token) {
         return token.substring(7);
     }
 

@@ -34,10 +34,10 @@ public class SpringSecurityConfiguration {
         return new JWTAuthenticationFilter();
     }
 
-    @Bean
-    public Logbook logbook() {
-        return Logbook.create();
-    }
+//    @Bean
+//    public Logbook logbook() {
+//        return Logbook.create();
+//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

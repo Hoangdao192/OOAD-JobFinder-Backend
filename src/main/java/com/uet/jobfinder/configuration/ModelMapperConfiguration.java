@@ -1,5 +1,6 @@
 package com.uet.jobfinder.configuration;
 
+import com.uet.jobfinder.elasticsearch.JobElastic;
 import com.uet.jobfinder.entity.*;
 import com.uet.jobfinder.model.*;
 import com.uet.jobfinder.service.FileService;
@@ -29,6 +30,7 @@ public class ModelMapperConfiguration {
         configMapCandidateToCandidateModel(modelMapper);
         configMapJobApplicationToJobApplicationModel(modelMapper);
         configMapSavedJobToSaveJobModel(modelMapper);
+        configMapJobToJobElastic(modelMapper);
 
         TypeMap<User, UserModel> userMapper = modelMapper.createTypeMap(User.class, UserModel.class);
         Converter<Set<Role>, List<String>> roleConverter = mappingContext -> mappingContext
@@ -115,6 +117,40 @@ public class ModelMapperConfiguration {
                         .map(SavedJob::getCandidate, SavedJobModel::setCandidateId));
     }
 
+    private void configMapJobToJobElastic(ModelMapper modelMapper) {
+        TypeMap<Job, JobElastic> jobMapper =
+                modelMapper.createTypeMap(Job.class, JobElastic.class);
+        jobMapper.addMappings(
+                mapper -> mapper.using(addressStringConverter())
+                        .map(Job::getJobAddress, JobElastic::setJobAddress)
+        );
+    }
+
+    private Converter<Address, String> addressStringConverter() {
+        return mappingContext -> {
+            if (mappingContext.getSource() != null) {
+                Address address = mappingContext.getSource();
+                StringBuilder stringBuilder = new StringBuilder();
+                if (address.getDetailAddress() != null && address.getDetailAddress() != "") {
+                    stringBuilder.append(address.getDetailAddress());
+                    stringBuilder.append(", ");
+                }
+                if (address.getWard() != null && address.getWard() != "") {
+                    stringBuilder.append(address.getWard());
+                    stringBuilder.append(", ");
+                }
+                if (address.getDistrict() != null && address.getDistrict() != "") {
+                    stringBuilder.append(address.getDistrict());
+                    stringBuilder.append(", ");
+                }
+                if (address.getProvince() != null && address.getProvince() != "") {
+                    stringBuilder.append(address.getProvince());
+                }
+                return stringBuilder.toString();
+            }
+            return null;
+        };
+    }
     private Converter<User, Long> userToLongConverter() {
         return mappingContext -> {
             if (mappingContext.getSource() != null) {

@@ -580,7 +580,7 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjc5MzYxMjcyL
 
 
 ```http request
-POST http://localhost:5000/api/job
+POST http://localhost:5000/api/jobElastic
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNjc5MzI0MDA4LCJleHAiOjE2Nzk5Mjg4MDh9.903xQJcw98ITqHGluPqSJuqbz0J3xRA1msgoTE6zHLPgw91Nl7EF1mlhZJiDXoZSKV12H3lz8WZpNgUN9PbMhw
 
@@ -626,7 +626,7 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNjc5MzI0MDA4L
 <a name="job_update"></a>
 ### b. Cập nhập công việc
 ```http request
-PUT http://localhost:5000/api/job
+PUT http://localhost:5000/api/jobElastic
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNjc5MzI0MDA4LCJleHAiOjE2Nzk5Mjg4MDh9.903xQJcw98ITqHGluPqSJuqbz0J3xRA1msgoTE6zHLPgw91Nl7EF1mlhZJiDXoZSKV12H3lz8WZpNgUN9PbMhw
 
@@ -680,11 +680,11 @@ API này cung cấp các param sau (đều không bắt buộc)<br>
 `workingForm` : Lọc theo hình thức làm việc<br>
 `workingForm` chỉ trong 3 giá trị `Full-time` `Part-time` và `Remote`
 ```http request
-GET http://localhost:5000/api/job?page=0&pageSize=10
+GET http://localhost:5000/api/jobElastic?page=0&pageSize=10
 ### Default page = 0, pageSize = 10
-GET http://localhost:5000/api/job
+GET http://localhost:5000/api/jobElastic
 ### Filter by company
-GET http://localhost:5000/api/job?companyId=1
+GET http://localhost:5000/api/jobElastic?companyId=1
 ```
 ```json
 {
@@ -719,7 +719,7 @@ GET http://localhost:5000/api/job?companyId=1
 <a name="job_get"></a>
 ### d. Lấy thông tin một công việc
 ```http request
-GET http://localhost:5000/api/job/13
+GET http://localhost:5000/api/jobElastic/13
 ```
 ```json
 {
@@ -745,7 +745,7 @@ GET http://localhost:5000/api/job/13
 <a name="job_delete"></a>
 ### e. Xóa công việc
 ```http request
-DELETE http://localhost:5000/api/job/13
+DELETE http://localhost:5000/api/jobElastic/13
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNjc5MzI0MDA4LCJleHAiOjE2Nzk5Mjg4MDh9.903xQJcw98ITqHGluPqSJuqbz0J3xRA1msgoTE6zHLPgw91Nl7EF1mlhZJiDXoZSKV12H3lz8WZpNgUN9PbMhw
 ```
 ```json
@@ -756,7 +756,7 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNjc5MzI0MDA4L
 <a name="job_save"></a>
 ### f. Ứng viên lưu công việc
 ```http request
-POST http://localhost:5000/api/job/save
+POST http://localhost:5000/api/jobElastic/save
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNjgwMDczODg1LCJleHAiOjE2ODA2Nzg2ODV9.sebTC9IVnDUg9H8MNk1EaPn5B7B79GU6usL9wNr5gvh3frF2zWocLXb_4Fug3fJl_glHE0GIp2CaT0OGEjQUhA
 Content-Type: application/json
 
@@ -769,7 +769,7 @@ Content-Type: application/json
 {
   "id": 1,
   "jobId": null,
-  "job": {
+  "jobElastic": {
     "id": 1,
     "userId": 1,
     "jobTitle": "Lập trình viên Java",
@@ -799,7 +799,7 @@ Content-Type: application/json
 <a name="job_save_list"></a>
 ### g. Ứng viên lấy danh sách công việc đã lưu
 ```http request
-GET http://localhost:5000/api/job/save?candidateId=6
+GET http://localhost:5000/api/jobElastic/save?candidateId=6
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNjgwNjI2OTM4LCJleHAiOjE2ODEyMzE3Mzh9.lhraggy0HTXCqbDS4ZZ8vpmwyD5h6kWGMLE-_Nnyg3SqetEpRAAhxGiJpzU1MIUF2HdKH2xEWX9Au7LKmVzaYw
 ```
 ```json
@@ -814,7 +814,7 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNjgwNjI2OTM4L
     {
       "id": 1,
       "jobId": null,
-      "job": {
+      "jobElastic": {
         "id": 1,
         "userId": 1,
         "jobTitle": "Lập trình viên Java",
@@ -846,7 +846,7 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNjgwNjI2OTM4L
 <a name="job_save_delete"></a>
 ### h. Ứng viên bỏ lưu công việc
 ```http request
-DELETE http://localhost:5000/api/job/save/1
+DELETE http://localhost:5000/api/jobElastic/save/1
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNjgwNjI2OTM4LCJleHAiOjE2ODEyMzE3Mzh9.lhraggy0HTXCqbDS4ZZ8vpmwyD5h6kWGMLE-_Nnyg3SqetEpRAAhxGiJpzU1MIUF2HdKH2xEWX9Au7LKmVzaYw
 ```
 ```json
@@ -868,7 +868,7 @@ Các trường thông tin
 ```
 <i>Form</i>
 ```html
-<form action="http://localhost:5000/api/job-application" method="put" enctype="multipart/form-data">
+<form action="http://localhost:5000/api/jobElastic-application" method="put" enctype="multipart/form-data">
     <input type="text" name="candidateId">
     <input type="text" name="jobId">
     <input type="text" name="description">
@@ -891,7 +891,7 @@ Các trường thông tin
 <a name="application_accept"></a>
 ### b. Chấp nhận đơn ứng tuyển
 ```http request
-GET http://localhost:5000/api/job-application/accept/17
+GET http://localhost:5000/api/jobElastic-application/accept/17
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNjc5MzI0MDA4LCJleHAiOjE2Nzk5Mjg4MDh9.903xQJcw98ITqHGluPqSJuqbz0J3xRA1msgoTE6zHLPgw91Nl7EF1mlhZJiDXoZSKV12H3lz8WZpNgUN9PbMhw
 ```
 ```json
@@ -902,7 +902,7 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNjc5MzI0MDA4L
 <a name="application_reject"></a>
 ### c. Từ chối đơn ứng tuyển
 ```http request
-GET http://localhost:5000/api/job-application/reject/17
+GET http://localhost:5000/api/jobElastic-application/reject/17
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNjc5MzI0MDA4LCJleHAiOjE2Nzk5Mjg4MDh9.903xQJcw98ITqHGluPqSJuqbz0J3xRA1msgoTE6zHLPgw91Nl7EF1mlhZJiDXoZSKV12H3lz8WZpNgUN9PbMhw
 ```
 ```json
@@ -913,7 +913,7 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNjc5MzI0MDA4L
 <a name="application_delete"></a>
 ### d. Ứng viên hủy ứng tuyển
 ```http request
-DELETE http://localhost:5000/api/job-application/17
+DELETE http://localhost:5000/api/jobElastic-application/17
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjc5MzYxMjcyLCJleHAiOjE2Nzk5NjYwNzJ9.EE_Y6H1fYqZ1t9nkI-wpFY-eiE25JmdzjW6hpoKTpQXew8uodJ4o3B2n81oMPYMpmCvBkWHKb6nQD5eRSNsx0w
 ```
 ```json
@@ -925,7 +925,7 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjc5MzYxMjcyL
 ### e. Lấy danh sách đơn ứng tuyển
 #### Ứng viên lấy danh sách đơn ứng tuyển đã gửi
 ```http request
-GET http://localhost:5000/api/job-application?candidateId=4
+GET http://localhost:5000/api/jobElastic-application?candidateId=4
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjc5MzYxMjcyLCJleHAiOjE2Nzk5NjYwNzJ9.EE_Y6H1fYqZ1t9nkI-wpFY-eiE25JmdzjW6hpoKTpQXew8uodJ4o3B2n81oMPYMpmCvBkWHKb6nQD5eRSNsx0w
 ```
 ```json
@@ -952,7 +952,7 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjc5MzYxMjcyL
 ```
 #### Công ty lấy danh sách đơn ứng tuyển cho một công việc nhất định
 ```http request
-GET http://localhost:5000/api/job-application?jobId=15
+GET http://localhost:5000/api/jobElastic-application?jobId=15
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNjc5MzI0MDA4LCJleHAiOjE2Nzk5Mjg4MDh9.903xQJcw98ITqHGluPqSJuqbz0J3xRA1msgoTE6zHLPgw91Nl7EF1mlhZJiDXoZSKV12H3lz8WZpNgUN9PbMhw
 ```
 ```json
@@ -991,7 +991,7 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNjc5MzI0MDA4L
 <a name="application_list_company"></a>
 ### f. Lấy danh sách đơn ứng tuyển theo công ty
 ```http request
-GET http://localhost:5000/api/job-application/listByCompany?companyId=1
+GET http://localhost:5000/api/jobElastic-application/listByCompany?companyId=1
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgwMzY2OTE0LCJleHAiOjE2ODA5NzE3MTR9.ivU7xZb-Q3u3lnh5HaybOKRpdRI0ME3avU4lRqs1vqxFdQqG3ljL19gO8vSi1Ej5WyIU3IoecSq_1QUxDPmy_w
 ```
 ```json

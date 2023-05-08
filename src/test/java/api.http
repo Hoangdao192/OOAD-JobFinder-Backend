@@ -133,8 +133,8 @@ Content-Type: text/plain
 University
 --boundary--
 
-### Create job
-POST http://localhost:5000/api/job/
+### Create jobElastic
+POST http://localhost:5000/api/jobElastic/
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjc4Njk3Nzg4LCJleHAiOjE2NzkzMDI1ODh9.fOgrkEmI14DGuzpeFdNYNZtQWiAU_fNEY3jC6XAbfxRdYwtxE21NYIUW6aHA6I86MT-raV92PYEkuKF6Igkw-w
 
@@ -150,8 +150,8 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjc4Njk3Nzg4L
   "workingForm" : "Fulltime"
 }
 
-### Update job
-PUT http://localhost:5000/api/job/
+### Update jobElastic
+PUT http://localhost:5000/api/jobElastic/
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjc4NzgxNzY1LCJleHAiOjE2NzkzODY1NjV9.elQHPr2g7XdQ4ycjx2uiCvp7XrGacmXx2FwQFMwI9SIH-f5F5wqKVqs3mPo1wlXsbGBZIRNtlQPz_GVXDSOaOw
 
